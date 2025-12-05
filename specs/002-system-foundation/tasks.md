@@ -137,7 +137,7 @@
 - [X] T046 [US4] Register HorizonServiceProvider in bootstrap/providers.php → @laravel-specialist
 - [X] T047 [US4] Create app/Jobs/TestJob.php as a simple test job for verification → @laravel-specialist
 - [X] T048 [US4] Verify unauthenticated access to /horizon returns 403 → @laravel-specialist
-- [ ] T049 [US4] Verify authenticated admin can access /horizon dashboard → @laravel-specialist
+- [X] T049 [US4] Verify authenticated admin can access /horizon dashboard → @laravel-specialist
 - [ ] T050 [US4] Dispatch TestJob and verify it appears in Horizon as pending → @laravel-specialist
 - [ ] T051 [US4] Start Horizon worker and verify TestJob processes successfully → @laravel-specialist
 - [ ] T052 [US4] Verify failed job appears in Horizon and can be retried → @laravel-specialist
