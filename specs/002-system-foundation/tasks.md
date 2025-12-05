@@ -131,7 +131,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T043 [US4] Publish Horizon configuration with `sail artisan horizon:install` → @laravel-specialist
+- [X] T043 [US4] Publish Horizon configuration with `sail artisan horizon:install` → @laravel-specialist
 - [ ] T044 [US4] Configure config/horizon.php with supervisor settings (128MB memory, 3 retries, 3 workers local/10 prod) → @laravel-specialist
 - [ ] T045 [US4] Create app/Providers/HorizonServiceProvider.php with viewHorizon gate using canAccessPanel() → @laravel-specialist
 - [ ] T046 [US4] Register HorizonServiceProvider in bootstrap/providers.php → @laravel-specialist
