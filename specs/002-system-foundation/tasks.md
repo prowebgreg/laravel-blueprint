@@ -111,7 +111,7 @@
 - [X] T036 [P] [US3] Configure config/filesystems.php with local-temp, local-permanent scoped disks → @laravel-specialist
 - [X] T037 [US3] Set AWS_URL environment variable for CloudFront CDN in .env.example → @devops-engineer
 - [X] T038 [US3] Verify Storage::disk('s3-temp')->put() uploads file to temp/ prefix → @laravel-specialist
-- [ ] T039 [US3] Verify file can be moved from s3-temp to s3-permanent disk → @laravel-specialist
+- [X] T039 [US3] Verify file can be moved from s3-temp to s3-permanent disk → @laravel-specialist
 - [ ] T040 [US3] Verify Storage::disk('s3-permanent')->url() returns CloudFront URL → @laravel-specialist
 - [ ] T041 [US3] Verify Storage::disk('s3-permanent')->delete() removes file from S3 → @laravel-specialist
 - [ ] T042 [US3] Verify local-temp and local-permanent disks work in development mode → @laravel-specialist
