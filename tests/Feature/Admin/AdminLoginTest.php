@@ -88,4 +88,8 @@ it('can logout and be redirected to login page', function () {
 
     // Assert redirected to login page
     $response->assertRedirect('/admin/login');
+
+    // Verify that after logout, protected admin pages require re-authentication
+    $protectedPageResponse = $this->get('/admin');
+    $protectedPageResponse->assertRedirect('/admin/login');
 });
