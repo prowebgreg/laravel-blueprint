@@ -89,7 +89,7 @@
 - [X] T027 [US2] Configure app/Providers/Filament/AdminPanelProvider.php with login, passwordReset, and auth settings → @laravel-specialist
 - [X] T028 [P] [US2] Create database/seeders/AdminUserSeeder.php with development admin credentials → @laravel-specialist
 - [X] T029 [P] [US2] Update database/seeders/DatabaseSeeder.php to call AdminUserSeeder in local/dev environment only → @laravel-specialist
-- [ ] T030 [US2] Run seeder with `sail artisan db:seed` to create admin user → @laravel-specialist
+- [X] T030 [US2] Run seeder with `sail artisan db:seed` to create admin user → @laravel-specialist
 - [ ] T031 [US2] Verify unauthenticated access to /admin redirects to /admin/login → @laravel-specialist
 - [ ] T032 [US2] Verify login with info@proweb.ai / Levonik2007@ succeeds and shows dashboard → @laravel-specialist
 - [ ] T033 [US2] Verify password reset sends email to Mailpit and reset link works → @laravel-specialist

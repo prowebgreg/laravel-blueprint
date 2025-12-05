@@ -17,16 +17,28 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::query()->updateOrCreate(
-            ['email' => 'info@proweb.ai'],
-            ['name' => 'Admin']
-        );
+        // SECURITY: Only allow in non-production environments
+        if (! \in_array(app()->environment(), ['local', 'development', 'testing'], true)) {
+            $this->command->warn('AdminUserSeeder is disabled in production environments.');
 
-        // Only set password on initial creation to avoid re-hashing on subsequent runs
-        if ($user->wasRecentlyCreated) {
-            $user->password = bcrypt('Levonik2007@');
-            $user->email_verified_at = now();
-            $user->save();
+            return;
         }
+
+        $password = env('DEFAULT_ADMIN_PASSWORD');
+
+        if (empty($password)) {
+            $this->command->error('DEFAULT_ADMIN_PASSWORD environment variable is not set.');
+
+            return;
+        }
+
+        User::query()->firstOrCreate(
+            ['email' => 'info@proweb.ai'],
+            [
+                'name' => 'Admin',
+                'password' => $password, // Will be auto-hashed by the 'hashed' cast
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
