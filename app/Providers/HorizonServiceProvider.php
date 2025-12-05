@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\User;
+use Filament\Exceptions\NoDefaultPanelSetException;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Gate;
-use Laravel\Horizon\Horizon;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
 
 class HorizonServiceProvider extends HorizonApplicationServiceProvider
@@ -16,23 +18,24 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
-
-        // Horizon::routeSmsNotificationsTo('15556667777');
-        // Horizon::routeMailNotificationsTo('example@example.com');
-        // Horizon::routeSlackNotificationsTo('slack-webhook-url', '#channel');
     }
 
     /**
      * Register the Horizon gate.
      *
      * This gate determines who can access Horizon in non-local environments.
+     * Access is granted only to users who can access the Filament admin panel.
      */
     protected function gate(): void
     {
-        Gate::define('viewHorizon', function ($user = null) {
-            return in_array(optional($user)->email, [
-                //
-            ]);
+        Gate::define('viewHorizon', function (User $user): bool {
+            try {
+                $adminPanel = Filament::getPanel('admin');
+
+                return $user->canAccessPanel($adminPanel);
+            } catch (NoDefaultPanelSetException) {
+                return false;
+            }
         });
     }
 }
