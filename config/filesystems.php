@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -51,13 +53,45 @@ return [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-west-1'),
+            'bucket' => env('AWS_BUCKET', 'laravel-blueprint-assets'),
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
+            'throw' => true,
             'report' => false,
+        ],
+
+        'local-temp' => [
+            'driver' => 'scoped',
+            'disk' => 'local',
+            'prefix' => 'temp',
+            'visibility' => 'private',
+            'throw' => true,
+        ],
+
+        'local-permanent' => [
+            'driver' => 'scoped',
+            'disk' => 'local',
+            'prefix' => 'permanent',
+            'visibility' => 'public',
+            'throw' => true,
+        ],
+
+        's3-temp' => [
+            'driver' => 'scoped',
+            'disk' => 's3',
+            'prefix' => 'temp',
+            'visibility' => 'private',
+            'throw' => true,
+        ],
+
+        's3-permanent' => [
+            'driver' => 'scoped',
+            'disk' => 's3',
+            'prefix' => 'permanent',
+            'visibility' => 'public',
+            'throw' => true,
         ],
 
     ],
