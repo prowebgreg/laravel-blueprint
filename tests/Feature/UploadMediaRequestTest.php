@@ -111,6 +111,28 @@ test('returns custom error message for invalid file type', function () {
     expect($error)->toContain('File type not allowed');
 });
 
+test('rejects invalid file type with accepted types list in message', function () {
+    $invalidFileTypes = [
+        'exe' => 'application/x-msdownload',
+        'zip' => 'application/zip',
+        'doc' => 'application/msword',
+    ];
+
+    foreach ($invalidFileTypes as $ext => $mime) {
+        $file = UploadedFile::fake()->create("test.{$ext}", 100, $mime);
+        $request = new UploadMediaRequest;
+
+        $validator = Validator::make(['file' => $file], $request->rules(), $request->messages());
+
+        expect($validator->fails())->toBeTrue("Should fail for type: {$ext}");
+
+        $error = $validator->errors()->first('file');
+        $expectedMessage = 'File type not allowed. Accepted types: jpg, jpeg, png, gif, webp, svg, pdf, mp4, webm';
+
+        expect($error)->toBe($expectedMessage, "Failed for type: {$ext}");
+    }
+});
+
 test('media config returns correct allowed extensions', function () {
     $extensions = config('media.helpers.extensions')();
 

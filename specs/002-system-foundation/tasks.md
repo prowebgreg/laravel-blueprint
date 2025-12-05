@@ -117,7 +117,7 @@
 - [X] T042 [US3] Verify local-temp and local-permanent disks work in development mode → @laravel-specialist
 - [X] T058 [US3] Configure file type validation for allowed types (jpg, jpeg, png, gif, webp, svg, pdf, mp4, webm) → @laravel-specialist
 - [X] T059 [US3] Verify file size rejection with message "File size exceeds maximum allowed size of 10MB" → @laravel-specialist
-- [ ] T060 [US3] Verify invalid file type rejection with message "File type not allowed. Accepted types: [list]" → @laravel-specialist
+- [X] T060 [US3] Verify invalid file type rejection with message "File type not allowed. Accepted types: [list]" → @laravel-specialist
 
 **Checkpoint**: User Story 3 complete - files upload to S3 and serve via CloudFront
 
