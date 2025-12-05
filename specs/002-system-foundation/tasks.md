@@ -114,7 +114,7 @@
 - [X] T039 [US3] Verify file can be moved from s3-temp to s3-permanent disk → @laravel-specialist
 - [X] T040 [US3] Verify Storage::disk('s3-permanent')->url() returns CloudFront URL → @laravel-specialist
 - [X] T041 [US3] Verify Storage::disk('s3-permanent')->delete() removes file from S3 → @laravel-specialist
-- [ ] T042 [US3] Verify local-temp and local-permanent disks work in development mode → @laravel-specialist
+- [X] T042 [US3] Verify local-temp and local-permanent disks work in development mode → @laravel-specialist
 - [ ] T058 [US3] Configure file type validation for allowed types (jpg, jpeg, png, gif, webp, svg, pdf, mp4, webm) → @laravel-specialist
 - [ ] T059 [US3] Verify file size rejection with message "File size exceeds maximum allowed size of 10MB" → @laravel-specialist
 - [ ] T060 [US3] Verify invalid file type rejection with message "File type not allowed. Accepted types: [list]" → @laravel-specialist
