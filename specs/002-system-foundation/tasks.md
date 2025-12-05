@@ -150,8 +150,8 @@
 
 **Purpose**: Final verification, cleanup, and documentation updates
 
-- [ ] T053 [P] Run Laravel Pint for code style formatting → @code-reviewer
-- [ ] T054 [P] Document all environment variables in .env.example with comments → @documentation-engineer
+- [X] T053 [P] Run Laravel Pint for code style formatting → @code-reviewer
+- [X] T054 [P] Document all environment variables in .env.example with comments → @documentation-engineer
 - [ ] T055 Verify all success criteria from spec.md (SC-001 through SC-021) → @qa-expert
 - [ ] T056 [P] Remove TestJob.php if not needed for production → @laravel-specialist
 - [ ] T057 Run quickstart.md validation - follow all steps from clean clone → @qa-expert
