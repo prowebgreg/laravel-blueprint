@@ -92,7 +92,7 @@
 - [X] T030 [US2] Run seeder with `sail artisan db:seed` to create admin user → @laravel-specialist
 - [X] T031 [US2] Verify unauthenticated access to /admin redirects to /admin/login → @laravel-specialist
 - [X] T032 [US2] Verify login with info@proweb.ai / Levonik2007@ succeeds and shows dashboard → @laravel-specialist
-- [ ] T033 [US2] Verify password reset sends email to Mailpit and reset link works → @laravel-specialist
+- [X] T033 [US2] Verify password reset sends email to Mailpit and reset link works → @laravel-specialist
 - [ ] T034 [US2] Verify logout terminates session and redirects to login → @laravel-specialist
 
 **Checkpoint**: User Story 2 complete - admins can login, logout, and reset passwords
