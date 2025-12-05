@@ -139,7 +139,7 @@
 - [X] T048 [US4] Verify unauthenticated access to /horizon returns 403 → @laravel-specialist
 - [X] T049 [US4] Verify authenticated admin can access /horizon dashboard → @laravel-specialist
 - [X] T050 [US4] Dispatch TestJob and verify it appears in Horizon as pending → @laravel-specialist
-- [ ] T051 [US4] Start Horizon worker and verify TestJob processes successfully → @laravel-specialist
+- [X] T051 [US4] Start Horizon worker and verify TestJob processes successfully → @laravel-specialist
 - [ ] T052 [US4] Verify failed job appears in Horizon and can be retried → @laravel-specialist
 
 **Checkpoint**: User Story 4 complete - jobs process in background with Horizon monitoring
