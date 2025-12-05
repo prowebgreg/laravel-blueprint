@@ -134,7 +134,7 @@
 - [X] T043 [US4] Publish Horizon configuration with `sail artisan horizon:install` → @laravel-specialist
 - [X] T044 [US4] Configure config/horizon.php with supervisor settings (128MB memory, 3 retries, 3 workers local/10 prod) → @laravel-specialist
 - [X] T045 [US4] Create app/Providers/HorizonServiceProvider.php with viewHorizon gate using canAccessPanel() → @laravel-specialist
-- [ ] T046 [US4] Register HorizonServiceProvider in bootstrap/providers.php → @laravel-specialist
+- [X] T046 [US4] Register HorizonServiceProvider in bootstrap/providers.php → @laravel-specialist
 - [ ] T047 [US4] Create app/Jobs/TestJob.php as a simple test job for verification → @laravel-specialist
 - [ ] T048 [US4] Verify unauthenticated access to /horizon returns 403 → @laravel-specialist
 - [ ] T049 [US4] Verify authenticated admin can access /horizon dashboard → @laravel-specialist
