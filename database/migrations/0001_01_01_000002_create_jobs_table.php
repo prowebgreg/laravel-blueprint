@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +16,7 @@ return new class extends Migration
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
             $table->string('queue')->index();
-            $table->longText('payload');
+            $table->text('payload'); // PostgreSQL TEXT handles all sizes efficiently
             $table->unsignedTinyInteger('attempts');
             $table->unsignedInteger('reserved_at')->nullable();
             $table->unsignedInteger('available_at');
@@ -27,8 +29,8 @@ return new class extends Migration
             $table->integer('total_jobs');
             $table->integer('pending_jobs');
             $table->integer('failed_jobs');
-            $table->longText('failed_job_ids');
-            $table->mediumText('options')->nullable();
+            $table->text('failed_job_ids'); // PostgreSQL TEXT handles all sizes efficiently
+            $table->text('options')->nullable(); // PostgreSQL TEXT handles all sizes efficiently
             $table->integer('cancelled_at')->nullable();
             $table->integer('created_at');
             $table->integer('finished_at')->nullable();
@@ -39,8 +41,8 @@ return new class extends Migration
             $table->string('uuid')->unique();
             $table->text('connection');
             $table->text('queue');
-            $table->longText('payload');
-            $table->longText('exception');
+            $table->text('payload'); // PostgreSQL TEXT handles all sizes efficiently
+            $table->text('exception'); // PostgreSQL TEXT handles all sizes efficiently
             $table->timestamp('failed_at')->useCurrent();
         });
     }

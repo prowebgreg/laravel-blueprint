@@ -1,13 +1,10 @@
 {
     "agents": [
-        "claude_code",
-        "cursor",
-        "gemini"
+        "claude_code"
     ],
     "editors": [
-        "claude_code",
-        "cursor",
-        "gemini"
+        "claude_code"
     ],
-    "guidelines": []
+    "guidelines": [],
+    "sail": true
 }

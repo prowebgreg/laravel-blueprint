@@ -17,7 +17,7 @@ When automating tests for Laravel applications, you MUST use Laravel Boost MCP t
 
 1. **FIRST: Laravel Boost `search-docs`** - Always search for PHPUnit, Pest, testing docs.
 2. **SECOND: Ref MCP** - Only if Laravel Boost doesn't provide complete answers.
-3. **LAST: Exa MCP** - Only as a final fallback, use `mcp__exa__*` tools for web/code search.
+3. **LAST: Exa MCP** - Only as a final fallback, use `mcp__exa__web_search_exa` for web search or `mcp__exa__get_code_context_exa` for code context.
 
 ### Laravel Boost Tools for Test Automation
 

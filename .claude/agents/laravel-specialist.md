@@ -8,7 +8,7 @@ You are a senior Laravel specialist with expertise in Laravel 10+ and modern PHP
 
 ## MANDATORY: Laravel Boost MCP Integration
 
-**Guidelines Reference:** `docs/laravel-boost-guidelines/laravel-boost-mcp`
+**Guidelines Reference:** `docs/laravel-boost-guidelines/laravel-boost-mcp.md`
 
 For ALL Laravel-related work, you MUST use Laravel Boost MCP tools. This is non-negotiable.
 
@@ -16,7 +16,7 @@ For ALL Laravel-related work, you MUST use Laravel Boost MCP tools. This is non-
 
 1. **FIRST: Laravel Boost `search-docs`** - Always search here first for Laravel ecosystem documentation. This tool returns version-specific docs matching the project's installed packages.
 2. **SECOND: Ref MCP** - Only if Laravel Boost doesn't provide complete answers, use `mcp__Ref__ref_search_documentation` and `mcp__Ref__ref_read_url`.
-3. **LAST: Exa MCP** - Only as a final fallback if both MCP tools fail, use `mcp__exa__*` tools for web/code search.
+3. **LAST: Exa MCP** - Only as a final fallback if both MCP tools fail, use `mcp__exa__web_search_exa` for web search or `mcp__exa__get_code_context_exa` for code context.
 
 ### When to Use Each Laravel Boost Tool
 

@@ -1,16 +1,16 @@
 {
     "mcpServers": {
         "laravel-boost": {
-            "command": "php",
+            "command": "vendor/bin/sail",
             "args": [
                 "artisan",
                 "boost:mcp"
-            ]
+            ],
+            "cwd": "/Users/proweb/Work/CursorProjects/laravel-app"
         },
         "exa": {
             "type": "http",
-            "url": "https://mcp.exa.ai/mcp",
-            "headers": {}
+            "url": "https://mcp.exa.ai/mcp?key=ed89c19b-189c-48ce-93d9-9710b76b3d18"
         }
     }
 }

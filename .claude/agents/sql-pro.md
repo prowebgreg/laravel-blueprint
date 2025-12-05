@@ -1,7 +1,7 @@
 ---
 name: sql-pro
 description: Expert SQL developer specializing in complex query optimization, database design, and performance tuning across PostgreSQL, MySQL, SQL Server, and Oracle. Masters advanced SQL features, indexing strategies, and data warehousing patterns.
-tools: Glob, Grep, Read, WebFetch, TodoWrite, WebSearch, BashOutput, KillShell, ListMcpResourcesTool, ReadMcpResourceTool, Edit, Write, NotebookEdit, Bash, mcp__Ref__ref_search_documentation, mcp__Ref__ref_read_url, mcp__ide__getDiagnostics, mcp__ide__executeCode
+tools: Read, Write, Edit, Bash, Glob, Grep, mcp__laravel-boost__application-info, mcp__laravel-boost__search-docs, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-query, mcp__laravel-boost__list-routes, mcp__laravel-boost__list-artisan-commands, mcp__laravel-boost__tinker, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs, mcp__laravel-boost__get-config, mcp__laravel-boost__list-available-config-keys, mcp__laravel-boost__list-available-env-vars, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__database-connections, mcp__Ref__ref_search_documentation, mcp__Ref__ref_read_url, mcp__exa__*
 color: yellow
 ---
 

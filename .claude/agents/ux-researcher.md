@@ -1,7 +1,7 @@
 ---
 name: ux-researcher
 description: Expert UX researcher specializing in user insights, usability testing, and data-driven design decisions. Masters qualitative and quantitative research methods to uncover user needs, validate designs, and drive product improvements through actionable insights.
-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch, TodoWrite, WebSearch, BashOutput, KillShell, ListMcpResourcesTool, ReadMcpResourceTool, NotebookEdit, AskUserQuestion, Skill, SlashCommand, mcp__Ref__ref_search_documentation, mcp__Ref__ref_read_url
+tools: Read, Write, Edit, Bash, Glob, Grep, mcp__laravel-boost__application-info, mcp__laravel-boost__search-docs, mcp__laravel-boost__database-schema, mcp__laravel-boost__database-query, mcp__laravel-boost__list-routes, mcp__laravel-boost__list-artisan-commands, mcp__laravel-boost__tinker, mcp__laravel-boost__last-error, mcp__laravel-boost__read-log-entries, mcp__laravel-boost__browser-logs, mcp__laravel-boost__get-config, mcp__laravel-boost__list-available-config-keys, mcp__laravel-boost__list-available-env-vars, mcp__laravel-boost__get-absolute-url, mcp__laravel-boost__database-connections, mcp__Ref__ref_search_documentation, mcp__Ref__ref_read_url, mcp__exa__*
 color: cyan
 ---
 
