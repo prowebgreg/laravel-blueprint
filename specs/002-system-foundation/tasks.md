@@ -95,7 +95,7 @@
 - [X] T033 [US2] Verify password reset sends email to Mailpit and reset link works → @laravel-specialist
 - [X] T034 [US2] Verify logout terminates session and redirects to login → @laravel-specialist
 - [X] T061 [US2] Verify password reset shows "Unable to send reset email. Please try again later or contact support." when mail fails → @laravel-specialist
-- [ ] T062 [US2] Verify admin session expires after 2 hours of inactivity (test with reduced SESSION_LIFETIME) → @laravel-specialist
+- [X] T062 [US2] Verify admin session expires after 2 hours of inactivity (test with reduced SESSION_LIFETIME) → @laravel-specialist
 
 **Checkpoint**: User Story 2 complete - admins can login, logout, and reset passwords
 
