@@ -94,6 +94,8 @@
 - [X] T032 [US2] Verify login with info@proweb.ai / Levonik2007@ succeeds and shows dashboard → @laravel-specialist
 - [X] T033 [US2] Verify password reset sends email to Mailpit and reset link works → @laravel-specialist
 - [X] T034 [US2] Verify logout terminates session and redirects to login → @laravel-specialist
+- [X] T061 [US2] Verify password reset shows "Unable to send reset email. Please try again later or contact support." when mail fails → @laravel-specialist
+- [ ] T062 [US2] Verify admin session expires after 2 hours of inactivity (test with reduced SESSION_LIFETIME) → @laravel-specialist
 
 **Checkpoint**: User Story 2 complete - admins can login, logout, and reset passwords
 
@@ -245,13 +247,13 @@ With multiple developers:
 | Subagent | Task Count | Primary Responsibilities |
 |----------|------------|-------------------------|
 | @devops-engineer | 14 | Docker, Sail, environment config, service verification |
-| @laravel-specialist | 38 | Filament, Horizon, models, config, seeders, storage, validation |
+| @laravel-specialist | 40 | Filament, Horizon, models, config, seeders, storage, validation |
 | @postgres-pro | 1 | Database migrations (with laravel-specialist) |
 | @code-reviewer | 1 | Code style formatting |
 | @documentation-engineer | 1 | Environment documentation |
 | @qa-expert | 2 | Success criteria validation |
 
-**Total Tasks**: 60 (was 57, added T058-T060 for file validation)
+**Total Tasks**: 62 (was 60, added T061-T062 for edge case coverage)
 
 ---
 

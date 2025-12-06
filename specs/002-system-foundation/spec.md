@@ -77,8 +77,8 @@ A content administrator uploads media files to the CMS. The files are stored sec
 3. **Given** a file in permanent storage, **When** a visitor requests the file, **Then** it is served via CDN URL for optimal performance
 4. **Given** a file in storage, **When** the system deletes the file, **Then** it is removed from cloud storage
 5. **Given** development environment configuration, **When** storage is configured for local mode, **Then** files are stored locally instead of in cloud storage
-6. **Given** a file exceeding 10MB, **When** the administrator attempts to upload it, **Then** they see error "File size exceeds maximum allowed size of 10MB"
-7. **Given** an unsupported file type, **When** the administrator attempts to upload it, **Then** they see error "File type not allowed. Accepted types: jpg, jpeg, png, gif, webp, svg, pdf, mp4, webm"
+6. **Given** a file exceeding maximum size (per FR-030), **When** the administrator attempts to upload it, **Then** they see the size validation error
+7. **Given** an unsupported file type (per FR-031), **When** the administrator attempts to upload it, **Then** they see the file type validation error
 8. **Given** an upload in progress, **When** the connection drops mid-transfer, **Then** partial upload is discarded and user sees "Upload incomplete. Please try again."
 
 ---
@@ -186,7 +186,7 @@ A developer needs to process time-consuming tasks (like image optimization) with
 
 - **User**: Represents an administrator with authentication credentials (email, password) and session state (2-hour inactivity timeout)
 - **Job**: Represents a queued background task with status (pending, processing, completed, failed), payload data, and retry count (maximum 3 attempts before permanent failure)
-- **File**: Represents an uploaded media file with storage location (temporary/permanent), path, CDN URL, and size constraint (maximum 10MB)
+- **File**: (Transient concept, not a persisted model in Phase 1) Represents an uploaded media file with storage location (temporary/permanent), path, CDN URL, and size constraint (maximum 10MB). A dedicated `Media` model with database tracking will be introduced in Phase 3 (Media Engine)
 
 ## Success Criteria *(mandatory)*
 
