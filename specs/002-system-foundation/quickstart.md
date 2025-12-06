@@ -9,7 +9,7 @@ Before starting, ensure you have:
 
 - [ ] Docker Desktop installed and running
 - [ ] Git installed
-- [ ] Node.js 20.x LTS installed
+- [ ] Node.js 20.x LTS or newer installed
 - [ ] Composer 2.x installed
 - [ ] Ports available: 80, 5432, 6379, 1025, 8025, 5173
 
@@ -25,23 +25,26 @@ cd blueprint-cms
 # 2. Copy environment file
 cp .env.example .env
 
-# 3. Install PHP dependencies
+# 3. Install PHP dependencies (required before Sail can start)
 composer install
 
-# 4. Install NPM dependencies
-npm install
-
-# 5. Generate application key
+# 4. Generate application key
 php artisan key:generate
 
-# 6. Start Sail (Docker)
+# 5. Start Sail (Docker)
 ./vendor/bin/sail up -d
+
+# 6. Install NPM dependencies (inside container)
+./vendor/bin/sail npm install
 
 # 7. Run migrations and seed
 ./vendor/bin/sail artisan migrate --seed
 
 # 8. Build frontend assets
 ./vendor/bin/sail npm run build
+
+# 9. Link storage directory
+./vendor/bin/sail artisan storage:link
 ```
 
 ---
@@ -103,8 +106,8 @@ sail artisan migrate --seed
 # Fresh migration (drops all tables)
 sail artisan migrate:fresh --seed
 
-# Database CLI
-sail psql
+# Database CLI (PostgreSQL)
+sail exec pgsql psql -U sail -d blueprint_db
 
 # Tinker (REPL)
 sail artisan tinker
