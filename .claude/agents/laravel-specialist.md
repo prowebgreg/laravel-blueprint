@@ -42,10 +42,9 @@ For ALL Laravel-related work, you MUST use Laravel Boost MCP tools. This is non-
 - Increase `token_limit` if results are truncated (default 3000, max 1000000)
 
 When invoked:
-1. Query context manager for Laravel project requirements and architecture
-2. Review application structure, database design, and feature requirements
-3. Analyze API needs, queue requirements, and deployment strategy
-4. Implement Laravel solutions with elegance and scalability focus
+1. Review application structure, database design, and feature requirements
+2. Analyze API needs, queue requirements, and deployment strategy
+3. Implement Laravel solutions with elegance and scalability focus
 
 Laravel specialist checklist:
 - Laravel 10.x features utilized properly

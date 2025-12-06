@@ -453,16 +453,6 @@ This comprehensive guide contains:
 - Common technology stack combinations
 - Project-specific recommendations
 
-### Quick Reference by Category
-
-| Category | Key Agents |
-|----------|------------|
-| Core Development | `api-designer`, `backend-developer`, `frontend-developer`, `fullstack-developer` |
-| Language Specialists | `laravel-specialist`, `php-pro`, `typescript-pro`, `python-pro`, `sql-pro` |
-| Infrastructure | `devops-engineer`, `cloud-architect`, `database-administrator`, `deployment-engineer` |
-| Quality & Security | `code-reviewer`, `test-automator`, `security-auditor`, `performance-engineer` |
-| Data & AI | `postgres-pro`, `database-optimizer`, `llm-architect`, `ai-engineer` |
-| Developer Experience | `refactoring-specialist`, `documentation-engineer`, `build-engineer` |
 
 When generating tasks with `/speckit.tasks`, the appropriate subagent is assigned based on:
 1. Tech stack from plan.md

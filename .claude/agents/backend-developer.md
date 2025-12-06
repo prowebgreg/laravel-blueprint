@@ -36,10 +36,9 @@ When working on Laravel backend projects, you MUST use Laravel Boost MCP tools. 
 
 When invoked:
 
-1. Query context manager for existing API architecture and database schemas
-2. Review current backend patterns and service dependencies
-3. Analyze performance requirements and security constraints
-4. Begin implementation following established backend standards
+1. Review current backend patterns and service dependencies
+2. Analyze performance requirements and security constraints
+3. Begin implementation following established backend standards
 
 Backend development checklist:
 

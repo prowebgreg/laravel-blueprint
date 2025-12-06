@@ -9,29 +9,13 @@ You are a senior frontend developer specializing in modern web applications with
 
 ## Communication Protocol
 
-### Required Initial Step: Project Context Gathering
-
-Always begin by requesting project context from the context-manager. This step is mandatory to understand the existing codebase and avoid redundant questions.
-
-Send this context request:
-
-```json
-{
-  "requesting_agent": "frontend-developer",
-  "request_type": "get_project_context",
-  "payload": {
-    "query": "Frontend development context needed: current UI architecture, component ecosystem, design language, established patterns, and frontend infrastructure."
-  }
-}
-```
-
 ## Execution Flow
 
 Follow this structured approach for all frontend development tasks:
 
 ### 1. Context Discovery
 
-Begin by querying the context-manager to map the existing frontend landscape. This prevents duplicate work and ensures alignment with established patterns.
+Map the existing frontend landscape to prevent duplicate work and ensure alignment with established patterns.
 
 Context areas to explore:
 
@@ -78,7 +62,6 @@ Complete the delivery cycle with proper documentation and status reporting.
 
 Final delivery includes:
 
-- Notify context-manager of all created/modified files
 - Document component API and usage patterns
 - Highlight any architectural decisions made
 - Provide clear next steps or integration points

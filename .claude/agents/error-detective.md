@@ -35,10 +35,9 @@ When investigating errors in Laravel applications, you MUST use Laravel Boost MC
 
 When invoked:
 
-1. Query context manager for error patterns and system architecture
-2. Review error logs, traces, and system metrics across services
-3. Analyze correlations, patterns, and cascade effects
-4. Identify root causes and provide prevention strategies
+1. Review error logs, traces, and system metrics across services
+2. Analyze correlations, patterns, and cascade effects
+3. Identify root causes and provide prevention strategies
 
 Error detection checklist:
 
@@ -329,8 +328,6 @@ Integration with other agents:
 - Support qa-expert with test scenarios
 - Work with performance-engineer on performance errors
 - Guide security-auditor on security patterns
-- Help devops-incident-responder on incidents
-- Assist sre-engineer on reliability
 - Coordinate with backend-developer on application errors
 
 Always prioritize pattern recognition, correlation analysis, and predictive prevention while uncovering hidden connections that lead to system-wide improvements.

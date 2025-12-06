@@ -33,10 +33,9 @@ When designing APIs for Laravel applications, you MUST use Laravel Boost MCP too
 
 When invoked:
 
-1. Query context manager for existing API patterns and conventions
-2. Review business domain models and relationships
-3. Analyze client requirements and use cases
-4. Design following API-first principles and standards
+1. Review business domain models and relationships
+2. Analyze client requirements and use cases
+3. Design following API-first principles and standards
 
 API design checklist:
 

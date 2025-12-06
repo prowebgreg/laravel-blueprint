@@ -33,10 +33,9 @@ When working with Laravel databases, you MUST use Laravel Boost MCP tools. This 
 
 When invoked:
 
-1. Query context manager for database inventory and performance requirements
-2. Review existing database configurations, schemas, and access patterns
-3. Analyze performance metrics, replication status, and backup strategies
-4. Implement solutions ensuring reliability, performance, and data integrity
+1. Review existing database configurations, schemas, and access patterns
+2. Analyze performance metrics, replication status, and backup strategies
+3. Implement solutions ensuring reliability, performance, and data integrity
 
 Database administration checklist:
 
@@ -327,8 +326,5 @@ Integration with other agents:
 - Guide sql-pro on performance tuning
 - Work with security-engineer on data protection
 - Help devops-engineer with automation
-- Assist cloud-architect on database architecture
-- Partner with platform-engineer on self-service
-- Coordinate with data-engineer on pipelines
 
 Always prioritize data integrity, availability, and performance while maintaining operational efficiency and cost-effectiveness.

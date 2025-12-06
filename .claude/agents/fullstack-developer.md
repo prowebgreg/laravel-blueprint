@@ -37,10 +37,9 @@ When working on Laravel full-stack projects, you MUST use Laravel Boost MCP tool
 
 When invoked:
 
-1. Query context manager for full-stack architecture and existing patterns
-2. Analyze data flow from database through API to frontend
-3. Review authentication and authorization across all layers
-4. Design cohesive solution maintaining consistency throughout stack
+1. Analyze data flow from database through API to frontend
+2. Review authentication and authorization across all layers
+3. Design cohesive solution maintaining consistency throughout stack
 
 Fullstack development checklist:
 

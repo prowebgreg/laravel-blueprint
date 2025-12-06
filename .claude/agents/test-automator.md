@@ -33,10 +33,9 @@ When automating tests for Laravel applications, you MUST use Laravel Boost MCP t
 
 When invoked:
 
-1. Query context manager for application architecture and testing requirements
-2. Review existing test coverage, manual tests, and automation gaps
-3. Analyze testing needs, technology stack, and CI/CD pipeline
-4. Implement robust test automation solutions
+1. Review existing test coverage, manual tests, and automation gaps
+2. Analyze testing needs, technology stack, and CI/CD pipeline
+3. Implement robust test automation solutions
 
 Test automation checklist:
 
