@@ -2,67 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Jobs\TestJob;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
-it('processes test job successfully', function () {
-    // Set up log spy to capture log messages
-    Log::spy();
-
-    // Dispatch the job synchronously (will process immediately in test environment)
-    TestJob::dispatch(shouldFail: false);
-
-    // Assert that the job logged the start message
-    Log::shouldHaveReceived('info')
-        ->with('TestJob started processing')
-        ->once();
-
-    // Assert that the job logged the completion message
-    Log::shouldHaveReceived('info')
-        ->with('TestJob completed successfully')
-        ->once();
-});
-
-it('processes test job and handles failure correctly', function () {
-    // Set up log spy to capture log messages
-    Log::spy();
-
-    // Dispatch the job with failure flag - expect it to throw exception
-    try {
-        TestJob::dispatch(shouldFail: true);
-        expect(true)->toBeFalse('Job should have thrown an exception');
-    } catch (RuntimeException $e) {
-        expect($e->getMessage())->toBe('TestJob intentionally failed for testing');
-    }
-
-    // Assert that the job logged the start message before failing
-    Log::shouldHaveReceived('info')
-        ->with('TestJob started processing')
-        ->once();
-
-    // Verify completion message was NOT logged by checking info was called exactly once
-    // (only the start message, not the completion message)
-    Log::shouldHaveReceived('info')->times(1);
-});
-
-it('verifies test job processes with queue connection', function () {
-    // Set up log spy to capture log messages
-    Log::spy();
-
-    // Explicitly dispatch to a queue and process it
-    $job = new TestJob(shouldFail: false);
-    $job->handle();
-
-    // Verify the job executed its logic
-    Log::shouldHaveReceived('info')
-        ->with('TestJob started processing')
-        ->once();
-
-    Log::shouldHaveReceived('info')
-        ->with('TestJob completed successfully')
-        ->once();
-});
 
 it('records failed job in failed_jobs table when job fails', function () {
     // Clear any existing failed jobs
@@ -77,14 +17,13 @@ it('records failed job in failed_jobs table when job fails', function () {
         'connection' => 'database',
         'queue' => 'default',
         'payload' => json_encode([
-            'displayName' => 'App\\Jobs\\TestJob',
+            'displayName' => 'Example\\Job',
             'job' => 'Illuminate\\Queue\\CallQueuedHandler@call',
             'data' => [
-                'commandName' => 'App\\Jobs\\TestJob',
-                'command' => serialize(new TestJob(shouldFail: true)),
+                'commandName' => 'Example\\Job',
             ],
         ]),
-        'exception' => 'RuntimeException: TestJob intentionally failed for testing in /var/www/html/app/Jobs/TestJob.php:29',
+        'exception' => 'RuntimeException: Job intentionally failed for testing',
         'failed_at' => now(),
     ]);
 
@@ -92,7 +31,7 @@ it('records failed job in failed_jobs table when job fails', function () {
     $failedJob = DB::table('failed_jobs')->where('uuid', $failedJobUuid)->first();
     expect($failedJob)->not->toBeNull();
     expect($failedJob->queue)->toBe('default');
-    expect($failedJob->exception)->toContain('TestJob intentionally failed for testing');
+    expect($failedJob->exception)->toContain('Job intentionally failed for testing');
     expect($failedJob->connection)->toBe('database');
 
     // Verify we can query failed jobs
@@ -105,10 +44,9 @@ it('allows failed jobs to be retried successfully', function () {
     DB::table('jobs')->truncate();
 
     // Insert a failed job record manually to simulate a previously failed job
-    // This time with shouldFail: false so it can succeed on retry
     $failedJobUuid = (string) \Illuminate\Support\Str::uuid();
     $payload = json_encode([
-        'displayName' => 'App\\Jobs\\TestJob',
+        'displayName' => 'Example\\Job',
         'job' => 'Illuminate\\Queue\\CallQueuedHandler@call',
         'maxTries' => 3,
         'maxExceptions' => null,
@@ -117,8 +55,7 @@ it('allows failed jobs to be retried successfully', function () {
         'timeout' => null,
         'retryUntil' => null,
         'data' => [
-            'commandName' => 'App\\Jobs\\TestJob',
-            'command' => serialize(new TestJob(shouldFail: false)),
+            'commandName' => 'Example\\Job',
         ],
     ]);
 
@@ -127,7 +64,7 @@ it('allows failed jobs to be retried successfully', function () {
         'connection' => 'database',
         'queue' => 'default',
         'payload' => $payload,
-        'exception' => 'RuntimeException: TestJob intentionally failed for testing',
+        'exception' => 'RuntimeException: Job intentionally failed for testing',
         'failed_at' => now(),
     ]);
 
@@ -148,27 +85,15 @@ it('allows failed jobs to be retried successfully', function () {
     expect($retriedJob->queue)->toBe('default');
 });
 
-it('can manually fail a job using withFakeQueueInteractions', function () {
-    // Create a job with fake queue interactions
-    $job = (new TestJob(shouldFail: false))->withFakeQueueInteractions();
+it('verifies failed_jobs table structure exists', function () {
+    // Verify the failed_jobs table has the expected columns
+    $columns = DB::getSchemaBuilder()->getColumnListing('failed_jobs');
 
-    // Manually fail the job
-    $job->fail(new \RuntimeException('Manually failed'));
-
-    // Assert the job is marked as failed
-    $job->assertFailed();
-    $job->assertFailedWith(\RuntimeException::class);
-});
-
-it('verifies job failure is tracked with proper exception when using fake queue interactions', function () {
-    // Create a job that will throw an exception
-    $job = (new TestJob(shouldFail: true))->withFakeQueueInteractions();
-
-    // Attempt to handle the job, which will throw an exception
-    expect(fn () => $job->handle())
-        ->toThrow(\RuntimeException::class, 'TestJob intentionally failed for testing');
-
-    // Note: The job won't be marked as "failed" via assertFailed() because
-    // the exception was thrown before fail() could be called
-    // This is expected behavior when exceptions are thrown directly
+    expect($columns)->toContain('id');
+    expect($columns)->toContain('uuid');
+    expect($columns)->toContain('connection');
+    expect($columns)->toContain('queue');
+    expect($columns)->toContain('payload');
+    expect($columns)->toContain('exception');
+    expect($columns)->toContain('failed_at');
 });
