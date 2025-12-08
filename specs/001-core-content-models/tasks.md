@@ -20,8 +20,8 @@
 **Purpose**: Configuration and foundational files for content system
 
 - [X] T001 Create content configuration file at config/content.php with reserved_slugs, recovery_days, and max_slug_suffix_attempts → @laravel-specialist
-- [ ] T002 [P] Create ContentStatus enum at app/Enums/ContentStatus.php (draft|published) → @laravel-specialist
-- [ ] T003 [P] Create OgType enum at app/Enums/OgType.php (website|article) → @laravel-specialist
+- [X] T002 [P] Create ContentStatus enum at app/Enums/ContentStatus.php (draft|published) → @laravel-specialist
+- [X] T003 [P] Create OgType enum at app/Enums/OgType.php (website|article) → @laravel-specialist
 
 ---
 
