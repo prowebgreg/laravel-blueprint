@@ -133,10 +133,10 @@
 
 ### Factories & Seeders
 
-- [ ] T027 [P] [US2] Create ServiceFactory at database/factories/ServiceFactory.php → @laravel-specialist
-- [ ] T028 [P] [US2] Create BlogPostFactory at database/factories/BlogPostFactory.php → @laravel-specialist
-- [ ] T029 [P] [US2] Create ServiceSeeder at database/seeders/ServiceSeeder.php with example data → @laravel-specialist
-- [ ] T030 [P] [US2] Create BlogPostSeeder at database/seeders/BlogPostSeeder.php with example data → @laravel-specialist
+- [X] T027 [P] [US2] Create ServiceFactory at database/factories/ServiceFactory.php → @laravel-specialist
+- [X] T028 [P] [US2] Create BlogPostFactory at database/factories/BlogPostFactory.php → @laravel-specialist
+- [X] T029 [P] [US2] Create ServiceSeeder at database/seeders/ServiceSeeder.php with example data → @laravel-specialist
+- [X] T030 [P] [US2] Create BlogPostSeeder at database/seeders/BlogPostSeeder.php with example data → @laravel-specialist
 
 ### Tests
 
