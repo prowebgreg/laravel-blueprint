@@ -128,7 +128,7 @@
 
 ### Models
 
-- [ ] T025 [P] [US2] Create Service model at app/Models/Service.php with all traits → @laravel-specialist
+- [X] T025 [P] [US2] Create Service model at app/Models/Service.php with all traits → @laravel-specialist
 - [ ] T026 [P] [US2] Create BlogPost model at app/Models/BlogPost.php with all traits → @laravel-specialist
 
 ### Factories & Seeders
