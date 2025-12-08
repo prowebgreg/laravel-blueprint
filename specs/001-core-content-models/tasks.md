@@ -40,7 +40,7 @@
 
 ### Core Traits
 
-- [ ] T008 Create HasSlug trait at app/Traits/HasSlug.php with auto-generation and reserved slug blocking → @laravel-specialist, @php-pro
+- [X] T008 Create HasSlug trait at app/Traits/HasSlug.php with auto-generation and reserved slug blocking → @laravel-specialist, @php-pro
 - [ ] T009 [P] Create HasSeo trait at app/Traits/HasSeo.php with field mirroring (OG/Twitter from meta) → @laravel-specialist
 - [ ] T010 [P] Create HasContentBlocks trait at app/Traits/HasContentBlocks.php with JSONB handling → @laravel-specialist, @postgres-pro
 - [ ] T011 Create HasRelatedContent trait at app/Traits/HasRelatedContent.php with polymorphic relationships → @laravel-specialist, @postgres-pro
