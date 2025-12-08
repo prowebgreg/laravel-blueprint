@@ -109,7 +109,7 @@
 
 ### Tests
 
-- [ ] T022 [US1] Create PageTest at tests/Feature/Models/PageTest.php covering CRUD, status transitions, content blocks, and SEO → @test-automator, @laravel-specialist
+- [X] T022 [US1] Create PageTest at tests/Feature/Models/PageTest.php covering CRUD, status transitions, content blocks, and SEO → @test-automator, @laravel-specialist
 
 **Checkpoint**: User Story 1 complete - static pages fully functional with content blocks and SEO
 
