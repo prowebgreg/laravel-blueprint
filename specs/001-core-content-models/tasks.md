@@ -155,8 +155,8 @@
 
 ### Migrations
 
-- [ ] T033 [P] [US3] Create faqs table migration at database/migrations/2025_12_08_000004_create_faqs_table.php → @laravel-specialist, @postgres-pro
-- [ ] T034 [P] [US3] Create testimonials table migration at database/migrations/2025_12_08_000005_create_testimonials_table.php → @laravel-specialist, @postgres-pro
+- [X] T033 [P] [US3] Create faqs table migration at database/migrations/2025_12_08_000004_create_faqs_table.php → @laravel-specialist, @postgres-pro
+- [X] T034 [P] [US3] Create testimonials table migration at database/migrations/2025_12_08_000005_create_testimonials_table.php → @laravel-specialist, @postgres-pro
 
 ### Models
 
