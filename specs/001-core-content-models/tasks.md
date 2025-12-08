@@ -34,8 +34,8 @@
 ### Block System (Code-Defined Schema)
 
 - [X] T004 Create BlockInterface contract at app/Blocks/Contracts/BlockInterface.php → @laravel-specialist, @php-pro
-- [ ] T005 [P] Create HeroBlock class at app/Blocks/HeroBlock.php implementing BlockInterface → @laravel-specialist
-- [ ] T006 [P] Create CtaBlock class at app/Blocks/CtaBlock.php implementing BlockInterface → @laravel-specialist
+- [X] T005 [P] Create HeroBlock class at app/Blocks/HeroBlock.php implementing BlockInterface → @laravel-specialist
+- [X] T006 [P] Create CtaBlock class at app/Blocks/CtaBlock.php implementing BlockInterface → @laravel-specialist
 - [ ] T007 Create ValidContentBlocks validation rule at app/Rules/ValidContentBlocks.php → @laravel-specialist, @php-pro
 
 ### Core Traits
