@@ -123,7 +123,7 @@
 
 ### Migrations
 
-- [ ] T023 [P] [US2] Create services table migration at database/migrations/2025_12_08_000002_create_services_table.php → @laravel-specialist, @postgres-pro
+- [X] T023 [P] [US2] Create services table migration at database/migrations/2025_12_08_000002_create_services_table.php → @laravel-specialist, @postgres-pro
 - [ ] T024 [P] [US2] Create blog_posts table migration at database/migrations/2025_12_08_000003_create_blog_posts_table.php → @laravel-specialist, @postgres-pro
 
 ### Models
