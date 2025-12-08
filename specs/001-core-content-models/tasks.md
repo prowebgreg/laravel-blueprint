@@ -100,7 +100,7 @@
 
 ### Model
 
-- [ ] T019 [US1] Create Page model at app/Models/Page.php with all traits (HasSeo, HasSlug, HasContentBlocks, HasRelatedContent, SoftDeletes) → @laravel-specialist
+- [X] T019 [US1] Create Page model at app/Models/Page.php with all traits (HasSeo, HasSlug, HasContentBlocks, HasRelatedContent, SoftDeletes) → @laravel-specialist
 
 ### Factory & Seeder
 
