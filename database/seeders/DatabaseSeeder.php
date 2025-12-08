@@ -16,9 +16,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Only seed admin user in local/development environment
+        // Only seed in local/development environment
         if (app()->environment(['local', 'development'])) {
-            $this->call(AdminUserSeeder::class);
+            $this->call([
+                AdminUserSeeder::class,
+                PageSeeder::class,
+            ]);
         }
     }
 }

@@ -105,7 +105,7 @@
 ### Factory & Seeder
 
 - [X] T020 [P] [US1] Create PageFactory at database/factories/PageFactory.php → @laravel-specialist
-- [ ] T021 [US1] Create PageSeeder at database/seeders/PageSeeder.php with example data → @laravel-specialist
+- [X] T021 [US1] Create PageSeeder at database/seeders/PageSeeder.php with example data → @laravel-specialist
 
 ### Tests
 
