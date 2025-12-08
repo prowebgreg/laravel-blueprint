@@ -47,10 +47,10 @@
 
 ### Trait Tests
 
-- [ ] T012 [P] Create HasSlugTest at tests/Feature/Traits/HasSlugTest.php → @test-automator, @laravel-specialist
-- [ ] T013 [P] Create HasSeoTest at tests/Feature/Traits/HasSeoTest.php → @test-automator, @laravel-specialist
-- [ ] T014 [P] Create HasContentBlocksTest at tests/Feature/Traits/HasContentBlocksTest.php (90%+ coverage required) → @test-automator, @laravel-specialist
-- [ ] T015 [P] Create HasRelatedContentTest at tests/Feature/Traits/HasRelatedContentTest.php (90%+ coverage required) → @test-automator, @laravel-specialist
+- [X] T012 [P] Create HasSlugTest at tests/Feature/Traits/HasSlugTest.php → @test-automator, @laravel-specialist
+- [X] T013 [P] Create HasSeoTest at tests/Feature/Traits/HasSeoTest.php → @test-automator, @laravel-specialist
+- [X] T014 [P] Create HasContentBlocksTest at tests/Feature/Traits/HasContentBlocksTest.php (90%+ coverage required) → @test-automator, @laravel-specialist
+- [X] T015 [P] Create HasRelatedContentTest at tests/Feature/Traits/HasRelatedContentTest.php (90%+ coverage required) → @test-automator, @laravel-specialist
 
 **90%+ Coverage Test Scenarios for T014 (HasContentBlocks)**:
 - Valid block array with known types (hero, cta)
@@ -81,8 +81,8 @@
 
 ### Block Tests
 
-- [ ] T016 [P] Create HeroBlockTest at tests/Unit/Blocks/HeroBlockTest.php → @test-automator
-- [ ] T017 [P] Create CtaBlockTest at tests/Unit/Blocks/CtaBlockTest.php → @test-automator
+- [X] T016 [P] Create HeroBlockTest at tests/Unit/Blocks/HeroBlockTest.php → @test-automator
+- [X] T017 [P] Create CtaBlockTest at tests/Unit/Blocks/CtaBlockTest.php → @test-automator
 
 **Checkpoint**: Foundation ready - traits tested and validated, user story implementation can now begin
 
