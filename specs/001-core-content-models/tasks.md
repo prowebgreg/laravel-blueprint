@@ -140,8 +140,8 @@
 
 ### Tests
 
-- [ ] T031 [P] [US2] Create ServiceTest at tests/Feature/Models/ServiceTest.php covering CRUD, content blocks, SEO → @test-automator, @laravel-specialist
-- [ ] T032 [P] [US2] Create BlogPostTest at tests/Feature/Models/BlogPostTest.php covering CRUD, content blocks, SEO → @test-automator, @laravel-specialist
+- [X] T031 [P] [US2] Create ServiceTest at tests/Feature/Models/ServiceTest.php covering CRUD, content blocks, SEO → @test-automator, @laravel-specialist
+- [X] T032 [P] [US2] Create BlogPostTest at tests/Feature/Models/BlogPostTest.php covering CRUD, content blocks, SEO → @test-automator, @laravel-specialist
 
 **Checkpoint**: User Story 2 complete - custom page types (Service, BlogPost) fully functional
 
