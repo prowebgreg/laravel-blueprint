@@ -96,7 +96,7 @@
 
 ### Migration
 
-- [ ] T018 [US1] Create pages table migration at database/migrations/2025_12_08_000001_create_pages_table.php → @laravel-specialist, @postgres-pro
+- [X] T018 [US1] Create pages table migration at database/migrations/2025_12_08_000001_create_pages_table.php → @laravel-specialist, @postgres-pro
 
 ### Model
 
