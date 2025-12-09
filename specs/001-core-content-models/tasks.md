@@ -160,8 +160,8 @@
 
 ### Models
 
-- [ ] T035 [P] [US3] Create Faq model at app/Models/Faq.php with HasRelatedContent and SoftDeletes → @laravel-specialist
-- [ ] T036 [P] [US3] Create Testimonial model at app/Models/Testimonial.php with HasRelatedContent and SoftDeletes → @laravel-specialist
+- [X] T035 [P] [US3] Create Faq model at app/Models/Faq.php with HasRelatedContent and SoftDeletes → @laravel-specialist
+- [X] T036 [P] [US3] Create Testimonial model at app/Models/Testimonial.php with HasRelatedContent and SoftDeletes → @laravel-specialist
 
 ### Factories & Seeders
 
