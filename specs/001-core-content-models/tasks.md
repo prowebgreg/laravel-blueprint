@@ -172,8 +172,8 @@
 
 ### Tests
 
-- [ ] T041 [P] [US3] Create FaqTest at tests/Feature/Models/FaqTest.php covering CRUD and status filtering → @test-automator, @laravel-specialist
-- [ ] T042 [P] [US3] Create TestimonialTest at tests/Feature/Models/TestimonialTest.php covering CRUD, rating validation → @test-automator, @laravel-specialist
+- [X] T041 [P] [US3] Create FaqTest at tests/Feature/Models/FaqTest.php covering CRUD and status filtering → @test-automator, @laravel-specialist
+- [X] T042 [P] [US3] Create TestimonialTest at tests/Feature/Models/TestimonialTest.php covering CRUD, rating validation → @test-automator, @laravel-specialist
 
 **Checkpoint**: User Story 3 complete - content resources (FAQ, Testimonial) fully functional
 
