@@ -138,7 +138,7 @@ trait HasSlug
 
         // Include soft-deleted records in the check if model uses soft deletes
         $traits = class_uses_recursive(static::class);
-        if (\is_array($traits) && \in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, $traits, true)) {
+        if (\in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, $traits, true)) {
             $query->withTrashed();
         }
 

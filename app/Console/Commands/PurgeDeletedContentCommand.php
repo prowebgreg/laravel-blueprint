@@ -10,7 +10,6 @@ use App\Models\Page;
 use App\Models\Service;
 use App\Models\Testimonial;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -40,7 +39,9 @@ class PurgeDeletedContentCommand extends Command
     /**
      * Content models that use soft deletes.
      *
-     * @var array<class-string<Model>>
+     * All models listed here must use the SoftDeletes trait.
+     *
+     * @var list<class-string<Page|Service|BlogPost|Faq|Testimonial>>
      */
     protected array $contentModels = [
         Page::class,

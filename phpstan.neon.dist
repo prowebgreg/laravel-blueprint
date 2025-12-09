@@ -1,0 +1,22 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - app/
+        - config/
+        - database/
+    excludePaths:
+        - app/Filament/
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # Laravel model traits use static methods via Model events which PHPStan doesn't understand
+        - '#Static call to instance method .+::creating\(\)#'
+        # Generic type constraints on MorphToMany are complex - PHPStan can't resolve them
+        - '#generic type .+MorphToMany#'
+        - '#should return .+MorphToMany.+ but returns#'
+        # HasFactory generic type - Laravel convention
+        - '#uses generic trait .+HasFactory but does not specify its types#'
+        # Iterable types in PHPDoc - acceptable at L6 for now
+        - '#PHPDoc tag @property for property .+ with no value type specified in iterable type array#'

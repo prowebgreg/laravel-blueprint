@@ -250,7 +250,7 @@
 
 ### Tests
 
-- [ ] T051 [US7] Add slug edge case tests to HasSlugTest at tests/Feature/Traits/HasSlugTest.php (duplicate suffixes, reserved slugs, cross-model same slug) → @test-automator, @laravel-specialist
+- [X] T051 [US7] Add slug edge case tests to HasSlugTest at tests/Feature/Traits/HasSlugTest.php (duplicate suffixes, reserved slugs, cross-model same slug) → @test-automator, @laravel-specialist
 
 **Checkpoint**: User Story 7 complete - slug management validated with all edge cases
 
@@ -260,9 +260,9 @@
 
 **Purpose**: Final validation and cleanup
 
-- [ ] T052 [P] Run full test suite and ensure 70%+ overall coverage → @test-automator
-- [ ] T053 [P] Run Laravel Pint formatter on all new files → @code-reviewer
-- [ ] T054 [P] Verify PHPStan Level 6 compliance on all new files → @code-reviewer
+- [X] T052 [P] Run full test suite and ensure 70%+ overall coverage → @test-automator
+- [X] T053 [P] Run Laravel Pint formatter on all new files → @code-reviewer
+- [X] T054 [P] Verify PHPStan Level 6 compliance on all new files → @code-reviewer
 - [ ] T055 Run quickstart.md validation steps (migrations, seeders, tinker commands) → @qa-expert, @laravel-specialist
 - [ ] T056 Verify all seeders can run without errors → @qa-expert
 
