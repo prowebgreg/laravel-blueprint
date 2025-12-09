@@ -49,11 +49,20 @@ beforeEach(function () {
         $table->timestamps();
         $table->softDeletes();
     });
+
+    // Create table for cross-model testing (AnotherTestModel)
+    Schema::create('another_test_models', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('slug')->unique();
+        $table->timestamps();
+    });
 });
 
 afterEach(function () {
     Schema::dropIfExists('test_models');
     Schema::dropIfExists('test_models_soft_deletes');
+    Schema::dropIfExists('another_test_models');
 });
 
 test('generates slug from name on creation', function () {
@@ -248,4 +257,216 @@ test('updating model does not create duplicate slug conflict with itself', funct
 
     // Slug should remain the same (not get suffixed)
     expect($model->slug)->toBe('test-page');
+});
+
+// ============================================================================
+// EDGE CASE TESTS - T051
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+// 1. Duplicate Suffix Edge Cases
+// ---------------------------------------------------------------------------
+
+test('suffix increments sequentially without skipping gaps', function () {
+    // Create page, page-3 (manually skipping page-2)
+    TestModel::create(['name' => 'Test Page']);
+    TestModel::create(['name' => 'Another Page', 'slug' => 'test-page-3']);
+
+    // Now create another "Test Page" - should get page-2, NOT page-4
+    $model = TestModel::create(['name' => 'Test Page']);
+
+    expect($model->slug)->toBe('test-page-2');
+});
+
+test('handles high suffix numbers correctly', function () {
+    // Create test-page and test-page-99
+    TestModel::create(['name' => 'Test Page']);
+    TestModel::create(['name' => 'Another', 'slug' => 'test-page-99']);
+
+    // Next one should be test-page-2 (algorithm starts at 2 and increments)
+    $model = TestModel::create(['name' => 'Test Page']);
+    expect($model->slug)->toBe('test-page-2');
+});
+
+test('suffix works when manually set slug uses suffix pattern', function () {
+    // Manually set 'test-page-5'
+    TestModel::create(['name' => 'Custom', 'slug' => 'test-page-5']);
+
+    // Create 'Test Page' - should get test-page
+    $model1 = TestModel::create(['name' => 'Test Page']);
+    expect($model1->slug)->toBe('test-page');
+
+    // Create another 'Test Page' - should get test-page-2
+    $model2 = TestModel::create(['name' => 'Test Page']);
+    expect($model2->slug)->toBe('test-page-2');
+});
+
+test('handles base slug ending with number', function () {
+    // Create 'Page 2024'
+    $model1 = TestModel::create(['name' => 'Page 2024']);
+    expect($model1->slug)->toBe('page-2024');
+
+    // Create duplicate - should become page-2024-2
+    $model2 = TestModel::create(['name' => 'Page 2024']);
+    expect($model2->slug)->toBe('page-2024-2');
+
+    // Third one - should become page-2024-3
+    $model3 = TestModel::create(['name' => 'Page 2024']);
+    expect($model3->slug)->toBe('page-2024-3');
+});
+
+test('suffix generation handles gaps in sequence', function () {
+    // Create test-page, test-page-2, test-page-5
+    TestModel::create(['name' => 'Test Page']); // test-page
+    TestModel::create(['name' => 'Test Page']); // test-page-2
+    TestModel::create(['name' => 'Custom', 'slug' => 'test-page-5']);
+
+    // Next creation should get test-page-3 (fills the gap)
+    $model = TestModel::create(['name' => 'Test Page']);
+    expect($model->slug)->toBe('test-page-3');
+});
+
+test('suffix algorithm continues past manually created suffixes', function () {
+    TestModel::create(['name' => 'Test']); // test
+    TestModel::create(['name' => 'Custom', 'slug' => 'test-100']); // test-100
+
+    // Should still get test-2, not test-101
+    $model = TestModel::create(['name' => 'Test']);
+    expect($model->slug)->toBe('test-2');
+});
+
+// ---------------------------------------------------------------------------
+// 2. Reserved Slug Edge Cases
+// ---------------------------------------------------------------------------
+
+test('suffixed reserved slugs ARE allowed when only base is reserved', function () {
+    // Configure reserved slugs
+    config(['content.reserved_slugs' => ['admin', 'api']]);
+
+    // 'admin' should fail
+    expect(fn () => TestModel::create(['name' => 'admin']))
+        ->toThrow(ValidationException::class);
+
+    // But 'admin-panel' should succeed (only 'admin' is reserved, not 'admin-*')
+    $model1 = TestModel::create(['name' => 'Admin Panel']); // Generates 'admin-panel'
+    expect($model1->slug)->toBe('admin-panel');
+
+    // And manually setting 'admin-2' should also succeed
+    $model2 = TestModel::create(['name' => 'Custom', 'slug' => 'admin-2']);
+    expect($model2->slug)->toBe('admin-2');
+});
+
+test('reserved slug check validates all config values', function () {
+    $reservedSlugs = config('content.reserved_slugs');
+
+    // Verify all reserved slugs are blocked
+    foreach ($reservedSlugs as $reserved) {
+        expect(fn () => TestModel::create(['name' => $reserved]))
+            ->toThrow(ValidationException::class, "The slug '{$reserved}' is reserved and cannot be used.");
+    }
+});
+
+test('reserved slug exception includes exact slug that failed', function () {
+    config(['content.reserved_slugs' => ['admin', 'api', 'horizon']]);
+
+    try {
+        TestModel::create(['name' => 'horizon']);
+        throw new \Exception('Should have thrown ValidationException');
+    } catch (ValidationException $e) {
+        expect($e->getMessage())->toContain("The slug 'horizon' is reserved and cannot be used.");
+    }
+});
+
+test('reserved slugs are checked case sensitively', function () {
+    config(['content.reserved_slugs' => ['admin']]);
+
+    // 'Admin' becomes 'admin' via Str::slug(), should throw
+    expect(fn () => TestModel::create(['name' => 'Admin']))
+        ->toThrow(ValidationException::class);
+
+    // 'ADMIN' becomes 'admin' via Str::slug(), should throw
+    expect(fn () => TestModel::create(['name' => 'ADMIN']))
+        ->toThrow(ValidationException::class);
+
+    // 'AdMiN' becomes 'admin' via Str::slug(), should throw
+    expect(fn () => TestModel::create(['name' => 'AdMiN']))
+        ->toThrow(ValidationException::class);
+});
+
+test('attempting to create content that collides with reserved slug fails immediately', function () {
+    config(['content.reserved_slugs' => ['admin', 'api']]);
+
+    // Create 'Administrator' with manual slug 'admin-system'
+    TestModel::create(['name' => 'Administrator', 'slug' => 'admin-system']);
+
+    // Try to create 'admin' - should fail immediately
+    expect(fn () => TestModel::create(['name' => 'admin']))
+        ->toThrow(ValidationException::class, "The slug 'admin' is reserved and cannot be used.");
+});
+
+// ---------------------------------------------------------------------------
+// 3. Cross-Model Same Slug Tests (CRITICAL)
+// ---------------------------------------------------------------------------
+
+// Second test model for cross-model testing
+class AnotherTestModel extends Model
+{
+    use HasSlug;
+
+    protected $table = 'another_test_models';
+
+    protected $guarded = [];
+}
+
+test('different models can have the same slug', function () {
+    // Create 'test-page' in TestModel
+    $model1 = TestModel::create(['name' => 'Test Page']);
+    expect($model1->slug)->toBe('test-page');
+
+    // Create 'test-page' in AnotherTestModel - should succeed with same slug
+    $model2 = AnotherTestModel::create(['name' => 'Test Page']);
+    expect($model2->slug)->toBe('test-page');
+
+    // Both should exist with the same slug
+    expect(TestModel::where('slug', 'test-page')->exists())->toBeTrue();
+    expect(AnotherTestModel::where('slug', 'test-page')->exists())->toBeTrue();
+});
+
+test('slug uniqueness is per-table not global', function () {
+    // Create multiple records with same name in different models
+    $testModel1 = TestModel::create(['name' => 'About Us']);
+    $testModel2 = TestModel::create(['name' => 'About Us']); // Should get suffix
+    $anotherModel = AnotherTestModel::create(['name' => 'About Us']); // Should NOT get suffix
+
+    expect($testModel1->slug)->toBe('about-us');
+    expect($testModel2->slug)->toBe('about-us-2'); // Suffix within same model
+    expect($anotherModel->slug)->toBe('about-us'); // No suffix in different model
+});
+
+test('cross-model duplicate slug generation works independently', function () {
+    // Create in TestModel: contact, contact-2
+    TestModel::create(['name' => 'Contact']);
+    TestModel::create(['name' => 'Contact']);
+
+    // Create in AnotherTestModel: contact, contact-2
+    AnotherTestModel::create(['name' => 'Contact']);
+    AnotherTestModel::create(['name' => 'Contact']);
+
+    // Verify both tables have their own sequence
+    expect(TestModel::where('slug', 'contact')->count())->toBe(1);
+    expect(TestModel::where('slug', 'contact-2')->count())->toBe(1);
+    expect(AnotherTestModel::where('slug', 'contact')->count())->toBe(1);
+    expect(AnotherTestModel::where('slug', 'contact-2')->count())->toBe(1);
+});
+
+test('reserved slugs apply across all models using the trait', function () {
+    config(['content.reserved_slugs' => ['admin']]);
+
+    // 'admin' should be blocked in TestModel
+    expect(fn () => TestModel::create(['name' => 'admin']))
+        ->toThrow(ValidationException::class);
+
+    // 'admin' should also be blocked in AnotherTestModel
+    expect(fn () => AnotherTestModel::create(['name' => 'admin']))
+        ->toThrow(ValidationException::class);
 });
