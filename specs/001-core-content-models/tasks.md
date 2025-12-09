@@ -195,7 +195,7 @@
 
 ### Tests
 
-- [ ] T045 [US4] Create ContentRelationTest at tests/Feature/Models/ContentRelationTest.php covering creation, ordering, bidirectional queries, and cascade behavior → @test-automator, @laravel-specialist
+- [X] T045 [US4] Create ContentRelationTest at tests/Feature/Models/ContentRelationTest.php covering creation, ordering, bidirectional queries, and cascade behavior → @test-automator, @laravel-specialist
 
 **Checkpoint**: User Story 4 complete - relationship engine fully functional with ordering
 

@@ -6,7 +6,6 @@ namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphedByMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
@@ -18,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  *
  * Relationship Types:
  * - Forward (morphToMany): This model links TO other content
- * - Inverse (morphedByMany): Other content links TO this model
+ * - Inverse (morphToMany with swapped keys): Other content links TO this model
  *
  * Pivot Table: content_relations
  * - source_type/source_id: The model initiating the relationship
@@ -68,7 +67,8 @@ trait HasRelatedContent
             'source_id',
             'target_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('target_type', \App\Models\Faq::class)
             ->orderByPivot('order');
     }
 
@@ -89,7 +89,8 @@ trait HasRelatedContent
             'source_id',
             'target_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('target_type', \App\Models\Testimonial::class)
             ->orderByPivot('order');
     }
 
@@ -110,7 +111,8 @@ trait HasRelatedContent
             'source_id',
             'target_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('target_type', \App\Models\Service::class)
             ->orderByPivot('order');
     }
 
@@ -131,7 +133,8 @@ trait HasRelatedContent
             'source_id',
             'target_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('target_type', \App\Models\BlogPost::class)
             ->orderByPivot('order');
     }
 
@@ -152,7 +155,8 @@ trait HasRelatedContent
             'source_id',
             'target_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('target_type', \App\Models\Page::class)
             ->orderByPivot('order');
     }
 
@@ -162,18 +166,19 @@ trait HasRelatedContent
      * Inverse relationship: Faq models that have this model as their target.
      * Results ordered by pivot 'order' column ascending.
      *
-     * @return MorphedByMany<\App\Models\Faq>
+     * @return MorphToMany<\App\Models\Faq>
      */
-    public function relatedFromFaqs(): MorphedByMany
+    public function relatedFromFaqs(): MorphToMany
     {
-        return $this->morphedByMany(
+        return $this->morphToMany(
             \App\Models\Faq::class,
             'target',
             'content_relations',
             'target_id',
             'source_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('source_type', \App\Models\Faq::class)
             ->orderByPivot('order');
     }
 
@@ -183,18 +188,19 @@ trait HasRelatedContent
      * Inverse relationship: Service models that have this model as their target.
      * Results ordered by pivot 'order' column ascending.
      *
-     * @return MorphedByMany<\App\Models\Service>
+     * @return MorphToMany<\App\Models\Service>
      */
-    public function relatedFromServices(): MorphedByMany
+    public function relatedFromServices(): MorphToMany
     {
-        return $this->morphedByMany(
+        return $this->morphToMany(
             \App\Models\Service::class,
             'target',
             'content_relations',
             'target_id',
             'source_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('source_type', \App\Models\Service::class)
             ->orderByPivot('order');
     }
 
@@ -204,18 +210,19 @@ trait HasRelatedContent
      * Inverse relationship: BlogPost models that have this model as their target.
      * Results ordered by pivot 'order' column ascending.
      *
-     * @return MorphedByMany<\App\Models\BlogPost>
+     * @return MorphToMany<\App\Models\BlogPost>
      */
-    public function relatedFromBlogPosts(): MorphedByMany
+    public function relatedFromBlogPosts(): MorphToMany
     {
-        return $this->morphedByMany(
+        return $this->morphToMany(
             \App\Models\BlogPost::class,
             'target',
             'content_relations',
             'target_id',
             'source_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('source_type', \App\Models\BlogPost::class)
             ->orderByPivot('order');
     }
 
@@ -225,18 +232,19 @@ trait HasRelatedContent
      * Inverse relationship: Page models that have this model as their target.
      * Results ordered by pivot 'order' column ascending.
      *
-     * @return MorphedByMany<\App\Models\Page>
+     * @return MorphToMany<\App\Models\Page>
      */
-    public function relatedFromPages(): MorphedByMany
+    public function relatedFromPages(): MorphToMany
     {
-        return $this->morphedByMany(
+        return $this->morphToMany(
             \App\Models\Page::class,
             'target',
             'content_relations',
             'target_id',
             'source_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('source_type', \App\Models\Page::class)
             ->orderByPivot('order');
     }
 
@@ -246,18 +254,19 @@ trait HasRelatedContent
      * Inverse relationship: Testimonial models that have this model as their target.
      * Results ordered by pivot 'order' column ascending.
      *
-     * @return MorphedByMany<\App\Models\Testimonial>
+     * @return MorphToMany<\App\Models\Testimonial>
      */
-    public function relatedFromTestimonials(): MorphedByMany
+    public function relatedFromTestimonials(): MorphToMany
     {
-        return $this->morphedByMany(
+        return $this->morphToMany(
             \App\Models\Testimonial::class,
             'target',
             'content_relations',
             'target_id',
             'source_id'
         )
-            ->withPivot(['order', 'created_at'])
+            ->withPivot(['order', 'created_at', 'source_type', 'target_type'])
+            ->withPivotValue('source_type', \App\Models\Testimonial::class)
             ->orderByPivot('order');
     }
 
