@@ -187,7 +187,7 @@
 
 ### Migration
 
-- [ ] T043 [US4] Create content_relations pivot table migration at database/migrations/2025_12_08_000006_create_content_relations_table.php → @laravel-specialist, @postgres-pro
+- [X] T043 [US4] Create content_relations pivot table migration at database/migrations/2025_12_08_000006_create_content_relations_table.php → @laravel-specialist, @postgres-pro
 
 ### Seeder
 
