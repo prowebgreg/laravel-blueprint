@@ -437,6 +437,172 @@ describe('SEO fields', function () {
     });
 });
 
+describe('SEO mirroring integration', function () {
+    test('empty string in og_title does not mirror - returns empty string', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Meta Title',
+            'og_title' => '',
+        ]);
+
+        expect($service->og_title)->toBe('');
+    });
+
+    test('empty string in og_description does not mirror - returns empty string', function () {
+        $service = Service::factory()->create([
+            'meta_description' => 'Meta Description',
+            'og_description' => '',
+        ]);
+
+        expect($service->og_description)->toBe('');
+    });
+
+    test('empty string in twitter_title does not mirror - returns empty string', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Meta Title',
+            'twitter_title' => '',
+        ]);
+
+        expect($service->twitter_title)->toBe('');
+    });
+
+    test('empty string in twitter_description does not mirror - returns empty string', function () {
+        $service = Service::factory()->create([
+            'meta_description' => 'Meta Description',
+            'twitter_description' => '',
+        ]);
+
+        expect($service->twitter_description)->toBe('');
+    });
+
+    test('setting og_title back to NULL re-enables mirroring from meta_title', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Meta Title',
+            'og_title' => 'Custom OG Title',
+        ]);
+
+        expect($service->og_title)->toBe('Custom OG Title');
+
+        $service->update(['og_title' => null]);
+        $service->refresh();
+
+        expect($service->og_title)->toBe('Meta Title');
+    });
+
+    test('setting og_description back to NULL re-enables mirroring from meta_description', function () {
+        $service = Service::factory()->create([
+            'meta_description' => 'Meta Description',
+            'og_description' => 'Custom OG Description',
+        ]);
+
+        expect($service->og_description)->toBe('Custom OG Description');
+
+        $service->update(['og_description' => null]);
+        $service->refresh();
+
+        expect($service->og_description)->toBe('Meta Description');
+    });
+
+    test('setting twitter_title back to NULL re-enables mirroring from meta_title', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Meta Title',
+            'twitter_title' => 'Custom Twitter Title',
+        ]);
+
+        expect($service->twitter_title)->toBe('Custom Twitter Title');
+
+        $service->update(['twitter_title' => null]);
+        $service->refresh();
+
+        expect($service->twitter_title)->toBe('Meta Title');
+    });
+
+    test('setting twitter_description back to NULL re-enables mirroring from meta_description', function () {
+        $service = Service::factory()->create([
+            'meta_description' => 'Meta Description',
+            'twitter_description' => 'Custom Twitter Description',
+        ]);
+
+        expect($service->twitter_description)->toBe('Custom Twitter Description');
+
+        $service->update(['twitter_description' => null]);
+        $service->refresh();
+
+        expect($service->twitter_description)->toBe('Meta Description');
+    });
+
+    test('mixed mirroring - some fields mirrored and some independent', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Meta Title',
+            'meta_description' => 'Meta Description',
+            'og_title' => 'Custom OG Title',
+            'og_description' => null, // Mirrored
+            'twitter_title' => null, // Mirrored
+            'twitter_description' => 'Custom Twitter Description',
+        ]);
+
+        expect($service->og_title)->toBe('Custom OG Title');
+        expect($service->og_description)->toBe('Meta Description');
+        expect($service->twitter_title)->toBe('Meta Title');
+        expect($service->twitter_description)->toBe('Custom Twitter Description');
+    });
+
+    test('updating meta_title affects only NULL social fields - custom ones remain independent', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Original Meta Title',
+            'og_title' => 'Custom OG Title',
+            'twitter_title' => null,
+        ]);
+
+        expect($service->og_title)->toBe('Custom OG Title');
+        expect($service->twitter_title)->toBe('Original Meta Title');
+
+        $service->update(['meta_title' => 'Updated Meta Title']);
+        $service->refresh();
+
+        expect($service->og_title)->toBe('Custom OG Title'); // Remains independent
+        expect($service->twitter_title)->toBe('Updated Meta Title'); // Mirrors updated value
+    });
+
+    test('updating meta_description affects only NULL social fields - custom ones remain independent', function () {
+        $service = Service::factory()->create([
+            'meta_description' => 'Original Meta Description',
+            'og_description' => null,
+            'twitter_description' => 'Custom Twitter Description',
+        ]);
+
+        expect($service->og_description)->toBe('Original Meta Description');
+        expect($service->twitter_description)->toBe('Custom Twitter Description');
+
+        $service->update(['meta_description' => 'Updated Meta Description']);
+        $service->refresh();
+
+        expect($service->og_description)->toBe('Updated Meta Description'); // Mirrors updated value
+        expect($service->twitter_description)->toBe('Custom Twitter Description'); // Remains independent
+    });
+
+    test('all social fields can have completely different values', function () {
+        $service = Service::factory()->create([
+            'meta_title' => 'Meta Title',
+            'meta_description' => 'Meta Description',
+            'og_title' => 'Unique OG Title',
+            'og_description' => 'Unique OG Description',
+            'twitter_title' => 'Unique Twitter Title',
+            'twitter_description' => 'Unique Twitter Description',
+        ]);
+
+        expect($service->og_title)->toBe('Unique OG Title');
+        expect($service->og_description)->toBe('Unique OG Description');
+        expect($service->twitter_title)->toBe('Unique Twitter Title');
+        expect($service->twitter_description)->toBe('Unique Twitter Description');
+
+        // None should match meta fields
+        expect($service->og_title)->not->toBe($service->meta_title);
+        expect($service->og_description)->not->toBe($service->meta_description);
+        expect($service->twitter_title)->not->toBe($service->meta_title);
+        expect($service->twitter_description)->not->toBe($service->meta_description);
+    });
+});
+
 describe('slug behavior', function () {
     test('slug is auto-generated from name', function () {
         $service = Service::factory()->create(['name' => 'Web Development Services']);
