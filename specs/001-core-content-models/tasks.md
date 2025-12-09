@@ -226,7 +226,7 @@
 
 ### Command
 
-- [ ] T048 [US6] Create PurgeDeletedContentCommand at app/Console/Commands/PurgeDeletedContentCommand.php → @laravel-specialist, @php-pro
+- [X] T048 [US6] Create PurgeDeletedContentCommand at app/Console/Commands/PurgeDeletedContentCommand.php → @laravel-specialist, @php-pro
 
 ### Schedule Registration
 
