@@ -165,10 +165,10 @@
 
 ### Factories & Seeders
 
-- [ ] T037 [P] [US3] Create FaqFactory at database/factories/FaqFactory.php → @laravel-specialist
-- [ ] T038 [P] [US3] Create TestimonialFactory at database/factories/TestimonialFactory.php → @laravel-specialist
-- [ ] T039 [P] [US3] Create FaqSeeder at database/seeders/FaqSeeder.php with example data → @laravel-specialist
-- [ ] T040 [P] [US3] Create TestimonialSeeder at database/seeders/TestimonialSeeder.php with example data → @laravel-specialist
+- [X] T037 [P] [US3] Create FaqFactory at database/factories/FaqFactory.php → @laravel-specialist
+- [X] T038 [P] [US3] Create TestimonialFactory at database/factories/TestimonialFactory.php → @laravel-specialist
+- [X] T039 [P] [US3] Create FaqSeeder at database/seeders/FaqSeeder.php with example data → @laravel-specialist
+- [X] T040 [P] [US3] Create TestimonialSeeder at database/seeders/TestimonialSeeder.php with example data → @laravel-specialist
 
 ### Tests
 
