@@ -191,7 +191,7 @@
 
 ### Seeder
 
-- [ ] T044 [US4] Create ContentRelationSeeder at database/seeders/ContentRelationSeeder.php linking Services to FAQs and Testimonials → @laravel-specialist
+- [X] T044 [US4] Create ContentRelationSeeder at database/seeders/ContentRelationSeeder.php linking Services to FAQs and Testimonials → @laravel-specialist
 
 ### Tests
 
