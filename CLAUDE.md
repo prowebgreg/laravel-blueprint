@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **The Blueprint CMS** - A high-performance, strictly-typed, developer-first Content Management System built to replace WordPress for professional bespoke website development. Schema and structure are code-defined, not database-configured.
 
-**Core Stack:** Laravel 12.x, Filament V3, PostgreSQL 17, Redis 7, Vite, Tailwind CSS v4, Alpine.js
+**Core Stack:** Laravel 12.x, Filament V3, PostgreSQL 17, Redis, AWS S3/CloudFront, Vite, Tailwind CSS (admin only), Custom SCSS (public frontend), Alpine.js
 
 ## Critical Development Rules
 
@@ -92,7 +92,32 @@ app/
 1. **Code-Defined Structure**: Schema lives in PHP classes, not database. Admin panel reflects code-defined structure.
 2. **Performance First**: SSR via Blade templates. No client-side hydration frameworks. JS limited to Alpine.js.
 3. **Asset Sovereignty**: All media processed and offloaded to S3/CloudFront. App server serves only dynamic content.
-4. **Clarity Over Cleverness**: Explicit over implicit. PSR-12 via Laravel Pint. PHPStan Level 6 minimum.
+4. **Hybrid Headless**: Native Blade frontend with full API for external automation tools (Notion, n8n).
+5. **Clarity Over Cleverness**: Explicit over implicit. PSR-12 via Laravel Pint. PHPStan Level 6 minimum.
+
+## Content Architecture
+
+### Content Types
+- **Static Pages** (`Page`): Standard architecture pages (Home, About, Contact) at `/{slug}`
+- **Custom Pages** (`Service`, `BlogPost`): Repeatable public content at `/services/{slug}`, `/blog/{slug}`
+- **Content Resources** (`Faq`, `Testimonial`, `TeamMember`): Hidden content used to populate page sections (no public URL)
+
+### Field Types
+- **Fixed Fields**: Shared across all pages (identity, SEO-related: meta title, description, canonical, noindex, breadcrumbs)
+- **Custom Fields**: Unique to a specific page or page type
+- **Reusable Fields**: Grouped into reusable section/component types (CTA, FAQs section) shareable across pages
+- **Structured Data Fields**: Populate JSON-LD templates, reusing existing fields where possible
+
+### Relationship Engine
+- Generic many-to-many relationships between any page-like model and content resource
+- Configurable pairs (e.g., `Service` ↔ `Faq`, `Service` ↔ `ServiceArea`)
+- Ordered display: relationships preserve manually defined order for frontend rendering
+
+## Styling Rules
+
+- **Admin/Filament UI**: Tailwind CSS exclusively
+- **Public Frontend**: Custom SCSS + CSS variables (no Tailwind utility classes)
+- **Per-Project**: Each new site creates fresh SCSS structure for public frontend while reusing shared admin styling
 
 ## Testing
 
@@ -122,9 +147,38 @@ This project uses spec-kit for feature development. Key commands:
 
 Constitution and templates are in `.specify/` directory.
 
+## Media Pipeline
+
+- All uploads go to S3 `/temp` folder → processed via queue → moved to `/permanent` folder
+- Convert JPG/PNG to WebP, run `spatie/image-optimizer`, generate responsive widths (480, 640, 720, 960, 1168, 1440, 1920px)
+- SVG and Video bypass resizing and WebP conversion
+- In Blade, use `<figure>` tag or Spatie helper to ensure WebP and responsive `srcset`
+- All media served via CloudFront URLs (never S3 direct or local storage)
+
+## API Layer
+
+- Sanctum token authentication for external tools
+- `POST /api/v1/pages/{type}` - create/update any page-like model
+- `POST /api/v1/content/{type}` - create/update Content Resources
+- Payloads mirror declared schema; include `relationships` section for attaching related records with order
+- Strict validation against model schema
+
 ## Current Development Phase
 
-Phase 1 (Architecture & Environment) - System Foundation setup with Laravel Sail, PostgreSQL, Redis, and Filament V3.
+**Phase 1 (Complete)**: Architecture & Environment - Laravel Sail, PostgreSQL, Redis, Filament V3
+
+**Phase 2 (Next)**: Core Data Models & Schema - Page models, Content Resources, Relationship Engine, HasSeo trait
+
+## Developer Guidelines (PRD Rules)
+
+1. **Filament Best Practice**: Use `schema()` within Resource files. Do not rely on auto-discovery.
+2. **No Logic in Views**: Blade files should only display data. Logic belongs in ViewModels or Components.
+3. **Content Schema Discipline**: Define all fields explicitly as Fixed, Custom, Reusable, or Structured Data Fields in code; avoid ad-hoc JSON blobs or new "meta" tables.
+4. **Relationship Engine Only**: When linking content, always use the generic Relationship Engine; do not introduce custom pivot tables unless PRD is extended.
+5. **Structured Data Implementation**: Generate all JSON-LD via Structured Data Engine templates in code; never hard-code schema JSON in Blade views.
+6. **Media Pipeline Discipline**: All media must go through the Media Engine (S3 `/temp` → `/permanent`, conversions); never bypass or serve from local storage.
+7. **Example Data**: Every new feature must ship with minimal seed/example data for end-to-end verification.
+8. **Laravel Boost MCP First**: Follow `laravel/boost` package patterns as primary source; extend PRD only where necessary.
 
 ## Response Style Preferences
 
@@ -492,3 +546,10 @@ it('has emails', function (string $email) {
 ]);
 </code-snippet>
 </laravel-boost-guidelines>
+
+## Active Technologies
+- PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, PostgreSQL 17 (001-core-content-models)
+- PostgreSQL with JSONB for content blocks, Redis for caching (001-core-content-models)
+
+## Recent Changes
+- 001-core-content-models: Added PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, PostgreSQL 17

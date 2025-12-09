@@ -2,28 +2,23 @@
 ================================================================================
 SYNC IMPACT REPORT
 ================================================================================
-Version Change: 0.0.0 (template) → 1.0.0 (initial ratification)
-Bump Rationale: MAJOR - Initial constitution establishment with full governance
+Version Change: 1.0.0 → 1.1.0
+Bump Rationale: MINOR - Added new principle (VI. Example-Driven Development) and
+expanded guidance for Relationship Engine, Content Schema, Structured Data Engine,
+and Media Pipeline. Developer Guidelines section 6 from PRD v1.1.0 now reflected.
 
 Modified Principles:
-  - [PRINCIPLE_1_NAME] → I. Code-Defined Structure
-  - [PRINCIPLE_2_NAME] → II. Performance First
-  - [PRINCIPLE_3_NAME] → III. Asset Sovereignty
-  - [PRINCIPLE_4_NAME] → IV. Testing Excellence
-  - [PRINCIPLE_5_NAME] → V. Clarity Over Cleverness
+  - III. Asset Sovereignty → Expanded with /temp and /permanent folder rules
+  - V. Clarity Over Cleverness → Added Content Schema Discipline rule
 
 Added Sections:
-  - Code Quality Standards (PHP Standards, Architecture Patterns, Naming, Organization)
-  - Performance Requirements (Lighthouse, Core Web Vitals, Query Discipline, Caching)
-  - Security & Privacy (Authentication, Rate Limiting, Dependency Security, Data Protection)
-  - Technical Constraints (Version Requirements, Extensions, Environment Structure)
-  - Logging & Observability (Logging Strategy, Log Format)
-  - Documentation Standards (Code Documentation, Project Documentation, API Documentation)
-  - Deployment & Infrastructure (Local Development, Production, CI/CD)
-  - Decision-Making Framework
+  - Principle VI: Example-Driven Development (PRD rule 12)
+  - Relationship Engine section under Data Architecture Rules
+  - Content Schema Discipline section under Code Quality Standards
+  - Structured Data Engine section under Technical Constraints
+  - Admin Panel & Editor Experience guidance under Code Quality Standards
 
-Removed Sections:
-  - All placeholder content removed
+Removed Sections: None
 
 Templates Requiring Updates:
   - .specify/templates/plan-template.md: ✅ Compatible (Constitution Check section exists)
@@ -70,9 +65,12 @@ All media MUST be processed, optimized, and offloaded to AWS S3/CloudFront immed
 **Non-Negotiable Rules**:
 - All uploaded media MUST be stored on S3, served via CloudFront
 - Images MUST be optimized (jpegoptim, optipng) and converted to WebP
-- Responsive image sets with proper `srcset` MUST be generated automatically
+- Responsive image sets with proper `srcset` MUST be generated automatically (480, 640, 720, 960, 1168, 1440, 1920px widths)
+- SVG and video files MUST bypass resizing and WebP conversion
 - The application server MUST serve only dynamic content
-- Direct file uploads go to temporary S3 folder, moved to permanent only after processing
+- Direct file uploads go to S3 `/temp` folder, moved to `/permanent` only after processing
+- Each media item MUST store metadata: type classification, alt, title, caption
+- Media items can be grouped into logical Collections for organization and filtering
 
 **Rationale**: Keeping the application server lightweight improves scalability and reduces hosting costs. CloudFront provides global CDN delivery for optimal performance worldwide.
 
@@ -101,8 +99,22 @@ Code MUST be understandable by a developer unfamiliar with the project within fi
 - Direct Eloquent for data access; no repository pattern abstraction
 - Action classes for complex operations; Service classes for orchestration only
 - Form Requests for all mutations; no inline validation in controllers
+- All fields for pages and Content Resources MUST be explicitly defined as Fixed, Custom, Reusable, or Structured Data Fields in code; no ad-hoc JSON blobs or new "meta" tables outside this pattern
 
 **Rationale**: Maintainability over cleverness. When multiple developers work on a project over years, readable code prevents bugs and reduces onboarding time.
+
+### VI. Example-Driven Development
+
+Every new feature MUST ship with minimal seed/example data so its behavior can be verified end-to-end by humans and AI tools.
+
+**Non-Negotiable Rules**:
+- Every model MUST have a working Factory for test data generation
+- Every feature MUST include example pages, resources, or templates demonstrating usage
+- Example data MUST be sufficient to validate queries, relationships, and rendering
+- The system MUST be demonstrable from a fresh install without manual data entry
+- When following Laravel Boost MCP conventions, extend this PRD only where necessary
+
+**Rationale**: Example data proves the feature works and enables rapid onboarding. AI tools require concrete examples to understand patterns and generate consistent code.
 
 ## Code Quality Standards
 
@@ -155,6 +167,56 @@ app/
 ├── Services/          # Orchestration services
 └── Traits/            # Reusable model traits (HasSeo, etc.)
 ```
+
+### Content Schema Discipline
+
+All content structure MUST follow the Field Type taxonomy:
+
+| Field Type | Description | Example |
+|------------|-------------|---------|
+| **Fixed Fields** | Fields on every page-like model (identity + SEO) | name, slug, status, meta_title, meta_description, canonical_url |
+| **Custom Fields** | Fields unique to a specific page or page type | Home page hero fields, Service icon/summary |
+| **Reusable Fields** | Grouped into section/component types usable across pages | CTA section, FAQs section |
+| **Structured Data Fields** | Fields for JSON-LD; reuse existing where possible | schema-only fields when SEO requires data not stored elsewhere |
+
+**Non-Negotiable Rules**:
+- All fields MUST be explicitly categorized into one of the above types
+- No ad-hoc JSON blobs or "meta" tables outside this pattern
+- Reusable Fields share design/layout/structure; pages provide their own content values
+
+### Relationship Engine
+
+The system MUST support a generic, configurable many-to-many relationship engine.
+
+**Supported Relationship Types**:
+- Page ↔ Content Resource (e.g., Service ↔ Faq)
+- Page ↔ Page (e.g., Service ↔ ServiceArea)
+- Content Resource ↔ Content Resource
+
+**Non-Negotiable Rules**:
+- All content linking MUST use the Relationship Engine; no custom pivot tables unless PRD explicitly extended
+- Relationships MUST preserve manually defined order for frontend display
+- Relationship pairs MUST be configured in code (e.g., Service ↔ Faq, Service ↔ ServiceArea)
+- Blueprint ships with example pairs; real projects define additional pairs as needed
+
+### Admin Panel & Editor Experience
+
+**Global Layout Requirements**:
+- All admin screens MUST share a common layout with persistent left sidebar and main content area
+- Sidebar MUST include: logo from Website Settings, grouped navigation, user/account block
+
+**Navigation Groups**:
+- Public Pages (Static Pages + each custom page type)
+- Content Resources (one entry per resource type)
+- Media Library (views filtered by media-type metadata)
+- SEO (Sitemap, Redirects, Structured Data, 404 Pages)
+- Settings (Website Details, Scripts & Integrations, Users)
+- Account
+
+**Editing Screens**:
+- Pages: Header (name, back link, status), tabbed main canvas (Page Content, SEO Data), right sidebar (Save, slug, timestamps, ID)
+- Content Resources: Simplified header (name, status), single content section, right sidebar (Save, ID)
+- Create flows: Lightweight modal → full edit screen; no separate "create" pages
 
 ## Performance Requirements
 
@@ -278,6 +340,17 @@ Secrets MUST be stored in Coolify environment configuration, never in repository
 - Safari: Last 2 versions
 - Mobile: iOS Safari 15+, Chrome Android
 - No IE11 support
+
+### Structured Data Engine
+
+All JSON-LD structured data MUST be generated via the Structured Data Engine.
+
+**Non-Negotiable Rules**:
+- JSON-LD templates MUST be defined in code (PHP/Blade/classes) with placeholders
+- Placeholders MUST be populated from combined global Settings + page-level fields
+- Always reuse existing Fixed, Custom, or Reusable Fields before adding schema-only fields
+- NEVER hard-code schema JSON directly inside Blade views
+- Blueprint MAY include example templates (e.g., WebPage with `mainEntity`); concrete schema types defined per project
 
 ## Logging & Observability
 
@@ -430,6 +503,10 @@ When facing architectural or implementation decisions, apply these principles in
 
 8. **Can it be tested?** If it cannot be tested, it MUST be refactored until it can.
 
+9. **Does it use the Relationship Engine for content linking?** No custom pivot tables.
+
+10. **Does it include example data?** Every feature must be verifiable from scratch.
+
 When in doubt, choose the boring solution. This is a Blueprint meant to be reused—stability and predictability matter more than novelty.
 
 ## Governance
@@ -454,4 +531,4 @@ This constitution supersedes all other development practices for The Blueprint C
 
 **Runtime Guidance**: Use the spec-kit workflow via Claude Code for feature development. See `.specify/` directory for templates and commands.
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-05
+**Version**: 1.1.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-08
