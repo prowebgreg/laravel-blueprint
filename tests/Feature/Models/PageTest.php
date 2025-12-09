@@ -445,6 +445,172 @@ describe('SEO fields', function () {
     });
 });
 
+describe('SEO mirroring integration', function () {
+    test('empty string in og_title does not mirror - returns empty string', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Meta Title',
+            'og_title' => '',
+        ]);
+
+        expect($page->og_title)->toBe('');
+    });
+
+    test('empty string in og_description does not mirror - returns empty string', function () {
+        $page = Page::factory()->create([
+            'meta_description' => 'Meta Description',
+            'og_description' => '',
+        ]);
+
+        expect($page->og_description)->toBe('');
+    });
+
+    test('empty string in twitter_title does not mirror - returns empty string', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Meta Title',
+            'twitter_title' => '',
+        ]);
+
+        expect($page->twitter_title)->toBe('');
+    });
+
+    test('empty string in twitter_description does not mirror - returns empty string', function () {
+        $page = Page::factory()->create([
+            'meta_description' => 'Meta Description',
+            'twitter_description' => '',
+        ]);
+
+        expect($page->twitter_description)->toBe('');
+    });
+
+    test('setting og_title back to NULL re-enables mirroring from meta_title', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Meta Title',
+            'og_title' => 'Custom OG Title',
+        ]);
+
+        expect($page->og_title)->toBe('Custom OG Title');
+
+        $page->update(['og_title' => null]);
+        $page->refresh();
+
+        expect($page->og_title)->toBe('Meta Title');
+    });
+
+    test('setting og_description back to NULL re-enables mirroring from meta_description', function () {
+        $page = Page::factory()->create([
+            'meta_description' => 'Meta Description',
+            'og_description' => 'Custom OG Description',
+        ]);
+
+        expect($page->og_description)->toBe('Custom OG Description');
+
+        $page->update(['og_description' => null]);
+        $page->refresh();
+
+        expect($page->og_description)->toBe('Meta Description');
+    });
+
+    test('setting twitter_title back to NULL re-enables mirroring from meta_title', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Meta Title',
+            'twitter_title' => 'Custom Twitter Title',
+        ]);
+
+        expect($page->twitter_title)->toBe('Custom Twitter Title');
+
+        $page->update(['twitter_title' => null]);
+        $page->refresh();
+
+        expect($page->twitter_title)->toBe('Meta Title');
+    });
+
+    test('setting twitter_description back to NULL re-enables mirroring from meta_description', function () {
+        $page = Page::factory()->create([
+            'meta_description' => 'Meta Description',
+            'twitter_description' => 'Custom Twitter Description',
+        ]);
+
+        expect($page->twitter_description)->toBe('Custom Twitter Description');
+
+        $page->update(['twitter_description' => null]);
+        $page->refresh();
+
+        expect($page->twitter_description)->toBe('Meta Description');
+    });
+
+    test('mixed mirroring - some fields mirrored and some independent', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Meta Title',
+            'meta_description' => 'Meta Description',
+            'og_title' => 'Custom OG Title',
+            'og_description' => null, // Mirrored
+            'twitter_title' => null, // Mirrored
+            'twitter_description' => 'Custom Twitter Description',
+        ]);
+
+        expect($page->og_title)->toBe('Custom OG Title');
+        expect($page->og_description)->toBe('Meta Description');
+        expect($page->twitter_title)->toBe('Meta Title');
+        expect($page->twitter_description)->toBe('Custom Twitter Description');
+    });
+
+    test('updating meta_title affects only NULL social fields - custom ones remain independent', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Original Meta Title',
+            'og_title' => 'Custom OG Title',
+            'twitter_title' => null,
+        ]);
+
+        expect($page->og_title)->toBe('Custom OG Title');
+        expect($page->twitter_title)->toBe('Original Meta Title');
+
+        $page->update(['meta_title' => 'Updated Meta Title']);
+        $page->refresh();
+
+        expect($page->og_title)->toBe('Custom OG Title'); // Remains independent
+        expect($page->twitter_title)->toBe('Updated Meta Title'); // Mirrors updated value
+    });
+
+    test('updating meta_description affects only NULL social fields - custom ones remain independent', function () {
+        $page = Page::factory()->create([
+            'meta_description' => 'Original Meta Description',
+            'og_description' => null,
+            'twitter_description' => 'Custom Twitter Description',
+        ]);
+
+        expect($page->og_description)->toBe('Original Meta Description');
+        expect($page->twitter_description)->toBe('Custom Twitter Description');
+
+        $page->update(['meta_description' => 'Updated Meta Description']);
+        $page->refresh();
+
+        expect($page->og_description)->toBe('Updated Meta Description'); // Mirrors updated value
+        expect($page->twitter_description)->toBe('Custom Twitter Description'); // Remains independent
+    });
+
+    test('all social fields can have completely different values', function () {
+        $page = Page::factory()->create([
+            'meta_title' => 'Meta Title',
+            'meta_description' => 'Meta Description',
+            'og_title' => 'Unique OG Title',
+            'og_description' => 'Unique OG Description',
+            'twitter_title' => 'Unique Twitter Title',
+            'twitter_description' => 'Unique Twitter Description',
+        ]);
+
+        expect($page->og_title)->toBe('Unique OG Title');
+        expect($page->og_description)->toBe('Unique OG Description');
+        expect($page->twitter_title)->toBe('Unique Twitter Title');
+        expect($page->twitter_description)->toBe('Unique Twitter Description');
+
+        // None should match meta fields
+        expect($page->og_title)->not->toBe($page->meta_title);
+        expect($page->og_description)->not->toBe($page->meta_description);
+        expect($page->twitter_title)->not->toBe($page->meta_title);
+        expect($page->twitter_description)->not->toBe($page->meta_description);
+    });
+});
+
 describe('slug behavior', function () {
     test('slug is auto-generated from name', function () {
         $page = Page::factory()->create(['name' => 'About Our Company']);
