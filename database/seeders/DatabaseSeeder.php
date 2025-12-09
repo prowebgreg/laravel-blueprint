@@ -21,6 +21,11 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 AdminUserSeeder::class,
                 PageSeeder::class,
+                ServiceSeeder::class,
+                BlogPostSeeder::class,
+                FaqSeeder::class,
+                TestimonialSeeder::class,
+                ContentRelationSeeder::class, // Must run last - depends on other models
             ]);
         }
     }
