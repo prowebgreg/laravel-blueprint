@@ -230,7 +230,7 @@
 
 ### Schedule Registration
 
-- [ ] T049 [US6] Register purge command in scheduler (routes/console.php or bootstrap/app.php) → @laravel-specialist
+- [X] T049 [US6] Register purge command in scheduler (routes/console.php or bootstrap/app.php) → @laravel-specialist
 
 ### Tests
 
