@@ -234,7 +234,7 @@
 
 ### Tests
 
-- [ ] T050 [US6] Create PurgeDeletedContentCommandTest at tests/Feature/Commands/PurgeDeletedContentCommandTest.php covering soft delete, restore, and purge with relationship cascade → @test-automator, @laravel-specialist
+- [X] T050 [US6] Create PurgeDeletedContentCommandTest at tests/Feature/Commands/PurgeDeletedContentCommandTest.php covering soft delete, restore, and purge with relationship cascade → @test-automator, @laravel-specialist
 
 **Checkpoint**: User Story 6 complete - soft delete with recovery period fully functional
 
