@@ -96,7 +96,7 @@
 
 ### Tests for User Story 2
 
-- [ ] T035 [P] [US2] Create tests/Unit/Actions/Media/SanitizeSvgActionTest.php - test script removal, event handler removal, external reference removal, valid SVG preservation → @test-automator, @laravel-specialist
+- [X] T035 [P] [US2] Create tests/Unit/Actions/Media/SanitizeSvgActionTest.php - test script removal, event handler removal, external reference removal, valid SVG preservation → @test-automator, @laravel-specialist
 
 ### Implementation for User Story 2
 
