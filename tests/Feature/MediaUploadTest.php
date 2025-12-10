@@ -222,6 +222,141 @@ describe('video upload handling', function () {
 
         expect($asset->s3_key_original)->toContain('media/videos/');
     });
+
+    it('supports WebM format without conversion', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('video.webm', 8000, 'video/webm');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->media_type)->toBe(MediaType::Video)
+            ->and($asset->mime_type)->toBe('video/webm')
+            ->and($asset->state)->toBe(MediaState::Ready)
+            ->and($asset->variants)->toHaveCount(0);
+
+        Queue::assertNotPushed(ProcessMediaVariantsJob::class);
+    });
+
+    it('supports MOV format without conversion', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('video.mov', 10000, 'video/quicktime');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->media_type)->toBe(MediaType::Video)
+            ->and($asset->mime_type)->toBe('video/quicktime')
+            ->and($asset->state)->toBe(MediaState::Ready)
+            ->and($asset->variants)->toHaveCount(0);
+
+        Queue::assertNotPushed(ProcessMediaVariantsJob::class);
+    });
+
+    it('rejects video exceeding 20MB', function () {
+        Storage::fake('s3-permanent');
+
+        $file = UploadedFile::fake()->create('large-video.mp4', 25000, 'video/mp4'); // 25MB
+        $service = app(MediaUploadService::class);
+
+        expect(fn () => $service->upload($file))
+            ->toThrow(\InvalidArgumentException::class);
+
+        expect(MediaAsset::count())->toBe(0);
+    });
+
+    it('sanitizes video filename', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('My Product Video!.mp4', 5000, 'video/mp4');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->filename)->toMatch('/^my-product-video-[a-z0-9]{8}\.mp4$/')
+            ->and($asset->original_name)->toBe('My Product Video!.mp4');
+    });
+
+    it('preserves video original name', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $originalName = 'Company Intro Video 2024.mp4';
+        $file = UploadedFile::fake()->create($originalName, 5000, 'video/mp4');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->original_name)->toBe($originalName);
+    });
+
+    it('generates CloudFront URL for video', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('demo.mp4', 5000, 'video/mp4');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->cloudfront_url_original)
+            ->not->toBeNull()
+            ->toBeString();
+    });
+
+    it('stores video file size', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('video.mp4', 15000, 'video/mp4'); // 15MB
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->file_size)->toBeGreaterThan(0);
+    });
+
+    it('stores video MIME type correctly', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('video.mp4', 5000, 'video/mp4');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset->mime_type)->toBe('video/mp4');
+    });
+
+    it('allows video at exactly 20MB', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('max-size.mp4', 20480, 'video/mp4'); // 20MB exactly
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        expect($asset)->toBeInstanceOf(MediaAsset::class)
+            ->and($asset->state)->toBe(MediaState::Ready);
+    });
+
+    it('uploads video to S3 permanent folder', function () {
+        Storage::fake('s3-permanent');
+        Queue::fake();
+
+        $file = UploadedFile::fake()->create('video.mp4', 5000, 'video/mp4');
+        $service = app(MediaUploadService::class);
+
+        $asset = $service->upload($file);
+
+        Storage::disk('s3-permanent')->assertExists($asset->s3_key_original);
+    });
 });
 
 describe('validation errors', function () {
