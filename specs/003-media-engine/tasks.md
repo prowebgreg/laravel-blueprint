@@ -66,7 +66,7 @@
 
 - [X] T019 [P] [US1] Create tests/Unit/Actions/Media/ValidateUploadActionTest.php - test all validation rules, magic bytes, dimensions 50-16000, file size 20MB limit → @test-automator, @laravel-specialist
 - [X] T020 [P] [US1] Create tests/Unit/Actions/Media/SanitizeFilenameActionTest.php - test lowercase, hyphens, special chars removal, nanoid suffix → @test-automator, @laravel-specialist
-- [ ] T021 [P] [US1] Create tests/Unit/Actions/Media/ExtractImageMetadataActionTest.php - test dimension extraction from all image formats → @test-automator, @laravel-specialist
+- [X] T021 [P] [US1] Create tests/Unit/Actions/Media/ExtractImageMetadataActionTest.php - test dimension extraction from all image formats → @test-automator, @laravel-specialist
 - [ ] T022 [P] [US1] Create tests/Unit/Actions/Media/GenerateVariantsActionTest.php - test 8 variants, skip upscaling, aspect ratio preservation, WebP conversion → @test-automator, @laravel-specialist
 - [ ] T023 [P] [US1] Create tests/Unit/Actions/Media/UploadToS3ActionTest.php - test success, retry logic (3 attempts with 1s/2s/4s delays), rollback on failure → @test-automator, @laravel-specialist
 - [ ] T024 [P] [US1] Create tests/Feature/MediaUploadTest.php - test complete upload flow, state transitions, variant generation → @test-automator, @laravel-specialist
