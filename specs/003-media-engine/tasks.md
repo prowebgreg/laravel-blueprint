@@ -64,7 +64,7 @@
 
 ### Tests for User Story 1
 
-- [ ] T019 [P] [US1] Create tests/Unit/Actions/Media/ValidateUploadActionTest.php - test all validation rules, magic bytes, dimensions 50-16000, file size 20MB limit → @test-automator, @laravel-specialist
+- [X] T019 [P] [US1] Create tests/Unit/Actions/Media/ValidateUploadActionTest.php - test all validation rules, magic bytes, dimensions 50-16000, file size 20MB limit → @test-automator, @laravel-specialist
 - [ ] T020 [P] [US1] Create tests/Unit/Actions/Media/SanitizeFilenameActionTest.php - test lowercase, hyphens, special chars removal, nanoid suffix → @test-automator, @laravel-specialist
 - [ ] T021 [P] [US1] Create tests/Unit/Actions/Media/ExtractImageMetadataActionTest.php - test dimension extraction from all image formats → @test-automator, @laravel-specialist
 - [ ] T022 [P] [US1] Create tests/Unit/Actions/Media/GenerateVariantsActionTest.php - test 8 variants, skip upscaling, aspect ratio preservation, WebP conversion → @test-automator, @laravel-specialist
