@@ -80,7 +80,7 @@
 - [X] T029 [P] [US1] Create app/Actions/Media/ExtractImageMetadataAction.php - extract width/height from image using GD → @laravel-specialist, @php-pro
 - [X] T030 [US1] Create app/Actions/Media/GenerateVariantsAction.php - generate WebP variants at 480/640/720/960/1168/1440/1920/original widths, skip larger than original → @laravel-specialist, @php-pro
 - [X] T031 [US1] Create app/Actions/Media/UploadToS3Action.php - upload to S3 with retry logic (3 attempts, exponential backoff), return S3 key and CloudFront URL → @laravel-specialist, @php-pro
-- [ ] T032 [US1] Create app/Jobs/Media/ProcessMediaVariantsJob.php - async variant generation with 180s timeout, rollback on failure, state transitions → @laravel-specialist
+- [X] T032 [US1] Create app/Jobs/Media/ProcessMediaVariantsJob.php - async variant generation with 180s timeout, rollback on failure, state transitions → @laravel-specialist
 - [ ] T033 [US1] Create app/Services/Media/MediaUploadService.php - orchestrate upload flow: validate, sanitize, extract metadata, create asset, dispatch job → @laravel-specialist
 - [ ] T034 [US1] Verify all US1 tests pass with ./vendor/bin/sail artisan test --filter=MediaUpload → @test-automator
 
