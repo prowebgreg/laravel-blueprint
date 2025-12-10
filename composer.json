@@ -7,13 +7,16 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "enshrined/svg-sanitize": "^0.22",
         "filament/filament": "^3.0",
         "laravel/framework": "^12.0",
         "laravel/horizon": "^5.40",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/flysystem-path-prefixing": "^3.0",
-        "predis/predis": "^3.3"
+        "predis/predis": "^3.3",
+        "spatie/image": "^3.0",
+        "spatie/laravel-image-optimizer": "^1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -550,6 +550,8 @@ it('has emails', function (string $email) {
 ## Active Technologies
 - PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, PostgreSQL 17 (001-core-content-models)
 - PostgreSQL with JSONB for content blocks, Redis for caching (001-core-content-models)
+- PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, spatie/image ^3.0, spatie/laravel-image-optimizer ^1.7, enshrined/svg-sanitize ^0.16 (003-media-engine)
+- PostgreSQL 17 with JSONB, AWS S3 with CloudFront CDN, Redis for caching (003-media-engine)
 
 ## Recent Changes
 - 001-core-content-models: Added PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, PostgreSQL 17
