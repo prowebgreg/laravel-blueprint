@@ -50,7 +50,7 @@
 - [X] T015 [P] Create database/factories/MediaAssetFactory.php with states: uploading(), processing(), failed(), video(), svg(), withMetadata(), withVariants() → @laravel-specialist
 - [X] T016 [P] Create database/factories/MediaVariantFactory.php with default 16:9 aspect ratio → @laravel-specialist
 - [X] T017 Create database/seeders/MediaSeeder.php with example assets per data-model.md including fallback image setting → @laravel-specialist
-- [ ] T018 Run seeder and verify example data created → @laravel-specialist
+- [X] T018 Run seeder and verify example data created → @laravel-specialist
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
