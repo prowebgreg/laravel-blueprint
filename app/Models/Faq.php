@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ContentStatus;
+use App\Traits\HasMedia;
 use App\Traits\HasRelatedContent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Faq extends Model
 {
     use HasFactory;
+    use HasMedia;
     use HasRelatedContent;
     use SoftDeletes;
 

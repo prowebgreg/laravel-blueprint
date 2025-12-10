@@ -52,16 +52,15 @@ describe('attachMedia()', function () {
 
         $page->attachMedia($media, 'page:home:hero:image', 5);
 
-        $relationship = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->first();
+        $relationship = \DB::select(
+            'SELECT * FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationship)
-            ->not->toBeNull()
-            ->order->toBe(5);
+        expect($relationship)->toHaveCount(1)
+            ->and($relationship[0]->order)->toBe(5);
     });
 
     it('defaults order to 0 when not provided', function () {
@@ -70,14 +69,15 @@ describe('attachMedia()', function () {
 
         $page->attachMedia($media, 'og_image');
 
-        $relationship = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->first();
+        $relationship = \DB::select(
+            'SELECT * FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationship->order)->toBe(0);
+        expect($relationship)->toHaveCount(1)
+            ->and($relationship[0]->order)->toBe(0);
     });
 
     it('allows same media to be attached with different type identifiers', function () {
@@ -104,14 +104,14 @@ describe('attachMedia()', function () {
             ->not->toThrow(\Exception::class);
 
         // Should still have only one relationship
-        $relationshipCount = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->count();
+        $relationshipCount = \DB::select(
+            'SELECT COUNT(*) as count FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationshipCount)->toBe(1);
+        expect((int) $relationshipCount[0]->count)->toBe(1);
     });
 
     it('stores created_at timestamp on relationship', function () {
@@ -120,14 +120,15 @@ describe('attachMedia()', function () {
 
         $page->attachMedia($media, 'og_image');
 
-        $relationship = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->first();
+        $relationship = \DB::select(
+            'SELECT * FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationship->created_at)->not->toBeNull();
+        expect($relationship)->toHaveCount(1)
+            ->and($relationship[0]->created_at)->not->toBeNull();
     });
 
     it('attaches SVG media using svg type naming', function () {
@@ -204,13 +205,14 @@ describe('detachMedia()', function () {
 
         $page->detachMedia('gallery:image');
 
-        $relationshipCount = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->count();
+        $relationshipCount = \DB::select(
+            'SELECT COUNT(*) as count FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class]
+        );
 
-        expect($relationshipCount)->toBe(0);
+        expect((int) $relationshipCount[0]->count)->toBe(0);
     });
 });
 
@@ -380,14 +382,14 @@ describe('edge cases and error handling', function () {
 
         $page->attachMedia($media, 'og_image');
 
-        $relationship = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', (string) $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->first();
+        $relationship = \DB::select(
+            'SELECT * FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationship)->not->toBeNull();
+        expect($relationship)->toHaveCount(1);
     });
 
     it('maintains relationships when model is soft deleted', function () {
@@ -397,14 +399,14 @@ describe('edge cases and error handling', function () {
 
         $page->delete(); // Soft delete
 
-        $relationshipCount = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->count();
+        $relationshipCount = \DB::select(
+            'SELECT COUNT(*) as count FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationshipCount)->toBe(1);
+        expect((int) $relationshipCount[0]->count)->toBe(1);
     });
 
     it('handles very long type identifiers', function () {
@@ -437,14 +439,15 @@ describe('edge cases and error handling', function () {
 
         $page->attachMedia($media, 'gallery:image', -1);
 
-        $relationship = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->first();
+        $relationship = \DB::select(
+            'SELECT * FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationship->order)->toBe(-1);
+        expect($relationship)->toHaveCount(1)
+            ->and($relationship[0]->order)->toBe(-1);
     });
 
     it('handles large order values', function () {
@@ -453,14 +456,15 @@ describe('edge cases and error handling', function () {
 
         $page->attachMedia($media, 'gallery:image', 9999);
 
-        $relationship = \DB::table('content_relations')
-            ->where('source_type', Page::class)
-            ->where('source_id', $page->id)
-            ->where('target_type', MediaAsset::class)
-            ->where('target_id', $media->id)
-            ->first();
+        $relationship = \DB::select(
+            'SELECT * FROM content_relations
+            WHERE source_type::text = ?::text AND source_id::text = ?::text
+            AND target_type::text = ?::text AND target_id::text = ?::text',
+            [Page::class, (string) $page->id, MediaAsset::class, (string) $media->id]
+        );
 
-        expect($relationship->order)->toBe(9999);
+        expect($relationship)->toHaveCount(1)
+            ->and($relationship[0]->order)->toBe(9999);
     });
 });
 
