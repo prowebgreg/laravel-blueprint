@@ -43,7 +43,7 @@
 - [X] T008 Create migration 2025_12_10_000002_create_media_variants_table.php with UUID PK, foreign key to media_assets, unique constraint on (media_asset_id, width) → @laravel-specialist, @postgres-pro
 - [X] T009 Create migration 2025_12_10_000003_create_settings_table.php with key as PK, value as text → @laravel-specialist
 - [X] T010 Create migration 2025_12_10_000004_modify_content_relations_for_uuid.php to change source_id and target_id to string(36) → @laravel-specialist, @postgres-pro
-- [ ] T011 Run migrations and verify all tables created correctly → @laravel-specialist
+- [X] T011 Run migrations and verify all tables created correctly → @laravel-specialist
 - [ ] T012 [P] Create app/Models/MediaAsset.php with UUID trait, JSONB casts, variants() relationship, state enum cast → @laravel-specialist
 - [ ] T013 [P] Create app/Models/MediaVariant.php with UUID trait, mediaAsset() relationship → @laravel-specialist
 - [ ] T014 [P] Create app/Models/Setting.php with key as primary key, static get()/set() helper methods → @laravel-specialist
