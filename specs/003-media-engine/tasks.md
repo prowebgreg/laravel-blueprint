@@ -101,7 +101,7 @@
 ### Implementation for User Story 2
 
 - [X] T036 [US2] Create app/Actions/Media/SanitizeSvgAction.php - use enshrined/svg-sanitize to remove scripts, event handlers, external references → @laravel-specialist, @php-pro
-- [ ] T037 [US2] Update app/Services/Media/MediaUploadService.php - add SVG handling path: validate, sanitize, upload directly without variant generation → @laravel-specialist
+- [X] T037 [US2] Update app/Services/Media/MediaUploadService.php - add SVG handling path: validate, sanitize, upload directly without variant generation → @laravel-specialist
 - [ ] T038 [US2] Verify all US2 tests pass with ./vendor/bin/sail artisan test --filter=SanitizeSvg → @test-automator
 
 **Checkpoint**: SVG upload with sanitization is fully functional

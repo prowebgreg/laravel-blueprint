@@ -28,6 +28,23 @@ use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
+/**
+ * Helper function to create an UploadedFile from SVG content.
+ */
+function createSvgUploadedFile(string $filename, string $svgContent): UploadedFile
+{
+    $tempPath = sys_get_temp_dir().'/'.uniqid('test_svg_', true).'.svg';
+    file_put_contents($tempPath, $svgContent);
+
+    return new UploadedFile(
+        path: $tempPath,
+        originalName: $filename,
+        mimeType: 'image/svg+xml',
+        error: null,
+        test: true
+    );
+}
+
 describe('complete upload flow', function () {
     it('creates MediaAsset with processing state initially for image', function () {
         Storage::fake('s3-permanent');
@@ -126,7 +143,8 @@ describe('SVG upload handling', function () {
         Storage::fake('s3-permanent');
         Queue::fake();
 
-        $file = UploadedFile::fake()->create('logo.svg', 100, 'image/svg+xml');
+        $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="40" fill="blue"/></svg>';
+        $file = createSvgUploadedFile('logo.svg', $svgContent);
         $service = app(MediaUploadService::class);
 
         $asset = $service->upload($file);
@@ -141,7 +159,8 @@ describe('SVG upload handling', function () {
         Storage::fake('s3-permanent');
         Queue::fake();
 
-        $file = UploadedFile::fake()->create('logo.svg', 100, 'image/svg+xml');
+        $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="40" fill="blue"/></svg>';
+        $file = createSvgUploadedFile('logo.svg', $svgContent);
         $service = app(MediaUploadService::class);
 
         $asset = $service->upload($file);
@@ -153,7 +172,8 @@ describe('SVG upload handling', function () {
         Storage::fake('s3-permanent');
         Queue::fake();
 
-        $file = UploadedFile::fake()->create('logo.svg', 100, 'image/svg+xml');
+        $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="40" fill="blue"/></svg>';
+        $file = createSvgUploadedFile('logo.svg', $svgContent);
         $service = app(MediaUploadService::class);
 
         $asset = $service->upload($file);
@@ -257,7 +277,7 @@ describe('validation errors', function () {
 
         try {
             $service->upload($file);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Expected
         }
 
@@ -272,7 +292,7 @@ describe('validation errors', function () {
 
         try {
             $service->upload($file);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Expected
         }
 
