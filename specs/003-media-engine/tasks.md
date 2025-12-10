@@ -44,11 +44,11 @@
 - [X] T009 Create migration 2025_12_10_000003_create_settings_table.php with key as PK, value as text → @laravel-specialist
 - [X] T010 Create migration 2025_12_10_000004_modify_content_relations_for_uuid.php to change source_id and target_id to string(36) → @laravel-specialist, @postgres-pro
 - [X] T011 Run migrations and verify all tables created correctly → @laravel-specialist
-- [ ] T012 [P] Create app/Models/MediaAsset.php with UUID trait, JSONB casts, variants() relationship, state enum cast → @laravel-specialist
-- [ ] T013 [P] Create app/Models/MediaVariant.php with UUID trait, mediaAsset() relationship → @laravel-specialist
-- [ ] T014 [P] Create app/Models/Setting.php with key as primary key, static get()/set() helper methods → @laravel-specialist
-- [ ] T015 [P] Create database/factories/MediaAssetFactory.php with states: uploading(), processing(), failed(), video(), svg(), withMetadata(), withVariants() → @laravel-specialist
-- [ ] T016 [P] Create database/factories/MediaVariantFactory.php with default 16:9 aspect ratio → @laravel-specialist
+- [X] T012 [P] Create app/Models/MediaAsset.php with UUID trait, JSONB casts, variants() relationship, state enum cast → @laravel-specialist
+- [X] T013 [P] Create app/Models/MediaVariant.php with UUID trait, mediaAsset() relationship → @laravel-specialist
+- [X] T014 [P] Create app/Models/Setting.php with key as primary key, static get()/set() helper methods → @laravel-specialist
+- [X] T015 [P] Create database/factories/MediaAssetFactory.php with states: uploading(), processing(), failed(), video(), svg(), withMetadata(), withVariants() → @laravel-specialist
+- [X] T016 [P] Create database/factories/MediaVariantFactory.php with default 16:9 aspect ratio → @laravel-specialist
 - [ ] T017 Create database/seeders/MediaSeeder.php with example assets per data-model.md including fallback image setting → @laravel-specialist
 - [ ] T018 Run seeder and verify example data created → @laravel-specialist
 
