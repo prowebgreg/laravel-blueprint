@@ -387,6 +387,106 @@ When dispatching subagents, provide appropriate context from Speckit artifacts:
 - Summarize long sections
 - Reference file paths for subagent to read
 
+## MCP Server Usage (IMPORTANT)
+
+Subagents MUST actively use MCP servers for research and verification. Include these instructions in every subagent prompt:
+
+### Required MCP Instructions for Subagents
+
+Add this section to ALL implementation subagent prompts:
+
+```
+## MCP Tools - USE THESE ACTIVELY
+
+You have access to MCP servers that provide critical capabilities. Use them proactively:
+
+### Laravel Boost (REQUIRED for Laravel tasks)
+Before writing Laravel code, use these tools:
+- `mcp__laravel-boost__application-info` - Get PHP/Laravel/package versions FIRST
+- `mcp__laravel-boost__search-docs` - Search version-specific Laravel docs before implementing
+- `mcp__laravel-boost__database-schema` - Check existing tables before creating migrations
+- `mcp__laravel-boost__list-artisan-commands` - Verify artisan command options
+- `mcp__laravel-boost__tinker` - Test code snippets when debugging
+
+Example workflow for migrations:
+1. Call `application-info` to confirm Laravel version
+2. Call `database-schema` to see existing tables
+3. Call `search-docs` with queries like ["migrations", "uuid primary key", "jsonb columns"]
+4. Then implement the migration
+
+### Exa Search (for external research)
+- `mcp__exa__get_code_context_exa` - Get coding context for libraries/APIs
+- `mcp__exa__web_search_exa` - Search for recent documentation or solutions
+
+Use when:
+- Working with third-party packages (spatie/image, etc.)
+- Implementing patterns you're uncertain about
+- Need examples of specific implementations
+
+### Ref Documentation
+- `mcp__Ref__ref_search_documentation` - Search library documentation
+- `mcp__Ref__ref_read_url` - Read specific documentation URLs
+
+### Playwright (for browser testing)
+- Use `mcp__playwright__*` tools when implementing frontend features that need browser verification
+```
+
+### MCP Usage by Task Type
+
+| Task Type | Required MCP Calls |
+|-----------|-------------------|
+| Migration | `application-info`, `database-schema`, `search-docs` |
+| Model | `application-info`, `search-docs` for casts/relations |
+| Action/Service | `search-docs` for patterns, `tinker` for testing |
+| API endpoint | `list-routes`, `search-docs` for validation |
+| Tests | `search-docs` for Pest syntax, `tinker` for data setup |
+| Frontend | `browser_snapshot`, `browser_navigate` for verification |
+| Package usage | `get_code_context_exa` for library docs |
+
+### Example: Enhanced Subagent Prompt with MCP
+
+```
+Task tool:
+  subagent_type: laravel-specialist
+  description: "Implement T007: Create media_assets migration"
+  prompt: |
+    You are implementing task T007 from tasks.md.
+
+    ## Task
+    - [ ] T007 Create migration for media_assets table...
+
+    ## MCP Tools - USE THESE ACTIVELY
+
+    Before implementing, you MUST:
+    1. Call `mcp__laravel-boost__application-info` to confirm Laravel/PHP versions
+    2. Call `mcp__laravel-boost__database-schema` to check existing tables
+    3. Call `mcp__laravel-boost__search-docs` with queries:
+       - ["migrations uuid", "jsonb columns postgresql"]
+       - ["laravel 12 migrations"]
+
+    For any uncertainty about syntax or patterns:
+    - Use `mcp__exa__get_code_context_exa` for package-specific examples
+    - Use `mcp__laravel-boost__search-docs` for Laravel patterns
+
+    ## Context
+    [... rest of context ...]
+
+    ## Your job
+    1. Use MCP tools to research before implementing
+    2. Implement exactly what the task specifies
+    3. Verify with `tinker` if needed
+    4. Report which MCP tools you used and what you learned
+```
+
+### Verifying MCP Usage
+
+In subagent reports, expect to see:
+- Which MCP tools were called
+- Key findings from documentation searches
+- Version-specific considerations discovered
+
+**Red flag:** If a subagent reports implementation without mentioning any MCP tool usage, the implementation may be based on outdated knowledge. Consider requesting a review with explicit MCP research.
+
 ## Advantages
 
 **vs. `/speckit.implement` (single agent):**
@@ -416,6 +516,8 @@ When dispatching subagents, provide appropriate context from Speckit artifacts:
 - Implement without reading Speckit artifacts
 - Forget to mark tasks `[X]` in tasks.md
 - Use a subagent not assigned in the task
+- Dispatch subagents without MCP tool instructions
+- Accept subagent work that didn't use MCP tools for research
 
 **Parallel execution (rare):**
 

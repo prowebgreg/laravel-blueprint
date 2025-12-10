@@ -75,7 +75,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T027 [P] [US1] Create app/Actions/Media/ValidateUploadAction.php - validate MIME types, magic bytes, dimensions 50-16000, file size ≤20MB → @laravel-specialist, @php-pro
+- [X] T027 [P] [US1] Create app/Actions/Media/ValidateUploadAction.php - validate MIME types, magic bytes, dimensions 50-16000, file size ≤20MB → @laravel-specialist, @php-pro
 - [ ] T028 [P] [US1] Create app/Actions/Media/SanitizeFilenameAction.php - lowercase, hyphens, remove special chars, append 8-char nanoid → @laravel-specialist, @php-pro
 - [ ] T029 [P] [US1] Create app/Actions/Media/ExtractImageMetadataAction.php - extract width/height from image using GD → @laravel-specialist, @php-pro
 - [ ] T030 [US1] Create app/Actions/Media/GenerateVariantsAction.php - generate WebP variants at 480/640/720/960/1168/1440/1920/original widths, skip larger than original → @laravel-specialist, @php-pro
