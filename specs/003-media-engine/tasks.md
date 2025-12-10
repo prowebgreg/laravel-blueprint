@@ -131,7 +131,7 @@
 
 ### Tests for User Story 4
 
-- [ ] T041 [P] [US4] Create tests/Feature/HasMediaTraitTest.php - test attachMedia(), detachMedia(), getMedia(), getAllMedia() methods → @test-automator, @laravel-specialist
+- [X] T041 [P] [US4] Create tests/Feature/HasMediaTraitTest.php - test attachMedia(), detachMedia(), getMedia(), getAllMedia() methods → @test-automator, @laravel-specialist
 
 ### Implementation for User Story 4
 
