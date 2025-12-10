@@ -116,7 +116,7 @@
 
 ### Implementation for User Story 3
 
-- [ ] T039 [US3] Update app/Services/Media/MediaUploadService.php - add video handling path: validate, upload directly, set state to ready immediately → @laravel-specialist
+- [X] T039 [US3] Update app/Services/Media/MediaUploadService.php - add video handling path: validate, upload directly, set state to ready immediately → @laravel-specialist
 - [ ] T040 [US3] Add feature test in tests/Feature/MediaUploadTest.php for video upload flow → @test-automator, @laravel-specialist
 
 **Checkpoint**: Video upload is fully functional
