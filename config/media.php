@@ -3,83 +3,22 @@
 declare(strict_types=1);
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Allowed File Types
-    |--------------------------------------------------------------------------
-    |
-    | Define the allowed file types for media uploads. Each MIME type is
-    | mapped to its corresponding file extensions.
-    |
-    */
-
-    'allowed_types' => [
-        // Images
-        'image/jpeg' => ['jpg', 'jpeg'],
-        'image/png' => ['png'],
-        'image/gif' => ['gif'],
-        'image/webp' => ['webp'],
-        'image/svg+xml' => ['svg'],
-
-        // Documents
-        'application/pdf' => ['pdf'],
-
-        // Videos
-        'video/mp4' => ['mp4'],
-        'video/webm' => ['webm'],
+    'max_upload_size' => env('MEDIA_MAX_UPLOAD_SIZE', 20971520), // 20MB
+    'max_dimensions' => env('MEDIA_MAX_DIMENSIONS', 16000),
+    'min_dimensions' => env('MEDIA_MIN_DIMENSIONS', 50),
+    'variant_quality' => env('MEDIA_VARIANT_QUALITY', 85),
+    'variant_widths' => [480, 640, 720, 960, 1168, 1440, 1920],
+    'processing_queue' => env('MEDIA_PROCESSING_QUEUE', 'media'),
+    'processing_timeout' => env('MEDIA_PROCESSING_TIMEOUT', 180),
+    'failed_retention_hours' => env('MEDIA_FAILED_RETENTION_HOURS', 24),
+    'soft_delete_retention_days' => env('MEDIA_SOFT_DELETE_RETENTION_DAYS', 30),
+    'folder_prefix' => 'media',
+    'folders' => [
+        'images' => 'images',
+        'videos' => 'videos',
+        'svg' => 'svg',
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Maximum File Size
-    |--------------------------------------------------------------------------
-    |
-    | The maximum file size allowed for uploads in kilobytes.
-    | Default: 10240 KB (10 MB)
-    |
-    */
-
-    'max_file_size' => 10240, // 10 MB in KB
-
-    /*
-    |--------------------------------------------------------------------------
-    | Validation Messages
-    |--------------------------------------------------------------------------
-    |
-    | Custom validation error messages for media uploads.
-    |
-    */
-
-    'validation_messages' => [
-        'size' => 'File size exceeds maximum allowed size of 10MB',
-        'type' => 'File type not allowed. Accepted types: jpg, jpeg, png, gif, webp, svg, pdf, mp4, webm',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Helper Methods
-    |--------------------------------------------------------------------------
-    |
-    | The following methods can be accessed via config('media.helpers')
-    |
-    */
-
-    'helpers' => [
-        /**
-         * Get all allowed MIME types as an array
-         */
-        'mime_types' => fn (): array => array_keys(config('media.allowed_types')),
-
-        /**
-         * Get all allowed file extensions as a flat array
-         */
-        'extensions' => fn (): array => array_merge(...array_values(config('media.allowed_types'))),
-
-        /**
-         * Get formatted extension list for validation messages
-         */
-        'extensions_list' => fn (): string => implode(', ', array_merge(...array_values(config('media.allowed_types')))),
-    ],
-
+    'allowed_image_mimes' => ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+    'allowed_video_mimes' => ['video/mp4', 'video/webm', 'video/quicktime'],
+    'allowed_svg_mimes' => ['image/svg+xml'],
 ];

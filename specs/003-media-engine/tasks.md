@@ -25,7 +25,7 @@
 **Purpose**: Package installation, configuration, and project structure
 
 - [X] T001 Install required packages (spatie/image ^3.0, spatie/laravel-image-optimizer ^1.7, enshrined/svg-sanitize ^0.16) → @devops-engineer
-- [ ] T002 Create config/media.php with all settings from plan.md → @laravel-specialist
+- [X] T002 Create config/media.php with all settings from plan.md → @laravel-specialist
 - [ ] T003 [P] Publish and configure config/image-optimizer.php for WebP optimization → @laravel-specialist
 - [ ] T004 [P] Create app/Enums/MediaType.php enum with allowedMimeTypes() and fromMimeType() methods → @laravel-specialist
 - [ ] T005 [P] Create app/Enums/MediaFolder.php enum with forMediaType() and s3Prefix() methods → @laravel-specialist
