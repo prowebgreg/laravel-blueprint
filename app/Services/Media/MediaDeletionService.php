@@ -65,7 +65,8 @@ class MediaDeletionService
 
             throw new MediaDeletionBlockedException(
                 media: $media,
-                usages: []
+                usages: [],
+                isFallbackImage: true
             );
         }
 

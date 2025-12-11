@@ -381,6 +381,25 @@ describe('blocking deletion of fallback image', function () {
         expect($fallbackMedia->fresh()->trashed())->toBeFalse();
     });
 
+    it('throws exception with isFallbackImage flag set when deleting fallback', function () {
+        $fallbackMedia = MediaAsset::factory()->create();
+
+        // Set as fallback image
+        Setting::set('media.fallback_image_id', $fallbackMedia->id);
+
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        try {
+            $deletionService->delete($fallbackMedia);
+            $this->fail('Expected MediaDeletionBlockedException was not thrown');
+        } catch (\App\Exceptions\MediaDeletionBlockedException $e) {
+            expect($e->isFallbackImage)->toBeTrue()
+                ->and($e->isBlockedAsFallbackImage())->toBeTrue()
+                ->and($e->usages)->toBeEmpty()
+                ->and($e->getMessage())->toContain('fallback image');
+        }
+    });
+
     it('allows deletion of non-fallback media when fallback exists', function () {
         $fallbackMedia = MediaAsset::factory()->create();
         $regularMedia = MediaAsset::factory()->create();
@@ -395,6 +414,20 @@ describe('blocking deletion of fallback image', function () {
 
         expect($regularMedia->fresh()->trashed())->toBeTrue()
             ->and($fallbackMedia->fresh()->trashed())->toBeFalse();
+    });
+
+    it('allows deletion when no fallback image is configured', function () {
+        $media = MediaAsset::factory()->create();
+
+        // Ensure no fallback is set
+        Setting::where('key', 'media.fallback_image_id')->delete();
+
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        // Should be able to delete
+        $deletionService->delete($media);
+
+        expect($media->fresh()->trashed())->toBeTrue();
     });
 });
 
