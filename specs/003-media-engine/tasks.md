@@ -216,11 +216,11 @@
 ### Tests for User Story 8
 
 - [X] T064 [P] [US8] Create tests/Feature/Jobs/CleanupFailedMediaJobTest.php - test 24-hour threshold cleanup → @test-automator, @laravel-specialist
-- [ ] T065 [P] [US8] Create tests/Feature/Jobs/SyncOrphanedFilesJobTest.php - test orphan detection and reporting → @test-automator, @laravel-specialist
+- [X] T065 [P] [US8] Create tests/Feature/Jobs/SyncOrphanedFilesJobTest.php - test orphan detection and reporting → @test-automator, @laravel-specialist
 
 ### Implementation for User Story 8
 
-- [ ] T066 [US8] Create app/Jobs/Media/CleanupFailedMediaJob.php - delete failed assets older than 24 hours, cleanup S3 files → @laravel-specialist
+- [x] T066 [US8] Create app/Jobs/Media/CleanupFailedMediaJob.php - delete failed assets older than 24 hours, cleanup S3 files → @laravel-specialist
 - [ ] T067 [US8] Create app/Jobs/Media/SyncOrphanedFilesJob.php - scan S3 for orphaned files, mark missing DB records as failed, generate report → @laravel-specialist
 - [ ] T068 [US8] Add purge logic for soft-deleted assets older than 30 days to CleanupFailedMediaJob → @laravel-specialist
 - [ ] T069 [US8] Register scheduled jobs in routes/console.php: CleanupFailedMediaJob daily at 3:00, SyncOrphanedFilesJob weekly Sunday at 4:00 → @laravel-specialist
