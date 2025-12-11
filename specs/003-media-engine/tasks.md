@@ -215,7 +215,7 @@
 
 ### Tests for User Story 8
 
-- [ ] T064 [P] [US8] Create tests/Feature/Jobs/CleanupFailedMediaJobTest.php - test 24-hour threshold cleanup → @test-automator, @laravel-specialist
+- [X] T064 [P] [US8] Create tests/Feature/Jobs/CleanupFailedMediaJobTest.php - test 24-hour threshold cleanup → @test-automator, @laravel-specialist
 - [ ] T065 [P] [US8] Create tests/Feature/Jobs/SyncOrphanedFilesJobTest.php - test orphan detection and reporting → @test-automator, @laravel-specialist
 
 ### Implementation for User Story 8

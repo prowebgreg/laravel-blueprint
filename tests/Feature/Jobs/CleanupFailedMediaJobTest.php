@@ -1,0 +1,506 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature\Jobs;
+
+/**
+ * Feature Tests for CleanupFailedMediaJob
+ *
+ * Tests automated cleanup of failed media assets:
+ * - Force deletes (permanent removal) failed assets older than configured retention period (24 hours default)
+ * - Cleans up S3 files (original + variants) for deleted failed assets
+ * - Preserves recent failed assets (newer than retention threshold)
+ * - Preserves assets in other states (Ready, Processing, Uploading)
+ * - Queue configuration (media queue)
+ * - Edge cases: empty result sets, multiple failures, assets with/without variants
+ *
+ * Note: The job uses forceDelete() for permanent removal since failed assets
+ * older than 24 hours have no recovery value.
+ *
+ * @see /specs/003-media-engine/plan.md
+ * @see /specs/003-media-engine/data-model.md
+ */
+
+use App\Enums\MediaState;
+use App\Jobs\Media\CleanupFailedMediaJob;
+use App\Models\MediaAsset;
+use App\Models\MediaVariant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
+
+uses(RefreshDatabase::class);
+
+describe('24-hour threshold cleanup', function () {
+    it('force deletes failed assets older than 24 hours', function () {
+        Storage::fake('s3-permanent');
+
+        // Create failed asset older than 24 hours
+        $oldFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        // Create S3 file for the old failed asset
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should be permanently deleted (not soft deleted)
+        expect(MediaAsset::find($oldFailed->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($oldFailed->id))->toBeNull()
+            ->and(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeFalse();
+    });
+
+    it('deletes multiple failed assets older than threshold', function () {
+        Storage::fake('s3-permanent');
+
+        // Create 3 old failed assets
+        $oldFailed1 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(25)]);
+        $oldFailed2 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(48)]);
+        $oldFailed3 = MediaAsset::factory()->failed()->create(['created_at' => now()->subDays(7)]);
+
+        // Create S3 files
+        Storage::disk('s3-permanent')->put($oldFailed1->s3_key_original, 'content 1');
+        Storage::disk('s3-permanent')->put($oldFailed2->s3_key_original, 'content 2');
+        Storage::disk('s3-permanent')->put($oldFailed3->s3_key_original, 'content 3');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All old failed assets should be deleted
+        expect(MediaAsset::find($oldFailed1->id))->toBeNull()
+            ->and(MediaAsset::find($oldFailed2->id))->toBeNull()
+            ->and(MediaAsset::find($oldFailed3->id))->toBeNull();
+    });
+
+    it('uses configured retention hours from config', function () {
+        Storage::fake('s3-permanent');
+
+        // Override config to 48 hours
+        config(['media.failed_retention_hours' => 48]);
+
+        // Create failed asset that's 25 hours old (would be deleted with 24h config, but not with 48h)
+        $recentFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($recentFailed->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist (25 hours < 48 hours)
+        expect(MediaAsset::find($recentFailed->id))->not->toBeNull();
+
+        // Now create asset older than 48 hours
+        $oldFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(49),
+        ]);
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'old content');
+
+        $job->handle();
+
+        // Old asset should be deleted
+        expect(MediaAsset::find($oldFailed->id))->toBeNull();
+    });
+
+    it('defaults to 24 hours when config is not set', function () {
+        Storage::fake('s3-permanent');
+
+        // Unset config to test default behavior
+        config(['media.failed_retention_hours' => null]);
+
+        // Create failed asset older than 24 hours (default)
+        $oldFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should be deleted using 24-hour default
+        expect(MediaAsset::find($oldFailed->id))->toBeNull();
+    });
+});
+
+describe('recent failed assets preservation', function () {
+    it('does not delete failed assets newer than 24 hours', function () {
+        Storage::fake('s3-permanent');
+
+        // Create failed asset that's only 23 hours old
+        $recentFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(23),
+        ]);
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($recentFailed->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist
+        expect(MediaAsset::find($recentFailed->id))->not->toBeNull()
+            ->and(Storage::disk('s3-permanent')->exists($recentFailed->s3_key_original))->toBeTrue();
+    });
+
+    it('does not delete failed assets created exactly at threshold', function () {
+        Storage::fake('s3-permanent');
+
+        // Create failed asset exactly 24 hours old
+        $thresholdFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(24),
+        ]);
+
+        Storage::disk('s3-permanent')->put($thresholdFailed->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist (not older than, just equal to)
+        expect(MediaAsset::find($thresholdFailed->id))->not->toBeNull();
+    });
+
+    it('preserves very recent failed assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create failed assets at various recent times
+        $justFailed = MediaAsset::factory()->failed()->create(['created_at' => now()->subMinutes(5)]);
+        $oneHourOld = MediaAsset::factory()->failed()->create(['created_at' => now()->subHour()]);
+        $twelveHoursOld = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(12)]);
+
+        // Create S3 files
+        Storage::disk('s3-permanent')->put($justFailed->s3_key_original, 'content 1');
+        Storage::disk('s3-permanent')->put($oneHourOld->s3_key_original, 'content 2');
+        Storage::disk('s3-permanent')->put($twelveHoursOld->s3_key_original, 'content 3');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All recent failed assets should still exist
+        expect(MediaAsset::find($justFailed->id))->not->toBeNull()
+            ->and(MediaAsset::find($oneHourOld->id))->not->toBeNull()
+            ->and(MediaAsset::find($twelveHoursOld->id))->not->toBeNull();
+    });
+});
+
+describe('state-based filtering', function () {
+    it('does not delete ready assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create ready asset older than 24 hours
+        $oldReady = MediaAsset::factory()->create([
+            'state' => MediaState::Ready,
+            'created_at' => now()->subDays(30),
+        ]);
+
+        Storage::disk('s3-permanent')->put($oldReady->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist
+        expect(MediaAsset::find($oldReady->id))->not->toBeNull();
+    });
+
+    it('does not delete processing assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create processing asset older than 24 hours
+        $oldProcessing = MediaAsset::factory()->processing()->create([
+            'created_at' => now()->subDays(2),
+        ]);
+
+        Storage::disk('s3-permanent')->put($oldProcessing->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist
+        expect(MediaAsset::find($oldProcessing->id))->not->toBeNull();
+    });
+
+    it('does not delete uploading assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create uploading asset older than 24 hours
+        $oldUploading = MediaAsset::factory()->uploading()->create([
+            'created_at' => now()->subDays(2),
+        ]);
+
+        Storage::disk('s3-permanent')->put($oldUploading->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist
+        expect(MediaAsset::find($oldUploading->id))->not->toBeNull();
+    });
+
+    it('only deletes failed state assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create multiple old assets in different states
+        $oldFailed = MediaAsset::factory()->failed()->create(['created_at' => now()->subDays(2)]);
+        $oldReady = MediaAsset::factory()->create(['state' => MediaState::Ready, 'created_at' => now()->subDays(2)]);
+        $oldProcessing = MediaAsset::factory()->processing()->create(['created_at' => now()->subDays(2)]);
+        $oldUploading = MediaAsset::factory()->uploading()->create(['created_at' => now()->subDays(2)]);
+
+        // Create S3 files
+        foreach ([$oldFailed, $oldReady, $oldProcessing, $oldUploading] as $asset) {
+            Storage::disk('s3-permanent')->put($asset->s3_key_original, 'content');
+        }
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Only failed asset should be deleted
+        expect(MediaAsset::find($oldFailed->id))->toBeNull()
+            ->and(MediaAsset::find($oldReady->id))->not->toBeNull()
+            ->and(MediaAsset::find($oldProcessing->id))->not->toBeNull()
+            ->and(MediaAsset::find($oldUploading->id))->not->toBeNull();
+    });
+});
+
+describe('S3 file cleanup', function () {
+    it('deletes S3 original file when deleting failed asset', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'test content');
+        expect(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeTrue();
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // S3 file should be deleted
+        expect(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeFalse();
+    });
+
+    it('deletes S3 variant files when deleting failed asset with variants', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed = MediaAsset::factory()->failed()->withVariants()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        // Create S3 files for original and variants
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'original content');
+
+        $variants = $oldFailed->variants;
+        foreach ($variants as $variant) {
+            Storage::disk('s3-permanent')->put($variant->s3_key, "variant {$variant->width}");
+        }
+
+        // Verify files exist before cleanup
+        expect(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeTrue();
+        foreach ($variants as $variant) {
+            expect(Storage::disk('s3-permanent')->exists($variant->s3_key))->toBeTrue();
+        }
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All S3 files should be deleted
+        expect(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeFalse();
+        foreach ($variants as $variant) {
+            expect(Storage::disk('s3-permanent')->exists($variant->s3_key))->toBeFalse();
+        }
+    });
+
+    it('handles missing S3 files gracefully', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        // Don't create S3 file (simulates already-deleted or missing file)
+        expect(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeFalse();
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Should complete without error, asset should be deleted
+        expect(MediaAsset::find($oldFailed->id))->toBeNull();
+    });
+
+    it('deletes multiple S3 files for multiple failed assets', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed1 = MediaAsset::factory()->failed()->withVariants()->create(['created_at' => now()->subDays(2)]);
+        $oldFailed2 = MediaAsset::factory()->failed()->withVariants()->create(['created_at' => now()->subDays(3)]);
+
+        // Create S3 files for both assets and their variants
+        Storage::disk('s3-permanent')->put($oldFailed1->s3_key_original, 'content 1');
+        Storage::disk('s3-permanent')->put($oldFailed2->s3_key_original, 'content 2');
+
+        foreach ($oldFailed1->variants as $variant) {
+            Storage::disk('s3-permanent')->put($variant->s3_key, 'variant 1');
+        }
+        foreach ($oldFailed2->variants as $variant) {
+            Storage::disk('s3-permanent')->put($variant->s3_key, 'variant 2');
+        }
+
+        $totalFiles = 2 + $oldFailed1->variants->count() + $oldFailed2->variants->count();
+        expect(Storage::disk('s3-permanent')->allFiles())->toHaveCount($totalFiles);
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All files should be deleted
+        expect(Storage::disk('s3-permanent')->allFiles())->toBeEmpty();
+    });
+});
+
+describe('variant cleanup', function () {
+    it('deletes variant database records when deleting failed asset', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed = MediaAsset::factory()->failed()->withVariants()->create([
+            'created_at' => now()->subHours(25),
+        ]);
+
+        $variantCount = $oldFailed->variants()->count();
+        expect($variantCount)->toBeGreaterThan(0);
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Variants should be deleted (cascade delete or explicit cleanup)
+        expect(MediaVariant::where('media_asset_id', $oldFailed->id)->count())->toBe(0);
+    });
+
+    it('handles failed assets without variants', function () {
+        Storage::fake('s3-permanent');
+
+        // Video and SVG assets don't have variants
+        $oldFailedVideo = MediaAsset::factory()->video()->failed()->create(['created_at' => now()->subDays(2)]);
+        $oldFailedSvg = MediaAsset::factory()->svg()->failed()->create(['created_at' => now()->subDays(2)]);
+
+        Storage::disk('s3-permanent')->put($oldFailedVideo->s3_key_original, 'video content');
+        Storage::disk('s3-permanent')->put($oldFailedSvg->s3_key_original, 'svg content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Assets should be deleted
+        expect(MediaAsset::find($oldFailedVideo->id))->toBeNull()
+            ->and(MediaAsset::find($oldFailedSvg->id))->toBeNull()
+            ->and(Storage::disk('s3-permanent')->exists($oldFailedVideo->s3_key_original))->toBeFalse()
+            ->and(Storage::disk('s3-permanent')->exists($oldFailedSvg->s3_key_original))->toBeFalse();
+    });
+});
+
+describe('queue configuration', function () {
+    it('runs on media queue', function () {
+        Queue::fake();
+
+        CleanupFailedMediaJob::dispatch();
+
+        Queue::assertPushedOn('media', CleanupFailedMediaJob::class);
+    });
+});
+
+describe('edge cases', function () {
+    it('handles empty result set gracefully', function () {
+        Storage::fake('s3-permanent');
+
+        // No failed assets exist
+        expect(MediaAsset::where('state', MediaState::Failed)->count())->toBe(0);
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Should complete without error
+        expect(true)->toBeTrue();
+    });
+
+    it('handles no old failed assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create only recent failed assets
+        $recentFailed1 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(1)]);
+        $recentFailed2 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(12)]);
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All assets should still exist
+        expect(MediaAsset::find($recentFailed1->id))->not->toBeNull()
+            ->and(MediaAsset::find($recentFailed2->id))->not->toBeNull();
+    });
+
+    it('handles mixed scenario with old and recent failed assets', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed1 = MediaAsset::factory()->failed()->create(['created_at' => now()->subDays(2)]);
+        $oldFailed2 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(30)]);
+        $recentFailed1 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(23)]);
+        $recentFailed2 = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(5)]);
+
+        foreach ([$oldFailed1, $oldFailed2, $recentFailed1, $recentFailed2] as $asset) {
+            Storage::disk('s3-permanent')->put($asset->s3_key_original, 'content');
+        }
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Old failed assets deleted, recent ones preserved
+        expect(MediaAsset::find($oldFailed1->id))->toBeNull()
+            ->and(MediaAsset::find($oldFailed2->id))->toBeNull()
+            ->and(MediaAsset::find($recentFailed1->id))->not->toBeNull()
+            ->and(MediaAsset::find($recentFailed2->id))->not->toBeNull();
+    });
+
+    it('handles large batch of failed assets', function () {
+        Storage::fake('s3-permanent');
+
+        // Create 50 old failed assets
+        $oldFailedAssets = MediaAsset::factory()->failed()->count(50)->create([
+            'created_at' => now()->subDays(5),
+        ]);
+
+        foreach ($oldFailedAssets as $asset) {
+            Storage::disk('s3-permanent')->put($asset->s3_key_original, 'content');
+        }
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All should be deleted
+        expect(MediaAsset::where('state', MediaState::Failed)
+            ->where('created_at', '<=', now()->subHours(24))
+            ->count())->toBe(0);
+    });
+
+    it('preserves error_message field before deletion', function () {
+        Storage::fake('s3-permanent');
+
+        $oldFailed = MediaAsset::factory()->failed()->create([
+            'created_at' => now()->subDays(2),
+            'error_message' => 'Original error: File processing timeout',
+        ]);
+
+        // Capture error message before deletion
+        $errorMessage = $oldFailed->error_message;
+        expect($errorMessage)->toBe('Original error: File processing timeout');
+
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset deleted but we captured the error message
+        expect(MediaAsset::find($oldFailed->id))->toBeNull();
+    });
+});
