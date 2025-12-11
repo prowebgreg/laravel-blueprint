@@ -407,8 +407,8 @@ describe('fallback configuration', function () {
     it('handles missing fallback image gracefully', function () {
         $page = Page::factory()->create(['slug' => 'home']);
 
-        // Set fallback to non-existent media ID
-        Setting::set('media.fallback_image_id', 'non-existent-uuid-12345678');
+        // Set fallback to non-existent media ID (valid UUID format but doesn't exist)
+        Setting::set('media.fallback_image_id', '00000000-0000-0000-0000-000000000000');
 
         $url = $page->getMediaUrl('page:home:hero:image');
 
