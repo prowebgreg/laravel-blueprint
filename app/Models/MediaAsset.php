@@ -125,23 +125,41 @@ class MediaAsset extends Model
      */
     public function getUrl(?int $width = null): string
     {
-        // TODO: Implement getUrl() method in T052
-        // Implementation steps:
-        // 1. If width is null, <= 0, or media is SVG/video: return cloudfront_url_original
-        // 2. Load variants: $variants = $this->variants()->orderBy('width')->get()
-        // 3. If no variants: return cloudfront_url_original
-        // 4. Find exact match: $exact = $variants->firstWhere('width', $width)
-        // 5. If exact: return $exact->cloudfront_url
-        // 6. Find next larger: $nextLarger = $variants->where('width', '>', $width)->first()
-        // 7. If next larger: return $nextLarger->cloudfront_url
-        // 8. Otherwise: return largest variant cloudfront_url
-        //
-        // Parameter used in implementation:
-        // - $width: variant width for selection logic (null/0/negative returns original)
+        // Return original URL if no width specified or invalid width
+        if ($width === null || $width <= 0) {
+            return $this->cloudfront_url_original;
+        }
 
-        /** @phpstan-ignore-next-line TDD placeholder - parameter used in implementation */
-        throw new \BadMethodCallException(
-            'getUrl('.($width ?? 'null').') not yet implemented - see T052'
-        );
+        // SVG and video don't have variants - always return original
+        if ($this->media_type !== MediaType::Image) {
+            return $this->cloudfront_url_original;
+        }
+
+        // Load variants sorted by width (reuse if already loaded to avoid N+1)
+        $variants = $this->relationLoaded('variants')
+            ? $this->variants->sortBy('width')->values()
+            : $this->variants()->orderBy('width')->get();
+
+        // If no variants exist, return original
+        if ($variants->isEmpty()) {
+            return $this->cloudfront_url_original;
+        }
+
+        // Try to find exact width match
+        $exact = $variants->firstWhere('width', $width);
+        if ($exact !== null) {
+            return $exact->cloudfront_url;
+        }
+
+        // Find next larger variant
+        $nextLarger = $variants->where('width', '>', $width)->first();
+        if ($nextLarger !== null) {
+            return $nextLarger->cloudfront_url;
+        }
+
+        // Requested width is larger than all variants - return largest
+        $largest = $variants->last();
+
+        return $largest->cloudfront_url;
     }
 }

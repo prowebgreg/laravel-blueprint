@@ -161,7 +161,7 @@
 
 - [X] T050 [US5] Create app/Services/Media/MediaFallbackService.php - get fallback image ID from settings, return fallback URL with optional width → @laravel-specialist
 - [X] T051 [US5] Add getMediaUrl(type, width?) method to HasMedia trait - return CDN URL or fallback, select appropriate variant width → @laravel-specialist, @php-pro
-- [ ] T052 [US5] Add getUrl(width?) method to MediaAsset model - return variant URL for width or next larger → @laravel-specialist
+- [X] T052 [US5] Add getUrl(width?) method to MediaAsset model - return variant URL for width or next larger → @laravel-specialist
 - [ ] T053 [US5] Verify all US5 tests pass with ./vendor/bin/sail artisan test --filter=MediaFallback → @test-automator
 
 **Checkpoint**: Frontend can display media with automatic fallback for missing content
