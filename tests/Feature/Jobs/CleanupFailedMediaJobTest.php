@@ -7,16 +7,27 @@ namespace Tests\Feature\Jobs;
 /**
  * Feature Tests for CleanupFailedMediaJob
  *
- * Tests automated cleanup of failed media assets:
+ * Tests automated cleanup of two categories of media assets:
+ *
+ * 1. Failed Assets Cleanup:
  * - Force deletes (permanent removal) failed assets older than configured retention period (24 hours default)
  * - Cleans up S3 files (original + variants) for deleted failed assets
  * - Preserves recent failed assets (newer than retention threshold)
  * - Preserves assets in other states (Ready, Processing, Uploading)
+ *
+ * 2. Soft-Deleted Assets Purging:
+ * - Permanently purges soft-deleted assets older than configured retention period (30 days default)
+ * - Cleans up S3 files (original + variants) for purged soft-deleted assets
+ * - Preserves recently soft-deleted assets within recovery window
+ * - Respects configured retention periods from config
+ *
+ * Additional tests:
  * - Queue configuration (media queue)
  * - Edge cases: empty result sets, multiple failures, assets with/without variants
+ * - Both cleanup phases in single job execution
  *
- * Note: The job uses forceDelete() for permanent removal since failed assets
- * older than 24 hours have no recovery value.
+ * Note: The job uses forceDelete() for permanent removal since assets outside
+ * their retention windows have no recovery value.
  *
  * @see /specs/003-media-engine/plan.md
  * @see /specs/003-media-engine/data-model.md
@@ -408,6 +419,272 @@ describe('queue configuration', function () {
         CleanupFailedMediaJob::dispatch();
 
         Queue::assertPushedOn('media', CleanupFailedMediaJob::class);
+    });
+});
+
+describe('soft-deleted asset purging', function () {
+    it('purges soft-deleted assets older than 30 days', function () {
+        Storage::fake('s3-permanent');
+
+        // Create soft-deleted asset older than 30 days
+        $oldSoftDeleted = MediaAsset::factory()->create([
+            'created_at' => now()->subDays(60),
+        ]);
+        $oldSoftDeleted->delete(); // Soft delete
+        $oldSoftDeleted->deleted_at = now()->subDays(31);
+        $oldSoftDeleted->save();
+
+        // Create S3 file for the old soft-deleted asset
+        Storage::disk('s3-permanent')->put($oldSoftDeleted->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should be permanently deleted (not in trash anymore)
+        expect(MediaAsset::find($oldSoftDeleted->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($oldSoftDeleted->id))->toBeNull()
+            ->and(Storage::disk('s3-permanent')->exists($oldSoftDeleted->s3_key_original))->toBeFalse();
+    });
+
+    it('preserves soft-deleted assets newer than 30 days', function () {
+        Storage::fake('s3-permanent');
+
+        // Create soft-deleted asset that's only 29 days old
+        $recentSoftDeleted = MediaAsset::factory()->create([
+            'created_at' => now()->subDays(40),
+        ]);
+        $recentSoftDeleted->delete(); // Soft delete
+        $recentSoftDeleted->deleted_at = now()->subDays(29);
+        $recentSoftDeleted->save();
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($recentSoftDeleted->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist in trash
+        expect(MediaAsset::withTrashed()->find($recentSoftDeleted->id))->not->toBeNull()
+            ->and(Storage::disk('s3-permanent')->exists($recentSoftDeleted->s3_key_original))->toBeTrue();
+    });
+
+    it('uses configured retention days from config', function () {
+        Storage::fake('s3-permanent');
+
+        // Override config to 45 days
+        config(['media.soft_delete_retention_days' => 45]);
+
+        // Create soft-deleted asset that's 31 days old (would be purged with 30d config, but not with 45d)
+        $recentSoftDeleted = MediaAsset::factory()->create();
+        $recentSoftDeleted->delete();
+        $recentSoftDeleted->deleted_at = now()->subDays(31);
+        $recentSoftDeleted->save();
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($recentSoftDeleted->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist (31 days < 45 days)
+        expect(MediaAsset::withTrashed()->find($recentSoftDeleted->id))->not->toBeNull();
+
+        // Now create asset older than 45 days
+        $oldSoftDeleted = MediaAsset::factory()->create();
+        $oldSoftDeleted->delete();
+        $oldSoftDeleted->deleted_at = now()->subDays(46);
+        $oldSoftDeleted->save();
+        Storage::disk('s3-permanent')->put($oldSoftDeleted->s3_key_original, 'old content');
+
+        $job->handle();
+
+        // Old asset should be purged
+        expect(MediaAsset::withTrashed()->find($oldSoftDeleted->id))->toBeNull();
+    });
+
+    it('defaults to 30 days when config is not set', function () {
+        Storage::fake('s3-permanent');
+
+        // Unset config to test default behavior
+        config(['media.soft_delete_retention_days' => null]);
+
+        // Create soft-deleted asset older than 30 days (default)
+        $oldSoftDeleted = MediaAsset::factory()->create();
+        $oldSoftDeleted->delete();
+        $oldSoftDeleted->deleted_at = now()->subDays(31);
+        $oldSoftDeleted->save();
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($oldSoftDeleted->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should be purged using 30-day default
+        expect(MediaAsset::withTrashed()->find($oldSoftDeleted->id))->toBeNull();
+    });
+
+    it('deletes S3 files for purged soft-deleted assets', function () {
+        Storage::fake('s3-permanent');
+
+        $oldSoftDeleted = MediaAsset::factory()->create();
+        $oldSoftDeleted->delete();
+        $oldSoftDeleted->deleted_at = now()->subDays(31);
+        $oldSoftDeleted->save();
+
+        // Create S3 file
+        Storage::disk('s3-permanent')->put($oldSoftDeleted->s3_key_original, 'test content');
+        expect(Storage::disk('s3-permanent')->exists($oldSoftDeleted->s3_key_original))->toBeTrue();
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // S3 file should be deleted
+        expect(Storage::disk('s3-permanent')->exists($oldSoftDeleted->s3_key_original))->toBeFalse();
+    });
+
+    it('deletes S3 variant files for purged soft-deleted assets with variants', function () {
+        Storage::fake('s3-permanent');
+
+        $oldSoftDeleted = MediaAsset::factory()->withVariants()->create();
+        $oldSoftDeleted->delete();
+        $oldSoftDeleted->deleted_at = now()->subDays(31);
+        $oldSoftDeleted->save();
+
+        // Create S3 files for original and variants
+        Storage::disk('s3-permanent')->put($oldSoftDeleted->s3_key_original, 'original content');
+
+        $variants = $oldSoftDeleted->variants;
+        foreach ($variants as $variant) {
+            Storage::disk('s3-permanent')->put($variant->s3_key, "variant {$variant->width}");
+        }
+
+        // Verify files exist before cleanup
+        expect(Storage::disk('s3-permanent')->exists($oldSoftDeleted->s3_key_original))->toBeTrue();
+        foreach ($variants as $variant) {
+            expect(Storage::disk('s3-permanent')->exists($variant->s3_key))->toBeTrue();
+        }
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All S3 files should be deleted
+        expect(Storage::disk('s3-permanent')->exists($oldSoftDeleted->s3_key_original))->toBeFalse();
+        foreach ($variants as $variant) {
+            expect(Storage::disk('s3-permanent')->exists($variant->s3_key))->toBeFalse();
+        }
+    });
+
+    it('does not purge assets that are not soft-deleted', function () {
+        Storage::fake('s3-permanent');
+
+        // Create ready asset (not soft-deleted)
+        $activeAsset = MediaAsset::factory()->create([
+            'state' => MediaState::Ready,
+            'created_at' => now()->subDays(60),
+        ]);
+
+        Storage::disk('s3-permanent')->put($activeAsset->s3_key_original, 'test content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Asset should still exist
+        expect(MediaAsset::find($activeAsset->id))->not->toBeNull();
+    });
+
+    it('purges multiple soft-deleted assets older than threshold', function () {
+        Storage::fake('s3-permanent');
+
+        // Create 3 old soft-deleted assets
+        $oldSoftDeleted1 = MediaAsset::factory()->create();
+        $oldSoftDeleted1->delete();
+        $oldSoftDeleted1->deleted_at = now()->subDays(31);
+        $oldSoftDeleted1->save();
+
+        $oldSoftDeleted2 = MediaAsset::factory()->create();
+        $oldSoftDeleted2->delete();
+        $oldSoftDeleted2->deleted_at = now()->subDays(60);
+        $oldSoftDeleted2->save();
+
+        $oldSoftDeleted3 = MediaAsset::factory()->create();
+        $oldSoftDeleted3->delete();
+        $oldSoftDeleted3->deleted_at = now()->subDays(90);
+        $oldSoftDeleted3->save();
+
+        // Create S3 files
+        Storage::disk('s3-permanent')->put($oldSoftDeleted1->s3_key_original, 'content 1');
+        Storage::disk('s3-permanent')->put($oldSoftDeleted2->s3_key_original, 'content 2');
+        Storage::disk('s3-permanent')->put($oldSoftDeleted3->s3_key_original, 'content 3');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // All old soft-deleted assets should be purged
+        expect(MediaAsset::withTrashed()->find($oldSoftDeleted1->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($oldSoftDeleted2->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($oldSoftDeleted3->id))->toBeNull();
+    });
+
+    it('handles mixed scenario with old and recent soft-deleted assets', function () {
+        Storage::fake('s3-permanent');
+
+        $oldSoftDeleted1 = MediaAsset::factory()->create();
+        $oldSoftDeleted1->delete();
+        $oldSoftDeleted1->deleted_at = now()->subDays(60);
+        $oldSoftDeleted1->save();
+
+        $oldSoftDeleted2 = MediaAsset::factory()->create();
+        $oldSoftDeleted2->delete();
+        $oldSoftDeleted2->deleted_at = now()->subDays(31);
+        $oldSoftDeleted2->save();
+
+        $recentSoftDeleted1 = MediaAsset::factory()->create();
+        $recentSoftDeleted1->delete();
+        $recentSoftDeleted1->deleted_at = now()->subDays(29);
+        $recentSoftDeleted1->save();
+
+        $recentSoftDeleted2 = MediaAsset::factory()->create();
+        $recentSoftDeleted2->delete();
+        $recentSoftDeleted2->deleted_at = now()->subDays(5);
+        $recentSoftDeleted2->save();
+
+        foreach ([$oldSoftDeleted1, $oldSoftDeleted2, $recentSoftDeleted1, $recentSoftDeleted2] as $asset) {
+            Storage::disk('s3-permanent')->put($asset->s3_key_original, 'content');
+        }
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Old soft-deleted assets purged, recent ones preserved
+        expect(MediaAsset::withTrashed()->find($oldSoftDeleted1->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($oldSoftDeleted2->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($recentSoftDeleted1->id))->not->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($recentSoftDeleted2->id))->not->toBeNull();
+    });
+
+    it('handles both failed and soft-deleted asset cleanup in single job execution', function () {
+        Storage::fake('s3-permanent');
+
+        // Create old failed asset
+        $oldFailed = MediaAsset::factory()->failed()->create(['created_at' => now()->subHours(25)]);
+        Storage::disk('s3-permanent')->put($oldFailed->s3_key_original, 'failed content');
+
+        // Create old soft-deleted asset
+        $oldSoftDeleted = MediaAsset::factory()->create();
+        $oldSoftDeleted->delete();
+        $oldSoftDeleted->deleted_at = now()->subDays(31);
+        $oldSoftDeleted->save();
+        Storage::disk('s3-permanent')->put($oldSoftDeleted->s3_key_original, 'soft-deleted content');
+
+        $job = new CleanupFailedMediaJob;
+        $job->handle();
+
+        // Both should be permanently deleted
+        expect(MediaAsset::withTrashed()->find($oldFailed->id))->toBeNull()
+            ->and(MediaAsset::withTrashed()->find($oldSoftDeleted->id))->toBeNull()
+            ->and(Storage::disk('s3-permanent')->exists($oldFailed->s3_key_original))->toBeFalse()
+            ->and(Storage::disk('s3-permanent')->exists($oldSoftDeleted->s3_key_original))->toBeFalse();
     });
 });
 

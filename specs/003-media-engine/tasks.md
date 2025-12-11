@@ -222,7 +222,7 @@
 
 - [x] T066 [US8] Create app/Jobs/Media/CleanupFailedMediaJob.php - delete failed assets older than 24 hours, cleanup S3 files → @laravel-specialist
 - [X] T067 [US8] Create app/Jobs/Media/SyncOrphanedFilesJob.php - scan S3 for orphaned files, mark missing DB records as failed, generate report → @laravel-specialist
-- [ ] T068 [US8] Add purge logic for soft-deleted assets older than 30 days to CleanupFailedMediaJob → @laravel-specialist
+- [X] T068 [US8] Add purge logic for soft-deleted assets older than 30 days to CleanupFailedMediaJob → @laravel-specialist
 - [ ] T069 [US8] Register scheduled jobs in routes/console.php: CleanupFailedMediaJob daily at 3:00, SyncOrphanedFilesJob weekly Sunday at 4:00 → @laravel-specialist
 - [ ] T070 [US8] Verify all US8 tests pass with ./vendor/bin/sail artisan test --filter=Cleanup → @test-automator
 
