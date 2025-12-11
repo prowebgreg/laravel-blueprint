@@ -10,6 +10,7 @@ return [
     'variant_widths' => [480, 640, 720, 960, 1168, 1440, 1920],
     'processing_queue' => env('MEDIA_PROCESSING_QUEUE', 'media'),
     'processing_timeout' => env('MEDIA_PROCESSING_TIMEOUT', 180),
+    'slow_operation_threshold' => env('MEDIA_SLOW_OPERATION_THRESHOLD', 30),
     'failed_retention_hours' => env('MEDIA_FAILED_RETENTION_HOURS', 24),
     'soft_delete_retention_days' => env('MEDIA_SOFT_DELETE_RETENTION_DAYS', 30),
     'folder_prefix' => 'media',

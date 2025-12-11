@@ -65,6 +65,8 @@ class ProcessMediaVariantsJob implements ShouldQueue
         GenerateVariantsAction $generateVariantsAction,
         UploadToS3Action $uploadToS3Action
     ): void {
+        $startTime = microtime(true);
+
         Log::info('Starting variant generation', [
             'asset_id' => $this->asset->id,
             'media_type' => $this->asset->media_type->value,
@@ -157,9 +159,25 @@ class ProcessMediaVariantsJob implements ShouldQueue
                 'error_message' => null,
             ]);
 
+            // Calculate total processing duration
+            $duration = round(microtime(true) - $startTime, 2);
+            $slowThreshold = config('media.slow_operation_threshold', 30);
+
+            // Log warning if operation took longer than threshold
+            if ($duration > $slowThreshold) {
+                Log::warning('Slow variant generation detected', [
+                    'asset_id' => $this->asset->id,
+                    'duration_seconds' => $duration,
+                    'variant_count' => count($createdVariantIds),
+                    'file_size' => $this->asset->file_size,
+                    'threshold_seconds' => $slowThreshold,
+                ]);
+            }
+
             Log::info('Variant generation completed successfully', [
                 'asset_id' => $this->asset->id,
                 'variants_created' => count($createdVariantIds),
+                'duration_seconds' => $duration,
             ]);
         } catch (\Throwable $e) {
             // Rollback will be handled by failed() method
