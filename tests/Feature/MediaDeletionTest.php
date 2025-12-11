@@ -30,7 +30,6 @@ declare(strict_types=1);
  * @see /specs/003-media-engine/tasks.md
  */
 
-use App\Enums\ContentStatus;
 use App\Models\BlogPost;
 use App\Models\Faq;
 use App\Models\MediaAsset;
@@ -290,18 +289,14 @@ describe('blocking deletion when used by published public content', function () 
 
         $page->attachMedia($media, 'page:home:hero:image');
 
-        // In this test, we're testing the constraint directly.
-        // When MediaDeletionService is implemented, it would throw a custom exception.
-        // For now, we test that the media is used by published content.
-        // This will be updated when MediaDeletionService exists (T059).
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
 
-        // Verify the blocking condition exists
-        expect($page->status)->toBe(ContentStatus::Published)
-            ->and($page->getMedia('page:home:hero:image'))->not->toBeNull();
+        expect(fn () => $deletionService->delete($media))
+            ->toThrow(\App\Exceptions\MediaDeletionBlockedException::class);
 
-        // The actual deletion blocking will be implemented in MediaDeletionService
-        // For now, we just verify we can detect the condition
-    })->skip('Will be implemented when MediaDeletionService exists (T059)');
+        // Verify media is NOT soft deleted
+        expect($media->fresh()->trashed())->toBeFalse();
+    });
 
     it('throws exception when trying to delete media used by published Service', function () {
         $media = MediaAsset::factory()->create();
@@ -309,10 +304,14 @@ describe('blocking deletion when used by published public content', function () 
 
         $service->attachMedia($media, 'service:hero:image');
 
-        // Verify the blocking condition exists
-        expect($service->status)->toBe(ContentStatus::Published)
-            ->and($service->getMedia('service:hero:image'))->not->toBeNull();
-    })->skip('Will be implemented when MediaDeletionService exists (T059)');
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        expect(fn () => $deletionService->delete($media))
+            ->toThrow(\App\Exceptions\MediaDeletionBlockedException::class);
+
+        // Verify media is NOT soft deleted
+        expect($media->fresh()->trashed())->toBeFalse();
+    });
 
     it('throws exception when trying to delete media used by published BlogPost', function () {
         $media = MediaAsset::factory()->create();
@@ -320,10 +319,14 @@ describe('blocking deletion when used by published public content', function () 
 
         $blogPost->attachMedia($media, 'blog:hero:image');
 
-        // Verify the blocking condition exists
-        expect($blogPost->status)->toBe(ContentStatus::Published)
-            ->and($blogPost->getMedia('blog:hero:image'))->not->toBeNull();
-    })->skip('Will be implemented when MediaDeletionService exists (T059)');
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        expect(fn () => $deletionService->delete($media))
+            ->toThrow(\App\Exceptions\MediaDeletionBlockedException::class);
+
+        // Verify media is NOT soft deleted
+        expect($media->fresh()->trashed())->toBeFalse();
+    });
 
     it('throws exception when media used by multiple published public content items', function () {
         $media = MediaAsset::factory()->create();
@@ -335,11 +338,14 @@ describe('blocking deletion when used by published public content', function () 
         $service->attachMedia($media, 'service:hero:image');
         $blogPost->attachMedia($media, 'blog:hero:image');
 
-        // Verify the blocking condition exists
-        expect($page->status)->toBe(ContentStatus::Published)
-            ->and($service->status)->toBe(ContentStatus::Published)
-            ->and($blogPost->status)->toBe(ContentStatus::Published);
-    })->skip('Will be implemented when MediaDeletionService exists (T059)');
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        expect(fn () => $deletionService->delete($media))
+            ->toThrow(\App\Exceptions\MediaDeletionBlockedException::class);
+
+        // Verify media is NOT soft deleted
+        expect($media->fresh()->trashed())->toBeFalse();
+    });
 
     it('throws exception when media used by both published Page and internal resource', function () {
         $media = MediaAsset::factory()->create();
@@ -349,9 +355,14 @@ describe('blocking deletion when used by published public content', function () 
         $page->attachMedia($media, 'page:home:hero:image');
         $faq->attachMedia($media, 'faq:icon');
 
-        // Verify the blocking condition exists (published Page blocks)
-        expect($page->status)->toBe(ContentStatus::Published);
-    })->skip('Will be implemented when MediaDeletionService exists (T059)');
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        expect(fn () => $deletionService->delete($media))
+            ->toThrow(\App\Exceptions\MediaDeletionBlockedException::class);
+
+        // Verify media is NOT soft deleted
+        expect($media->fresh()->trashed())->toBeFalse();
+    });
 });
 
 describe('blocking deletion of fallback image', function () {
@@ -361,10 +372,14 @@ describe('blocking deletion of fallback image', function () {
         // Set as fallback image
         Setting::set('media.fallback_image_id', $fallbackMedia->id);
 
-        // Verify the fallback setting exists
-        $fallbackId = Setting::get('media.fallback_image_id');
-        expect($fallbackId)->toBe($fallbackMedia->id);
-    })->skip('Will be implemented when MediaDeletionService exists (T059)');
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
+
+        expect(fn () => $deletionService->delete($fallbackMedia))
+            ->toThrow(\App\Exceptions\MediaDeletionBlockedException::class);
+
+        // Verify media is NOT soft deleted
+        expect($fallbackMedia->fresh()->trashed())->toBeFalse();
+    });
 
     it('allows deletion of non-fallback media when fallback exists', function () {
         $fallbackMedia = MediaAsset::factory()->create();
@@ -373,11 +388,13 @@ describe('blocking deletion of fallback image', function () {
         // Set fallback image
         Setting::set('media.fallback_image_id', $fallbackMedia->id);
 
-        // Should be able to delete regular media
-        $regularMedia->delete();
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
 
-        expect($regularMedia->trashed())->toBeTrue()
-            ->and($fallbackMedia->trashed())->toBeFalse();
+        // Should be able to delete regular media
+        $deletionService->delete($regularMedia);
+
+        expect($regularMedia->fresh()->trashed())->toBeTrue()
+            ->and($fallbackMedia->fresh()->trashed())->toBeFalse();
     });
 });
 
@@ -464,12 +481,21 @@ describe('relationship removal on soft delete', function () {
 
         expect($relationExists)->toBeTrue();
 
-        // Soft delete the media
-        $media->delete();
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
 
-        // Note: Actual relationship removal would be handled by MediaDeletionService
-        // or a database-level CASCADE. This test documents the expected behavior.
-    })->skip('Relationship removal will be implemented in MediaDeletionService (T059)');
+        // Soft delete the media
+        $deletionService->delete($media);
+
+        // Verify relationship is removed
+        $relationExists = DB::table('content_relations')
+            ->where('source_type', Page::class)
+            ->where('source_id', (string) $page->id)
+            ->where('target_type', MediaAsset::class)
+            ->where('target_id', (string) $media->id)
+            ->exists();
+
+        expect($relationExists)->toBeFalse();
+    });
 
     it('removes multiple content relations when media is soft deleted', function () {
         $media = MediaAsset::factory()->create();
@@ -489,11 +515,19 @@ describe('relationship removal on soft delete', function () {
 
         expect($relationCount)->toBe(3);
 
-        // Soft delete the media
-        $media->delete();
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
 
-        // Relationships should be removed
-    })->skip('Relationship removal will be implemented in MediaDeletionService (T059)');
+        // Soft delete the media
+        $deletionService->delete($media);
+
+        // Verify all relationships are removed
+        $relationCount = DB::table('content_relations')
+            ->where('target_type', MediaAsset::class)
+            ->where('target_id', (string) $media->id)
+            ->count();
+
+        expect($relationCount)->toBe(0);
+    });
 
     it('removes relationships with different relation types for same content', function () {
         $media = MediaAsset::factory()->create();
@@ -513,11 +547,21 @@ describe('relationship removal on soft delete', function () {
 
         expect($relationCount)->toBe(2);
 
-        // Soft delete the media
-        $media->delete();
+        $deletionService = app(\App\Services\Media\MediaDeletionService::class);
 
-        // Both relationships should be removed
-    })->skip('Relationship removal will be implemented in MediaDeletionService (T059)');
+        // Soft delete the media
+        $deletionService->delete($media);
+
+        // Verify both relationships are removed
+        $relationCount = DB::table('content_relations')
+            ->where('source_type', Page::class)
+            ->where('source_id', (string) $page->id)
+            ->where('target_type', MediaAsset::class)
+            ->where('target_id', (string) $media->id)
+            ->count();
+
+        expect($relationCount)->toBe(0);
+    });
 });
 
 describe('edge cases and validation', function () {
