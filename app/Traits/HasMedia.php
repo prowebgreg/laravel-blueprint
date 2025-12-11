@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use App\Models\MediaAsset;
+use App\Services\Media\MediaFallbackService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
@@ -208,22 +209,17 @@ trait HasMedia
      */
     public function getMediaUrl(string $type, ?int $width = null): ?string
     {
-        // TODO: Implement getMediaUrl() method in T051
-        // Implementation steps:
-        // 1. Get media for the type: $media = $this->getMedia($type)
-        // 2. Check if media exists and is in 'ready' state
-        // 3. If yes: return $media->getUrl($width)
-        // 4. If no: return fallback URL from Setting::get('media.fallback_image_id')
-        // 5. If fallback exists and ready: return $fallback->getUrl($width)
-        // 6. Otherwise: return null
-        //
-        // Parameters used in implementation:
-        // - $type: relationship identifier to look up media
-        // - $width: optional variant width to pass to getUrl()
+        // Get media for the specified relationship type
+        $media = $this->getMedia($type);
 
-        /** @phpstan-ignore-next-line TDD placeholder - parameters used in implementation */
-        throw new \BadMethodCallException(
-            "getMediaUrl('{$type}', ".($width ?? 'null').') not yet implemented - see T051'
-        );
+        // Check if media exists and is in accessible (ready) state
+        if ($media !== null && $media->state->isAccessible()) {
+            return $media->getUrl($width);
+        }
+
+        // Media not available - use fallback service
+        $fallbackService = app(MediaFallbackService::class);
+
+        return $fallbackService->getFallbackUrl($width);
     }
 }
