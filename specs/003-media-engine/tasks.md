@@ -182,7 +182,7 @@
 
 ### Implementation for User Story 6
 
-- [ ] T057 [US6] Create app/Services/Media/MediaUsageService.php - findUsages() query content_relations, isBlockedByPublicContent() check model types → @laravel-specialist
+- [X] T057 [US6] Create app/Services/Media/MediaUsageService.php - findUsages() query content_relations, isBlockedByPublicContent() check model types → @laravel-specialist
 - [ ] T058 [US6] Create app/Actions/Media/DeleteFromS3Action.php - delete single file and batch delete with error handling → @laravel-specialist, @php-pro
 - [ ] T059 [US6] Create app/Services/Media/MediaDeletionService.php - check usage, block if public content, soft-delete asset, remove relationships, delete S3 files → @laravel-specialist
 - [ ] T060 [US6] Block deletion of fallback image in MediaDeletionService → @laravel-specialist
