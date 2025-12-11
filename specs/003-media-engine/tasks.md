@@ -235,7 +235,7 @@
 **Purpose**: Logging, optimization, edge case handling, final verification
 
 - [X] T071 Add slow operation logging (>30s) to ProcessMediaVariantsJob → @laravel-specialist
-- [ ] T072 Add processing failure logging with asset ID and stack trace → @laravel-specialist
+- [X] T072 Add processing failure logging with asset ID and stack trace → @laravel-specialist
 - [ ] T073 [P] Run ./vendor/bin/sail pint to format all new files → @laravel-specialist
 - [ ] T074 [P] Run ./vendor/bin/sail artisan test to verify entire test suite passes → @test-automator
 - [ ] T075 Verify Horizon media queue configuration exists → @laravel-specialist

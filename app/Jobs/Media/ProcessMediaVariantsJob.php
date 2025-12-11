@@ -204,6 +204,7 @@ class ProcessMediaVariantsJob implements ShouldQueue
         Log::error('ProcessMediaVariantsJob failed, rolling back', [
             'asset_id' => $this->asset->id,
             'error' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
         ]);
 
         // Refresh asset to get latest state
