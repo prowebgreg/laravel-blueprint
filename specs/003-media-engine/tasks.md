@@ -178,7 +178,7 @@
 
 - [X] T054 [P] [US6] Create tests/Feature/MediaUsageTrackingTest.php - test findUsages(), isBlockedByPublicContent() for Page/Service/BlogPost vs Faq/Testimonial → @test-automator, @laravel-specialist
 - [X] T055 [P] [US6] Create tests/Feature/MediaDeletionTest.php - test soft delete, S3 cleanup, relationship removal, blocking logic → @test-automator, @laravel-specialist
-- [ ] T056 [P] [US6] Create tests/Unit/Actions/Media/DeleteFromS3ActionTest.php - test single file and batch deletion → @test-automator, @laravel-specialist
+- [X] T056 [P] [US6] Create tests/Unit/Actions/Media/DeleteFromS3ActionTest.php - test single file and batch deletion → @test-automator, @laravel-specialist
 
 ### Implementation for User Story 6
 
