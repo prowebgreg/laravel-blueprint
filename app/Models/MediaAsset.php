@@ -39,6 +39,30 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ *
+ * Soft Delete Usage Examples:
+ *
+ * // Get only soft-deleted assets (for "Trash" view in admin panel)
+ * MediaAsset::onlyTrashed()->get();
+ * MediaAsset::onlyTrashed()->where('deleted_at', '>=', now()->subDays(30))->get();
+ *
+ * // Get all assets including soft-deleted (for audit/admin queries)
+ * MediaAsset::withTrashed()->find($id);
+ * MediaAsset::withTrashed()->where('media_type', MediaType::Image)->get();
+ *
+ * // Restore a soft-deleted asset (within 30-day retention window)
+ * $asset = MediaAsset::onlyTrashed()->find($id);
+ * $asset->restore();
+ *
+ * // Permanently delete an asset (force delete bypasses soft delete)
+ * $asset = MediaAsset::find($id);
+ * $asset->forceDelete();
+ *
+ * // Check if an asset is soft-deleted
+ * $asset->trashed(); // returns bool
+ *
+ * // Query deleted assets with relationships
+ * MediaAsset::onlyTrashed()->with('variants')->get();
  */
 class MediaAsset extends Model
 {
