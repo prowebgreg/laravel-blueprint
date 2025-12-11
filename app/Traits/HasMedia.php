@@ -42,8 +42,7 @@ trait HasMedia
             'id',
             'id'
         )
-            ->withPivot('relation_type', 'order')
-            ->withTimestamps()
+            ->withPivot('relation_type', 'order', 'created_at')
             ->orderBy('content_relations.order');
     }
 
@@ -102,12 +101,20 @@ trait HasMedia
      */
     public function detachMedia(string $type): void
     {
-        DB::table('content_relations')
-            ->where('source_type', static::class)
-            ->where('source_id', (string) $this->getKey())
-            ->where('target_type', MediaAsset::class)
-            ->where('relation_type', $type)
-            ->delete();
+        // PostgreSQL: Use raw SQL with explicit text casting to avoid UUID type inference
+        DB::delete(
+            'DELETE FROM content_relations
+            WHERE source_type::text = ?::text
+            AND source_id::text = ?::text
+            AND target_type::text = ?::text
+            AND relation_type::text = ?::text',
+            [
+                static::class,
+                (string) $this->getKey(),
+                MediaAsset::class,
+                $type,
+            ]
+        );
     }
 
     /**
