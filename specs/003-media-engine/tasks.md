@@ -137,10 +137,10 @@
 
 - [X] T042 [US4] Create app/Traits/HasMedia.php - implement mediaAssets() morphToMany, attachMedia(), detachMedia(), getMedia(), getAllMedia() using content_relations table → @laravel-specialist, @php-pro
 - [X] T043 [US4] Add HasMedia trait to app/Models/Page.php → @laravel-specialist
-- [ ] T044 [P] [US4] Add HasMedia trait to app/Models/Service.php → @laravel-specialist
-- [ ] T045 [P] [US4] Add HasMedia trait to app/Models/BlogPost.php → @laravel-specialist
-- [ ] T046 [P] [US4] Add HasMedia trait to app/Models/Faq.php → @laravel-specialist
-- [ ] T047 [P] [US4] Add HasMedia trait to app/Models/Testimonial.php → @laravel-specialist
+- [X] T044 [P] [US4] Add HasMedia trait to app/Models/Service.php → @laravel-specialist
+- [X] T045 [P] [US4] Add HasMedia trait to app/Models/BlogPost.php → @laravel-specialist
+- [X] T046 [P] [US4] Add HasMedia trait to app/Models/Faq.php → @laravel-specialist
+- [X] T047 [P] [US4] Add HasMedia trait to app/Models/Testimonial.php → @laravel-specialist
 - [ ] T048 [US4] Verify all US4 tests pass with ./vendor/bin/sail artisan test --filter=HasMedia → @test-automator
 
 **Checkpoint**: HasMedia trait enables media attachment on any content model

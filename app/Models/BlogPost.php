@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\ContentStatus;
 use App\Enums\OgType;
 use App\Traits\HasContentBlocks;
+use App\Traits\HasMedia;
 use App\Traits\HasRelatedContent;
 use App\Traits\HasSeo;
 use App\Traits\HasSlug;
@@ -54,6 +55,7 @@ class BlogPost extends Model
 {
     use HasContentBlocks;
     use HasFactory;
+    use HasMedia;
     use HasRelatedContent;
     use HasSeo;
     use HasSlug;
