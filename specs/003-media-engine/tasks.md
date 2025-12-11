@@ -136,7 +136,7 @@
 ### Implementation for User Story 4
 
 - [X] T042 [US4] Create app/Traits/HasMedia.php - implement mediaAssets() morphToMany, attachMedia(), detachMedia(), getMedia(), getAllMedia() using content_relations table → @laravel-specialist, @php-pro
-- [ ] T043 [US4] Add HasMedia trait to app/Models/Page.php → @laravel-specialist
+- [X] T043 [US4] Add HasMedia trait to app/Models/Page.php → @laravel-specialist
 - [ ] T044 [P] [US4] Add HasMedia trait to app/Models/Service.php → @laravel-specialist
 - [ ] T045 [P] [US4] Add HasMedia trait to app/Models/BlogPost.php → @laravel-specialist
 - [ ] T046 [P] [US4] Add HasMedia trait to app/Models/Faq.php → @laravel-specialist
