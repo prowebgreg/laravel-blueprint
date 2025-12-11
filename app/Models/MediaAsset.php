@@ -107,4 +107,41 @@ class MediaAsset extends Model
     {
         return $this->hasMany(MediaVariant::class);
     }
+
+    /**
+     * Get the CDN URL for this media asset with optional variant width selection.
+     *
+     * Width selection logic:
+     * - If no width specified: return original URL
+     * - If exact width exists: return that variant URL
+     * - If exact width doesn't exist: return next larger variant
+     * - If requested width is larger than all variants: return largest variant
+     * - If no variants exist: return original URL
+     * - SVG and video: always return original URL (no variants)
+     * - Zero or negative width: return original URL
+     *
+     * @param  int|null  $width  Optional variant width in pixels
+     * @return string The CDN URL for the media or selected variant
+     */
+    public function getUrl(?int $width = null): string
+    {
+        // TODO: Implement getUrl() method in T052
+        // Implementation steps:
+        // 1. If width is null, <= 0, or media is SVG/video: return cloudfront_url_original
+        // 2. Load variants: $variants = $this->variants()->orderBy('width')->get()
+        // 3. If no variants: return cloudfront_url_original
+        // 4. Find exact match: $exact = $variants->firstWhere('width', $width)
+        // 5. If exact: return $exact->cloudfront_url
+        // 6. Find next larger: $nextLarger = $variants->where('width', '>', $width)->first()
+        // 7. If next larger: return $nextLarger->cloudfront_url
+        // 8. Otherwise: return largest variant cloudfront_url
+        //
+        // Parameter used in implementation:
+        // - $width: variant width for selection logic (null/0/negative returns original)
+
+        /** @phpstan-ignore-next-line TDD placeholder - parameter used in implementation */
+        throw new \BadMethodCallException(
+            'getUrl('.($width ?? 'null').') not yet implemented - see T052'
+        );
+    }
 }

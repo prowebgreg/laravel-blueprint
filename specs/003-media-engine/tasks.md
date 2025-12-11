@@ -155,7 +155,7 @@
 
 ### Tests for User Story 5
 
-- [ ] T049 [P] [US5] Create tests/Feature/MediaFallbackTest.php - test getMediaUrl() with attached media, missing media, deleted media, width selection → @test-automator, @laravel-specialist
+- [X] T049 [P] [US5] Create tests/Feature/MediaFallbackTest.php - test getMediaUrl() with attached media, missing media, deleted media, width selection → @test-automator, @laravel-specialist
 
 ### Implementation for User Story 5
 

@@ -193,4 +193,37 @@ trait HasMedia
             ->orderByRaw("array_position(ARRAY[{$placeholders}]::text[], id::text)", $ids)
             ->get();
     }
+
+    /**
+     * Get CDN URL for attached media with optional width selection.
+     *
+     * Returns the appropriate variant URL for the requested width, or fallback
+     * image if media is not attached, deleted, or not in 'ready' state.
+     *
+     * Implementation delegated to MediaAsset::getUrl() for variant selection logic.
+     *
+     * @param  string  $type  Relationship identifier
+     * @param  int|null  $width  Optional variant width
+     * @return string|null CDN URL or fallback URL or null if no fallback configured
+     */
+    public function getMediaUrl(string $type, ?int $width = null): ?string
+    {
+        // TODO: Implement getMediaUrl() method in T051
+        // Implementation steps:
+        // 1. Get media for the type: $media = $this->getMedia($type)
+        // 2. Check if media exists and is in 'ready' state
+        // 3. If yes: return $media->getUrl($width)
+        // 4. If no: return fallback URL from Setting::get('media.fallback_image_id')
+        // 5. If fallback exists and ready: return $fallback->getUrl($width)
+        // 6. Otherwise: return null
+        //
+        // Parameters used in implementation:
+        // - $type: relationship identifier to look up media
+        // - $width: optional variant width to pass to getUrl()
+
+        /** @phpstan-ignore-next-line TDD placeholder - parameters used in implementation */
+        throw new \BadMethodCallException(
+            "getMediaUrl('{$type}', ".($width ?? 'null').') not yet implemented - see T051'
+        );
+    }
 }
