@@ -345,9 +345,9 @@ describe('relationship cascade', function () {
         // Verify the remaining relationship is Page->FAQ
         $remaining = DB::table('content_relations')->first();
         expect($remaining->source_type)->toBe(Page::class);
-        expect($remaining->source_id)->toBe($page->id);
+        expect($remaining->source_id)->toBe((string) $page->id);
         expect($remaining->target_type)->toBe(Faq::class);
-        expect($remaining->target_id)->toBe($faq->id);
+        expect($remaining->target_id)->toBe((string) $faq->id);
     });
 
     test('counts relationships correctly in output', function () {
