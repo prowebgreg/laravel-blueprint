@@ -201,7 +201,7 @@
 ### Implementation for User Story 7
 
 - [X] T062 [US7] Add scope onlyTrashed(), withTrashed() usage examples in MediaAsset model docblock → @laravel-specialist
-- [ ] T063 [US7] Add withDeletedMedia() scope to MediaAsset for admin queries → @laravel-specialist
+- [X] T063 [US7] Add withDeletedMedia() scope to MediaAsset for admin queries → @laravel-specialist
 
 **Checkpoint**: Deleted media is viewable for 30-day recovery window
 

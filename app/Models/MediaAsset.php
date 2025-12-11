@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\MediaFolder;
 use App\Enums\MediaState;
 use App\Enums\MediaType;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,6 +50,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * // Get all assets including soft-deleted (for audit/admin queries)
  * MediaAsset::withTrashed()->find($id);
  * MediaAsset::withTrashed()->where('media_type', MediaType::Image)->get();
+ *
+ * // Semantic alias for admin contexts (same as withTrashed())
+ * MediaAsset::withDeletedMedia()->get();
+ * MediaAsset::withDeletedMedia()->where('media_type', MediaType::Image)->get();
  *
  * // Restore a soft-deleted asset (within 30-day retention window)
  * $asset = MediaAsset::onlyTrashed()->find($id);
@@ -130,6 +135,20 @@ class MediaAsset extends Model
     public function variants(): HasMany
     {
         return $this->hasMany(MediaVariant::class);
+    }
+
+    /**
+     * Scope query to include soft-deleted media assets.
+     *
+     * Semantic alias for withTrashed() that provides clearer context
+     * when querying media in admin panels or audit views.
+     *
+     * @param  Builder<MediaAsset>  $query
+     * @return Builder<MediaAsset>
+     */
+    public function scopeWithDeletedMedia(Builder $query): Builder
+    {
+        return $query->withTrashed();
     }
 
     /**
