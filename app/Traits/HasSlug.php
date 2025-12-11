@@ -124,12 +124,19 @@ trait HasSlug
      * and ensure true uniqueness across all records. Excludes the current
      * model from the check when updating existing records.
      *
+     * Note: Uses explicit text casting for PostgreSQL 17 compatibility.
+     * PostgreSQL 17's PDO driver incorrectly infers UUID type for hyphenated
+     * string parameters, causing "invalid input syntax for type uuid" errors.
+     * The ::text cast forces proper varchar comparison.
+     *
      * @param  string  $slug  The slug to check
      * @return bool True if slug exists, false otherwise
      */
     protected function slugExists(string $slug): bool
     {
-        $query = static::where('slug', $slug);
+        // Use whereRaw with explicit text casting for PostgreSQL 17 compatibility
+        // This prevents PDO from incorrectly inferring UUID type for hyphenated strings
+        $query = static::whereRaw('slug::text = ?::text', [$slug]);
 
         // Exclude current model if it exists (has an ID) - prevents false positives on updates
         if ($this->exists) {

@@ -427,9 +427,9 @@ test('different models can have the same slug', function () {
     $model2 = AnotherTestModel::create(['name' => 'Test Page']);
     expect($model2->slug)->toBe('test-page');
 
-    // Both should exist with the same slug
-    expect(TestModel::where('slug', 'test-page')->exists())->toBeTrue();
-    expect(AnotherTestModel::where('slug', 'test-page')->exists())->toBeTrue();
+    // Both should exist with the same slug (use whereRaw for PostgreSQL 17 compatibility)
+    expect(TestModel::whereRaw('slug::text = ?::text', ['test-page'])->exists())->toBeTrue();
+    expect(AnotherTestModel::whereRaw('slug::text = ?::text', ['test-page'])->exists())->toBeTrue();
 });
 
 test('slug uniqueness is per-table not global', function () {
@@ -452,11 +452,11 @@ test('cross-model duplicate slug generation works independently', function () {
     AnotherTestModel::create(['name' => 'Contact']);
     AnotherTestModel::create(['name' => 'Contact']);
 
-    // Verify both tables have their own sequence
-    expect(TestModel::where('slug', 'contact')->count())->toBe(1);
-    expect(TestModel::where('slug', 'contact-2')->count())->toBe(1);
-    expect(AnotherTestModel::where('slug', 'contact')->count())->toBe(1);
-    expect(AnotherTestModel::where('slug', 'contact-2')->count())->toBe(1);
+    // Verify both tables have their own sequence (use whereRaw for PostgreSQL 17 compatibility)
+    expect(TestModel::whereRaw('slug::text = ?::text', ['contact'])->count())->toBe(1);
+    expect(TestModel::whereRaw('slug::text = ?::text', ['contact-2'])->count())->toBe(1);
+    expect(AnotherTestModel::whereRaw('slug::text = ?::text', ['contact'])->count())->toBe(1);
+    expect(AnotherTestModel::whereRaw('slug::text = ?::text', ['contact-2'])->count())->toBe(1);
 });
 
 test('reserved slugs apply across all models using the trait', function () {

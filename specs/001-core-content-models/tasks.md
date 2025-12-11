@@ -41,6 +41,7 @@
 ### Core Traits
 
 - [X] T008 Create HasSlug trait at app/Traits/HasSlug.php with auto-generation and reserved slug blocking → @laravel-specialist, @php-pro
+  - **Note (2025-12-11)**: Fixed PostgreSQL 17 PDO type inference bug in `slugExists()`. PDO driver incorrectly infers UUID type for hyphenated strings like "test-page". Solution: Use `whereRaw('slug::text = ?::text', [$slug])` instead of `where('slug', $slug)`.
 - [X] T009 [P] Create HasSeo trait at app/Traits/HasSeo.php with field mirroring (OG/Twitter from meta) → @laravel-specialist
 - [X] T010 [P] Create HasContentBlocks trait at app/Traits/HasContentBlocks.php with JSONB handling → @laravel-specialist, @postgres-pro
 - [X] T011 Create HasRelatedContent trait at app/Traits/HasRelatedContent.php with polymorphic relationships → @laravel-specialist, @postgres-pro
