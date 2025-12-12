@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Enums\ContentStatus;
 use App\Filament\Resources\TestimonialResource\Pages;
 use App\Models\Testimonial;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,7 +29,25 @@ class TestimonialResource extends Resource
     {
         return $form
             ->schema([
-                // Form schema will be implemented in US5
+                Forms\Components\Section::make('Testimonial Details')
+                    ->schema([
+                        Forms\Components\TextInput::make('author_name')
+                            ->label('Author Name')
+                            ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\Textarea::make('quote')
+                            ->label('Content')
+                            ->required()
+                            ->rows(6),
+
+                        Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options(ContentStatus::class)
+                            ->default(ContentStatus::Draft)
+                            ->required(),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -73,7 +92,6 @@ class TestimonialResource extends Resource
     {
         return [
             'index' => Pages\ListTestimonials::route('/'),
-            'create' => Pages\CreateTestimonial::route('/create'),
             'edit' => Pages\EditTestimonial::route('/{record}/edit'),
         ];
     }
