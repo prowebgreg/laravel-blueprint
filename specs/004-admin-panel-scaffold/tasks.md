@@ -87,14 +87,14 @@
 ### Implementation for User Story 2
 
 - [X] T028 [US2] Create AllPublicPagesPage in `app/Filament/Pages/AllPublicPagesPage.php` with combined listing → @laravel-specialist
-- [ ] T029 [P] [US2] Create ImagesPage in `app/Filament/Pages/Media/ImagesPage.php` with placeholder grid (default view) → @laravel-specialist
-- [ ] T030 [P] [US2] Create VideosPage in `app/Filament/Pages/Media/VideosPage.php` with placeholder table (default view) → @laravel-specialist
-- [ ] T031 [P] [US2] Create SvgPage in `app/Filament/Pages/Media/SvgPage.php` with placeholder grid (default view) → @laravel-specialist
-- [ ] T032 [P] [US2] Create BrandAssetsPage in `app/Filament/Pages/Media/BrandAssetsPage.php` with grid/table toggle → @laravel-specialist
-- [ ] T033 [P] [US2] Create SitemapPage in `app/Filament/Pages/Seo/SitemapPage.php` with placeholder Generate button → @laravel-specialist
-- [ ] T034 [P] [US2] Create StructuredDataPage in `app/Filament/Pages/Seo/StructuredDataPage.php` with sectioned form skeleton → @laravel-specialist
-- [ ] T035 [P] [US2] Create NotFoundPagesPage in `app/Filament/Pages/Seo/NotFoundPagesPage.php` with placeholder config area → @laravel-specialist
-- [ ] T036 [P] [US2] Create WebsiteDetailsPage in `app/Filament/Pages/Settings/WebsiteDetailsPage.php` with Identity/Contact/Social sections → @laravel-specialist
+- [X] T029 [P] [US2] Create ImagesPage in `app/Filament/Pages/Media/ImagesPage.php` with placeholder grid (default view) → @laravel-specialist
+- [X] T030 [P] [US2] Create VideosPage in `app/Filament/Pages/Media/VideosPage.php` with placeholder table (default view) → @laravel-specialist
+- [X] T031 [P] [US2] Create SvgPage in `app/Filament/Pages/Media/SvgPage.php` with placeholder grid (default view) → @laravel-specialist
+- [X] T032 [P] [US2] Create BrandAssetsPage in `app/Filament/Pages/Media/BrandAssetsPage.php` with grid/table toggle → @laravel-specialist
+- [X] T033 [P] [US2] Create SitemapPage in `app/Filament/Pages/Seo/SitemapPage.php` with placeholder Generate button → @laravel-specialist
+- [X] T034 [P] [US2] Create StructuredDataPage in `app/Filament/Pages/Seo/StructuredDataPage.php` with sectioned form skeleton → @laravel-specialist
+- [X] T035 [P] [US2] Create NotFoundPagesPage in `app/Filament/Pages/Seo/NotFoundPagesPage.php` with placeholder config area → @laravel-specialist
+- [X] T036 [P] [US2] Create WebsiteDetailsPage in `app/Filament/Pages/Settings/WebsiteDetailsPage.php` with Identity/Contact/Social sections → @laravel-specialist
 - [ ] T037 [P] [US2] Create ScriptsIntegrationsPage in `app/Filament/Pages/Settings/ScriptsIntegrationsPage.php` with Scripts/APIs/Webhooks tabs → @laravel-specialist
 - [ ] T038 [US2] Verify all 23 navigation items accessible with correct breadcrumbs and icons → @laravel-specialist
 
