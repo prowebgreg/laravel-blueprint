@@ -7,4 +7,12 @@ export default {
         './resources/views/filament/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
     ],
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Geist', 'sans-serif'],
+                mono: ['Geist Mono', 'monospace'],
+            },
+        },
+    },
 }

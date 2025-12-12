@@ -26,12 +26,12 @@
 
 - [X] T001 Generate Filament theme files via `sail artisan make:filament-theme admin` in `resources/css/filament/admin/` → @laravel-specialist
 - [X] T002 Copy Geist font files from `resources/fonts/admin/` to `public/fonts/admin/` directory (all weights 100-900 + variable fonts) → @devops-engineer
-- [ ] T003 [P] Create @font-face declarations for Geist Sans (weights 100-900 + variable) in `resources/css/filament/admin/theme.css` → @frontend-developer
-- [ ] T004 [P] Create @font-face declarations for Geist Mono (weights 100-900 + variable) in `resources/css/filament/admin/theme.css` → @frontend-developer
-- [ ] T005 [P] Add shadcn oklch CSS custom properties (light mode) in `resources/css/filament/admin/theme.css` → @frontend-developer
-- [ ] T006 [P] Add shadcn oklch CSS custom properties (dark mode .dark class) in `resources/css/filament/admin/theme.css` → @frontend-developer
-- [ ] T007 [P] Configure Tailwind v3 fontFamily extend for Geist in `resources/css/filament/admin/tailwind.config.js` → @frontend-developer
-- [ ] T008 [P] Create CSS bridge mapping oklch variables to Filament utility classes in `resources/css/filament/admin/theme.css` → @frontend-developer
+- [X] T003 [P] Create @font-face declarations for Geist Sans (weights 100-900 + variable) in `resources/css/filament/admin/theme.css` → @frontend-developer
+- [X] T004 [P] Create @font-face declarations for Geist Mono (weights 100-900 + variable) in `resources/css/filament/admin/theme.css` → @frontend-developer
+- [X] T005 [P] Add shadcn oklch CSS custom properties (light mode) in `resources/css/filament/admin/theme.css` → @frontend-developer
+- [X] T006 [P] Add shadcn oklch CSS custom properties (dark mode .dark class) in `resources/css/filament/admin/theme.css` → @frontend-developer
+- [X] T007 [P] Configure Tailwind v3 fontFamily extend for Geist in `resources/css/filament/admin/tailwind.config.js` → @frontend-developer
+- [X] T008 [P] Create CSS bridge mapping oklch variables to Filament utility classes in `resources/css/filament/admin/theme.css` → @frontend-developer
 - [ ] T009 Add theme.css to Vite inputs in `vite.config.js` → @frontend-developer
 - [ ] T010 Build frontend assets with `sail npm run build` and verify Geist fonts load correctly → @frontend-developer
 
