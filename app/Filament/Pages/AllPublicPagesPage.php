@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Enums\ContentStatus;
 use App\Models\BlogPost;
 use App\Models\Page;
 use App\Models\Service;
@@ -31,8 +30,6 @@ class AllPublicPagesPage extends BasePage implements HasForms, HasTable
     protected static ?string $navigationGroup = 'Public Pages';
 
     protected static ?int $navigationSort = -1;
-
-    protected static ?string $title = 'All Public Pages';
 
     protected static ?string $navigationLabel = 'All Public Pages';
 
@@ -74,9 +71,11 @@ class AllPublicPagesPage extends BasePage implements HasForms, HasTable
                     ->copyMessageDuration(1500),
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn (ContentStatus $state): string => match ($state) {
-                        ContentStatus::Published => 'success',
-                        ContentStatus::Draft => 'gray',
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        'published' => 'success',
+                        'draft' => 'gray',
+                        default => 'gray',
                     })
                     ->sortable(),
                 TextColumn::make('updated_at')
@@ -133,7 +132,8 @@ class AllPublicPagesPage extends BasePage implements HasForms, HasTable
                 'status',
                 'updated_at',
             ])
-            ->selectRaw("'Page' as type");
+            ->selectRaw('? as type', ['Page'])
+            ->whereNull('deleted_at');
 
         $services = Service::query()
             ->select([
@@ -143,7 +143,8 @@ class AllPublicPagesPage extends BasePage implements HasForms, HasTable
                 'status',
                 'updated_at',
             ])
-            ->selectRaw("'Service' as type");
+            ->selectRaw('? as type', ['Service'])
+            ->whereNull('deleted_at');
 
         $blogPosts = BlogPost::query()
             ->select([
@@ -153,7 +154,8 @@ class AllPublicPagesPage extends BasePage implements HasForms, HasTable
                 'status',
                 'updated_at',
             ])
-            ->selectRaw("'BlogPost' as type");
+            ->selectRaw('? as type', ['BlogPost'])
+            ->whereNull('deleted_at');
 
         // Return the unioned query
         return $pages->union($services)->union($blogPosts);

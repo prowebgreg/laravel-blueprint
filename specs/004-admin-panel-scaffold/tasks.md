@@ -121,7 +121,7 @@
 - [X] T047 [US3] Create TestimonialResource in `app/Filament/Resources/TestimonialResource.php` with table columns (Name/Author, Status, Updated) → @laravel-specialist
 - [X] T048 [P] [US3] Create TestimonialResource pages in `app/Filament/Resources/TestimonialResource/Pages/` → @laravel-specialist
 - [X] T049 [US3] Configure consistent status badge styling (Published=success/green, Draft=gray) across all Resources → @laravel-specialist
-- [ ] T050 [US3] Update AllPublicPagesPage to show records from Pages, Services, BlogPosts with Type indicator column → @laravel-specialist
+- [X] T050 [US3] Update AllPublicPagesPage to show records from Pages, Services, BlogPosts with Type indicator column → @laravel-specialist
 
 **Checkpoint**: User Story 3 complete - All listings display with consistent structure and status badges
 
