@@ -53,7 +53,7 @@
 - [X] T018 [P] Create redirects migration with indexes in `database/migrations/2025_12_12_000001_create_redirects_table.php` → @laravel-specialist, @postgres-pro
 - [X] T019 [P] Create RedirectFactory with states (permanent, temporary, active, inactive) in `database/factories/RedirectFactory.php` → @laravel-specialist
 - [X] T020 Create AdminScaffoldSeeder with placeholder data (5 pages, 4 services, 4 posts, 4 faqs, 4 testimonials, 4 redirects) in `database/seeders/AdminScaffoldSeeder.php` → @laravel-specialist
-- [ ] T021 Run migrations and seed database with placeholder data via `sail artisan migrate && sail artisan db:seed --class=AdminScaffoldSeeder` → @laravel-specialist
+- [X] T021 Run migrations and seed database with placeholder data via `sail artisan migrate && sail artisan db:seed --class=AdminScaffoldSeeder` → @laravel-specialist
 - [ ] T022 Configure navigation groups (Public Pages, Content Resources, Media Library, SEO, Settings, Account) in `app/Providers/Filament/AdminPanelProvider.php` → @laravel-specialist
 
 **Checkpoint**: Foundation ready - panel loads at /admin with theme, navigation groups visible, database seeded
