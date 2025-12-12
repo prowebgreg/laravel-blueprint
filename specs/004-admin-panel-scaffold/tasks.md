@@ -114,7 +114,7 @@
 - [X] T040 [P] [US3] Create PageResource pages (ListPages, CreatePage, EditPage) in `app/Filament/Resources/PageResource/Pages/` → @laravel-specialist
 - [X] T041 [US3] Create ServiceResource in `app/Filament/Resources/ServiceResource.php` cloning PageResource table structure exactly → @laravel-specialist
 - [X] T042 [P] [US3] Create ServiceResource pages in `app/Filament/Resources/ServiceResource/Pages/` → @laravel-specialist
-- [ ] T043 [US3] Create BlogPostResource in `app/Filament/Resources/BlogPostResource.php` cloning PageResource table structure exactly → @laravel-specialist
+- [X] T043 [US3] Create BlogPostResource in `app/Filament/Resources/BlogPostResource.php` cloning PageResource table structure exactly → @laravel-specialist
 - [ ] T044 [P] [US3] Create BlogPostResource pages in `app/Filament/Resources/BlogPostResource/Pages/` → @laravel-specialist
 - [ ] T045 [US3] Create FaqResource in `app/Filament/Resources/FaqResource.php` with table columns (Question, Status, Updated) → @laravel-specialist
 - [ ] T046 [P] [US3] Create FaqResource pages in `app/Filament/Resources/FaqResource/Pages/` → @laravel-specialist
