@@ -86,7 +86,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Create AllPublicPagesPage in `app/Filament/Pages/AllPublicPagesPage.php` with combined listing → @laravel-specialist
+- [X] T028 [US2] Create AllPublicPagesPage in `app/Filament/Pages/AllPublicPagesPage.php` with combined listing → @laravel-specialist
 - [ ] T029 [P] [US2] Create ImagesPage in `app/Filament/Pages/Media/ImagesPage.php` with placeholder grid (default view) → @laravel-specialist
 - [ ] T030 [P] [US2] Create VideosPage in `app/Filament/Pages/Media/VideosPage.php` with placeholder table (default view) → @laravel-specialist
 - [ ] T031 [P] [US2] Create SvgPage in `app/Filament/Pages/Media/SvgPage.php` with placeholder grid (default view) → @laravel-specialist
