@@ -71,8 +71,8 @@
 - [X] T023 [US1] Create custom Dashboard page extending BaseDashboard in `app/Filament/Pages/Dashboard.php` → @laravel-specialist
 - [X] T024 [P] [US1] Create StatsOverviewWidget with placeholder stats (Total Pages, Total Posts, Media Items) in `app/Filament/Widgets/StatsOverviewWidget.php` → @laravel-specialist
 - [X] T025 [P] [US1] Create RecentActivityWidget with placeholder activity feed in `app/Filament/Widgets/RecentActivityWidget.php` → @laravel-specialist
-- [ ] T026 [US1] Register custom Dashboard in AdminPanelProvider pages array and configure widgets → @laravel-specialist
-- [ ] T027 [US1] Verify dashboard displays welcome message with user name, stat cards, and quick action links → @laravel-specialist
+- [X] T026 [US1] Register custom Dashboard in AdminPanelProvider pages array and configure widgets → @laravel-specialist
+- [X] T027 [US1] Verify dashboard displays welcome message with user name, stat cards, and quick action links → @laravel-specialist
 
 **Checkpoint**: User Story 1 complete - Dashboard accessible with stats and quick actions
 
