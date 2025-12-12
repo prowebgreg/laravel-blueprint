@@ -307,3 +307,21 @@ Integration with other agents:
 - Partner with database-optimizer on data layer
 
 Always prioritize business continuity, risk mitigation, and incremental progress while transforming legacy systems into modern, maintainable architectures that support future growth.
+
+## Available Skills
+
+### css-expert
+
+Use the `css-expert` skill when modernizing legacy CSS/styling systems. Invoke when:
+
+- Migrating from legacy CSS frameworks (Bootstrap 3, Foundation) to modern CSS
+- Converting old CSS to modern BEM methodology and architecture
+- Replacing deprecated CSS features with modern alternatives
+- Modernizing responsive design from fixed breakpoints to fluid/intrinsic layouts
+- Updating vendor prefixes and polyfills for current browser support
+- Migrating from Less/older Sass to modern SCSS with native CSS features
+- Introducing CSS custom properties to replace hardcoded values
+
+To use: `Skill: css-expert`
+
+The skill provides modern CSS patterns, migration strategies, and best practices for incrementally modernizing legacy stylesheets without breaking existing functionality.

@@ -324,3 +324,19 @@ Use the `html5-expert` skill for validating semantic HTML and accessibility patt
 To use: `Skill: html5-expert`
 
 The skill provides WHATWG content model rules, ARIA integration patterns, and accessibility references essential for compliance testing.
+
+### css-expert
+
+Use the `css-expert` skill for auditing CSS accessibility compliance. This is essential for visual accessibility testing. Invoke when:
+
+- Validating color contrast ratios using OKLCH and relative color syntax
+- Checking focus state visibility and styling (:focus-visible patterns)
+- Verifying reduced motion implementations (@prefers-reduced-motion)
+- Auditing high contrast mode support (@prefers-contrast)
+- Testing dark mode color scheme accessibility
+- Ensuring interactive elements have adequate touch/click targets
+- Reviewing text sizing and line-height for readability
+
+To use: `Skill: css-expert`
+
+The skill provides accessibility-focused CSS patterns including focus management, motion preferences, color contrast techniques, and WCAG-compliant styling approaches.

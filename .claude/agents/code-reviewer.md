@@ -346,3 +346,19 @@ Use the `html5-expert` skill when reviewing frontend HTML/JSX for semantic corre
 To use: `Skill: html5-expert`
 
 The skill provides semantic HTML standards knowledge for catching HTML quality issues during code review.
+
+### css-expert
+
+Use the `css-expert` skill when reviewing CSS/SCSS code quality. Invoke when:
+
+- Reviewing BEM naming convention compliance and consistency
+- Checking for CSS anti-patterns (!important overuse, magic numbers, ID selectors)
+- Validating responsive design implementation (container queries vs media queries)
+- Auditing CSS architecture and file organization
+- Reviewing animation performance (transform/opacity vs layout properties)
+- Checking accessibility patterns (focus states, reduced motion, contrast)
+- Ensuring proper use of modern CSS features (nesting, custom properties, logical properties)
+
+To use: `Skill: css-expert`
+
+The skill provides CSS best practices, common mistakes to avoid, and modern standards for thorough stylesheet code review.

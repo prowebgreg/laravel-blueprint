@@ -181,3 +181,18 @@ Use the `html5-expert` skill for understanding HTML semantic constraints in desi
 To use: `Skill: html5-expert`
 
 The skill provides semantic HTML knowledge for designing interfaces that translate cleanly to accessible, semantic code.
+
+### css-expert
+
+Use the `css-expert` skill for comprehensive CSS/SCSS guidance in design implementation. Invoke when:
+
+- Specifying component styling with proper BEM naming conventions
+- Defining responsive design breakpoints and container queries
+- Creating animation and transition specifications
+- Establishing design tokens (custom properties) for colors, spacing, typography
+- Ensuring accessible styles (focus states, reduced motion, color contrast)
+- Guiding developers on modern CSS features (nesting, logical properties, OKLCH colors)
+
+To use: `Skill: css-expert`
+
+The skill provides modern CSS best practices, BEM methodology, responsive techniques, and accessibility patterns for translating designs into maintainable stylesheets.

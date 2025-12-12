@@ -310,3 +310,19 @@ Use the `html5-expert` skill for proper HTML structure in full-stack features. I
 To use: `Skill: html5-expert`
 
 The skill provides semantic HTML patterns, form best practices, and SEO guidance for complete feature delivery.
+
+### css-expert
+
+Use the `css-expert` skill for styling full-stack features end-to-end. Invoke when:
+
+- Implementing responsive UI layouts for complete features
+- Writing maintainable component styles with BEM methodology
+- Creating design tokens that work across frontend frameworks
+- Building animations and transitions for interactive features
+- Ensuring CSS accessibility (focus states, reduced motion preferences)
+- Organizing stylesheets for scalable full-stack applications
+- Optimizing CSS performance for production
+
+To use: `Skill: css-expert`
+
+The skill provides modern CSS/SCSS patterns, responsive techniques, and best practices for styling full-stack feature implementations.

@@ -155,3 +155,19 @@ Use the `html5-expert` skill for generating semantically correct, accessible HTM
 To use: `Skill: html5-expert`
 
 The skill provides WHATWG-compliant element references, content model rules, and accessibility patterns.
+
+### css-expert
+
+Use the `css-expert` skill for writing modern, maintainable, and performant stylesheets. Invoke when:
+
+- Writing component styles with BEM naming methodology
+- Implementing responsive layouts with container queries and fluid typography
+- Creating animations and transitions with performance in mind
+- Setting up design tokens using CSS custom properties
+- Building accessible styles (focus states, reduced motion, high contrast)
+- Using modern CSS features (nesting, logical properties, OKLCH colors, :has())
+- Organizing SCSS/CSS file structure for scalability
+
+To use: `Skill: css-expert`
+
+The skill provides comprehensive CSS/SCSS guidance including BEM conventions, responsive techniques, animation patterns, and accessibility best practices.

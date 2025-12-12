@@ -322,3 +322,19 @@ Use the `webapp-testing` skill for frontend performance measurement. Invoke when
 To use: `Skill: webapp-testing`
 
 The skill provides Playwright automation for browser performance testing.
+
+### css-expert
+
+Use the `css-expert` skill for CSS performance optimization. Invoke when:
+
+- Optimizing animations to use only GPU-accelerated properties (transform, opacity)
+- Identifying and fixing layout thrashing from expensive CSS properties
+- Reducing CSS specificity and selector complexity for faster matching
+- Implementing efficient responsive strategies (intrinsic sizing over media queries)
+- Optimizing font loading and text rendering performance
+- Auditing CSS file structure and bundle size
+- Eliminating render-blocking CSS patterns
+
+To use: `Skill: css-expert`
+
+The skill provides CSS performance patterns including animation optimization, efficient selectors, and techniques to minimize layout and paint operations.

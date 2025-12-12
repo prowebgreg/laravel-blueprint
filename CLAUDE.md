@@ -26,6 +26,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Run tests
 ./vendor/bin/sail test
 
+# Run single test file
+./vendor/bin/sail test tests/Feature/MediaUploadTest.php
+
+# Run tests with filter
+./vendor/bin/sail test --filter=testName
+
 # Run artisan commands
 ./vendor/bin/sail artisan <command>
 
@@ -40,6 +46,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 # Access container shell
 ./vendor/bin/sail shell
+
+# Start Horizon queue workers
+./vendor/bin/sail artisan horizon
+
+# Purge soft-deleted content (30+ days old)
+./vendor/bin/sail artisan content:purge-deleted
+./vendor/bin/sail artisan content:purge-deleted --dry-run  # Preview only
 ```
 
 ## Architecture Patterns
@@ -52,21 +65,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | Form Requests | Validate all mutations | `app/Http/Requests/` |
 | DTOs | API boundary contracts | `app/DTOs/` |
 
-## Code Organization (Target Structure)
+## Code Organization (Current Structure)
 
 ```
 app/
-├── Actions/           # Single-responsibility operations (Verb+Action)
-├── Blocks/            # Content block definitions
+├── Actions/Media/     # Media pipeline actions (7 actions)
+├── Blocks/            # Content block definitions (HeroBlock, CtaBlock)
+├── Console/Commands/  # Artisan commands (PurgeDeletedContentCommand)
 ├── DTOs/              # Data Transfer Objects (Descriptive+Data)
+├── Enums/             # Type enums (ContentStatus, MediaType, MediaState, MediaFolder, OgType)
 ├── Http/
 │   ├── Controllers/   # Resource+Controller
 │   ├── Requests/      # Resource+Operation+Request
 │   └── Middleware/
-├── Jobs/              # Verb+Job
-├── Models/            # Singular PascalCase
-├── Services/          # Noun+Service
-└── Traits/            # Has/Is prefix (HasSeo, IsPublishable)
+├── Jobs/Media/        # Media queue jobs (ProcessMediaVariantsJob, CleanupFailedMediaJob, SyncOrphanedFilesJob)
+├── Models/            # Page, Service, BlogPost, Faq, Testimonial, MediaAsset, MediaVariant, Setting
+├── Services/Media/    # Media services (MediaUploadService, MediaDeletionService, MediaFallbackService, MediaUsageService)
+└── Traits/            # HasSeo, HasSlug, HasContentBlocks, HasRelatedContent, HasMedia
 ```
 
 ## Naming Conventions
@@ -167,7 +182,62 @@ Constitution and templates are in `.specify/` directory.
 
 **Phase 1 (Complete)**: Architecture & Environment - Laravel Sail, PostgreSQL, Redis, Filament V3
 
-**Phase 2 (Next)**: Core Data Models & Schema - Page models, Content Resources, Relationship Engine, HasSeo trait
+**Phase 2 (Complete)**: Core Data Models & Schema
+- Content Models: `Page`, `Service`, `BlogPost`, `Faq`, `Testimonial`
+- Traits: `HasSeo`, `HasSlug`, `HasContentBlocks`, `HasRelatedContent`, `HasMedia`
+- Enums: `ContentStatus`, `OgType`
+- Content Blocks: `HeroBlock`, `CtaBlock` (with `BlockInterface` contract)
+- Relationship Engine via `content_relations` polymorphic pivot table
+- `PurgeDeletedContentCommand` for soft-delete cleanup
+
+**Phase 3 (Complete)**: Media Engine
+- Models: `MediaAsset` (UUID), `MediaVariant` (UUID)
+- Enums: `MediaType`, `MediaState`, `MediaFolder`
+- Upload Pipeline: `MediaUploadService` orchestrates validation → sanitization → S3 upload
+- Actions: `ValidateUploadAction`, `SanitizeFilenameAction`, `SanitizeSvgAction`, `UploadToS3Action`, `GenerateVariantsAction`, `ExtractImageMetadataAction`, `DeleteFromS3Action`
+- Services: `MediaUploadService`, `MediaDeletionService`, `MediaFallbackService`, `MediaUsageService`
+- Jobs: `ProcessMediaVariantsJob`, `CleanupFailedMediaJob`, `SyncOrphanedFilesJob`
+- Horizon queue configuration with dedicated `media` supervisor
+- Responsive variants: 480, 640, 720, 960, 1168, 1440, 1920px widths (WebP)
+- SVG sanitization via `enshrined/svg-sanitize`
+
+**Phase 4 (Next)**: Filament Admin Panel - CRUD resources, media picker, relationship management
+
+## Implementation Notes
+
+### PostgreSQL 17 UUID Handling
+PostgreSQL 17's PDO driver incorrectly infers UUID type for hyphenated string parameters. Use explicit `::text` casts in raw queries:
+```php
+// WRONG: PDO infers UUID type, fails with "invalid input syntax for type uuid"
+->where('slug', $slug)
+
+// CORRECT: Explicit text cast
+->whereRaw('slug::text = ?::text', [$slug])
+```
+
+### Media State Machine
+```
+Uploading → Processing → Ready (success)
+                      → Failed (failure, retryable)
+```
+- Images: Start `Processing`, transition to `Ready` after variant generation
+- SVG/Video: Start `Ready` immediately (no variants needed)
+- Use `MediaState::isAccessible()` to check if media can be served
+
+### Content Relations Pivot Table
+The `content_relations` table supports both content-to-content and content-to-media relationships:
+- `source_type`/`source_id`: Model initiating relationship
+- `target_type`/`target_id`: Model being related (supports UUID for MediaAsset)
+- `relation_type`: Type identifier (e.g., `page:home:hero:image`)
+- `order`: Display ordering (0-indexed)
+
+### Block Interface Contract
+New blocks must implement `App\Blocks\Contracts\BlockInterface`:
+```php
+public static function type(): string;        // Unique identifier
+public static function schema(): array;       // Field definitions
+public static function validate(array $data, Closure $fail, int $index): void;
+```
 
 ## Developer Guidelines (PRD Rules)
 
@@ -548,10 +618,20 @@ it('has emails', function (string $email) {
 </laravel-boost-guidelines>
 
 ## Active Technologies
-- PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, PostgreSQL 17 (001-core-content-models)
-- PostgreSQL with JSONB for content blocks, Redis for caching (001-core-content-models)
-- PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, spatie/image ^3.0, spatie/laravel-image-optimizer ^1.7, enshrined/svg-sanitize ^0.16 (003-media-engine)
-- PostgreSQL 17 with JSONB, AWS S3 with CloudFront CDN, Redis for caching (003-media-engine)
+- PHP 8.3.x with `strict_types=1` + Laravel 12.x, Filament V3, Tailwind CSS v3, Vite (004-admin-panel-scaffold)
+- PostgreSQL 17 (existing), Redis (existing) (004-admin-panel-scaffold)
+- PHP 8.3.x with `strict_types=1` + Laravel 12.x, Filament v3.x, Livewire v3.x, Tailwind CSS v3.x (004-admin-panel-scaffold)
+- PostgreSQL 17 (JSONB for content blocks), Redis 7 (queues/cache) (004-admin-panel-scaffold)
+
+**Backend:** PHP 8.3.x (`strict_types=1` in all files), Laravel 12.x, Filament V3
+
+**Database:** PostgreSQL 17 with JSONB for content blocks, Redis for caching/queues
+
+**Media Processing:** spatie/image ^3.0, spatie/laravel-image-optimizer ^1.7, enshrined/svg-sanitize ^0.16
+
+**Storage:** AWS S3 with CloudFront CDN (temp → permanent folder pipeline)
+
+**Queue:** Laravel Horizon with dedicated `media` supervisor
 
 ## Recent Changes
-- 001-core-content-models: Added PHP 8.3.x with `strict_types=1` in all files + Laravel 12.x, Filament V3, PostgreSQL 17
+- 004-admin-panel-scaffold: Added PHP 8.3.x with `strict_types=1` + Laravel 12.x, Filament V3, Tailwind CSS v3, Vite
