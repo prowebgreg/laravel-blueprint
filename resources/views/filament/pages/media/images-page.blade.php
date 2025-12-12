@@ -1,18 +1,10 @@
 <x-filament-panels::page>
     <div class="space-y-6">
         {{-- Upload Area Placeholder --}}
-        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/70 transition-colors cursor-pointer">
-            <x-filament::icon
-                icon="heroicon-o-cloud-arrow-up"
-                class="mx-auto w-12 h-12 text-gray-400 dark:text-gray-500 mb-3"
-            />
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                <strong>Upload images</strong> (placeholder - not functional yet)
-            </p>
-            <p class="text-xs text-gray-500 dark:text-gray-500">
-                Drag and drop JPG, PNG, WebP files here, or click to browse
-            </p>
-        </div>
+        <x-filament.placeholder-upload-area
+            title="Upload images"
+            description="Drag and drop JPG, PNG, WebP files here, or click to browse"
+        />
 
         {{-- View Mode Container with Transition --}}
         <div
