@@ -340,8 +340,6 @@
 @tailwind variants;
 @import '../../../../vendor/filament/filament/resources/css/base.css';
 
-@config 'tailwind.config.js';
-
 /* ================================================
    Design Tokens - Light Mode (shadcn oklch)
    ================================================ */
