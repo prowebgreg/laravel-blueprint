@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Media;
 
+use Filament\Actions\Action;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -21,6 +22,8 @@ class ImagesPage extends Page
 
     protected static ?string $navigationLabel = 'Images';
 
+    public string $viewMode = 'grid';
+
     public function getHeading(): string|Htmlable
     {
         return 'Images';
@@ -29,6 +32,32 @@ class ImagesPage extends Page
     public function getSubheading(): string|Htmlable|null
     {
         return 'Browse and manage image assets';
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('gridView')
+                ->label('Grid')
+                ->icon('heroicon-o-squares-2x2')
+                ->color($this->viewMode === 'grid' ? 'primary' : 'gray')
+                ->disabled($this->viewMode === 'grid')
+                ->extraAttributes([
+                    'aria-label' => 'Switch to grid view',
+                    'aria-pressed' => $this->viewMode === 'grid' ? 'true' : 'false',
+                ])
+                ->action(fn () => $this->viewMode = 'grid'),
+            Action::make('tableView')
+                ->label('Table')
+                ->icon('heroicon-o-table-cells')
+                ->color($this->viewMode === 'table' ? 'primary' : 'gray')
+                ->disabled($this->viewMode === 'table')
+                ->extraAttributes([
+                    'aria-label' => 'Switch to table view',
+                    'aria-pressed' => $this->viewMode === 'table' ? 'true' : 'false',
+                ])
+                ->action(fn () => $this->viewMode = 'table'),
+        ];
     }
 
     /**
