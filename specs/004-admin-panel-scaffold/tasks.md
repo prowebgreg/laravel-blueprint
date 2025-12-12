@@ -172,7 +172,7 @@
 
 ### Implementation for User Story 6
 
-- [ ] T062 [US6] Implement grid view with placeholder thumbnails in ImagesPage → @laravel-specialist, @frontend-developer
+- [X] T062 [US6] Implement grid view with placeholder thumbnails in ImagesPage → @laravel-specialist, @frontend-developer
 - [ ] T063 [US6] Implement table/grid toggle functionality in ImagesPage → @laravel-specialist, @frontend-developer
 - [ ] T064 [US6] Implement table view with video metadata columns (Name, Duration, Size, Uploaded) in VideosPage → @laravel-specialist
 - [ ] T065 [US6] Implement grid view with SVG previews in SvgPage → @laravel-specialist, @frontend-developer
