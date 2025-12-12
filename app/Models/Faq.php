@@ -72,4 +72,27 @@ class Faq extends Model
             'deleted_at' => 'datetime',
         ];
     }
+
+    /**
+     * Boot the model.
+     *
+     * Auto-populates the 'name' field from 'question' when creating or updating,
+     * allowing the admin form to only show Question, Answer, and Status fields.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Faq $faq): void {
+            if (empty($faq->name) && ! empty($faq->question)) {
+                $faq->name = $faq->question;
+            }
+        });
+
+        static::updating(function (Faq $faq): void {
+            if ($faq->isDirty('question') && ! $faq->isDirty('name')) {
+                $faq->name = $faq->question;
+            }
+        });
+    }
 }

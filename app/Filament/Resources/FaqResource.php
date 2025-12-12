@@ -7,6 +7,7 @@ namespace App\Filament\Resources;
 use App\Enums\ContentStatus;
 use App\Filament\Resources\FaqResource\Pages;
 use App\Models\Faq;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,7 +29,21 @@ class FaqResource extends Resource
     {
         return $form
             ->schema([
-                // Form schema will be implemented in US5
+                Forms\Components\TextInput::make('question')
+                    ->label('Question')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\Textarea::make('answer')
+                    ->label('Answer')
+                    ->required()
+                    ->rows(4),
+
+                Forms\Components\Select::make('status')
+                    ->label('Status')
+                    ->options(ContentStatus::class)
+                    ->default(ContentStatus::Draft)
+                    ->required(),
             ]);
     }
 
@@ -72,7 +87,6 @@ class FaqResource extends Resource
     {
         return [
             'index' => Pages\ListFaqs::route('/'),
-            'create' => Pages\CreateFaq::route('/create'),
             'edit' => Pages\EditFaq::route('/{record}/edit'),
         ];
     }
