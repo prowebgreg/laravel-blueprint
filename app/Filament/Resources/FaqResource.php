@@ -45,10 +45,6 @@ class FaqResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn (ContentStatus $state): string => match ($state) {
-                        ContentStatus::Published => 'success',
-                        ContentStatus::Draft => 'gray',
-                    })
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('updated_at')
