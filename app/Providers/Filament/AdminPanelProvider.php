@@ -33,8 +33,16 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset(RequestPasswordReset::class)
             ->authGuard('web')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Zinc,
+                'danger' => Color::Red,
+                'gray' => Color::Zinc,
+                'warning' => Color::Amber,
+                'success' => Color::Green,
+                'info' => Color::Blue,
             ])
+            ->darkMode(true)
+            ->sidebarCollapsibleOnDesktop()
+            ->brandLogo(fn () => view('filament.logo'))
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
