@@ -174,7 +174,7 @@
 
 - [X] T062 [US6] Implement grid view with placeholder thumbnails in ImagesPage → @laravel-specialist, @frontend-developer
 - [X] T063 [US6] Implement table/grid toggle functionality in ImagesPage → @laravel-specialist, @frontend-developer
-- [ ] T064 [US6] Implement table view with video metadata columns (Name, Duration, Size, Uploaded) in VideosPage → @laravel-specialist
+- [X] T064 [US6] Implement table view with video metadata columns (Name, Duration, Size, Uploaded) in VideosPage → @laravel-specialist
 - [ ] T065 [US6] Implement grid view with SVG previews in SvgPage → @laravel-specialist, @frontend-developer
 - [ ] T066 [US6] Implement grid/table toggle with placeholder logos/favicons in BrandAssetsPage → @laravel-specialist, @frontend-developer
 - [ ] T067 [US6] Add placeholder upload area component to all Media Library pages → @laravel-specialist, @frontend-developer
