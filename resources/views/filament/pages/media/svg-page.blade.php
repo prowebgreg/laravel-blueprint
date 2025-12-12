@@ -1,98 +1,123 @@
 <x-filament-panels::page>
     <div class="space-y-6">
-        {{-- Header Section --}}
-        <div class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-            <div class="fi-section-content p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-base font-semibold text-gray-950 dark:text-white">
-                            SVG Vector Assets
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                            Scalable vector graphics for icons, logos, and illustrations
-                        </p>
-                    </div>
-                    <x-filament::button
-                        icon="heroicon-o-arrow-up-tray"
-                        disabled
+        {{-- Upload Area Placeholder --}}
+        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800/70 transition-colors cursor-pointer">
+            <x-filament::icon
+                icon="heroicon-o-cloud-arrow-up"
+                class="mx-auto w-12 h-12 text-gray-400 dark:text-gray-500 mb-3"
+            />
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                <strong>Upload SVG files</strong> (placeholder - not functional yet)
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-500">
+                Drag and drop SVG files here, or click to browse
+            </p>
+        </div>
+
+        {{-- Grid View --}}
+        <div
+            role="region"
+            aria-label="SVG library grid view"
+        >
+            <div
+                class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
+                role="list"
+                aria-label="SVG grid"
+            >
+                @foreach($this->getPlaceholderSvgs() as $index => $svg)
+                    <article
+                        role="listitem"
+                        class="group relative rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden hover:shadow-lg hover:border-primary-500 dark:hover:border-primary-600 transition-all duration-200 cursor-pointer focus-within:ring-2 focus-within:ring-primary-500 dark:focus-within:ring-primary-600"
+                        tabindex="0"
+                        aria-label="{{ $svg['name'] }}, {{ $svg['category'] }}, {{ $svg['size'] }}"
                     >
-                        Upload SVG
-                    </x-filament::button>
-                </div>
-            </div>
-        </div>
-
-        {{-- Placeholder Upload Area --}}
-        <div class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-            <div class="fi-section-content p-6">
-                <div class="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-12 dark:border-gray-700">
-                    <x-filament::icon
-                        icon="heroicon-o-cloud-arrow-up"
-                        class="h-12 w-12 text-gray-400"
-                    />
-                    <p class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Drag and drop SVG files here
-                    </p>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                        or click to browse (Upload functionality coming soon)
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        {{-- Placeholder Grid --}}
-        <div class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
-            <div class="fi-section-content p-6">
-                <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                    @foreach(range(1, 8) as $index)
-                        <div class="group relative overflow-hidden rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:border-primary-500 hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
-                            {{-- SVG Preview Placeholder --}}
-                            <div class="flex aspect-square items-center justify-center rounded-md bg-white dark:bg-gray-900">
-                                <svg class="h-16 w-16 text-gray-400 dark:text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7z"/>
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                                </svg>
-                            </div>
-
-                            {{-- File Info --}}
-                            <div class="mt-3 space-y-1">
-                                <p class="truncate text-xs font-medium text-gray-900 dark:text-white">
-                                    icon-{{ $index }}.svg
-                                </p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ rand(2, 15) }} KB
-                                </p>
-                            </div>
-
-                            {{-- Hover Actions --}}
-                            <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition group-hover:opacity-100">
-                                <div class="flex gap-2">
-                                    <button class="rounded-md bg-white p-2 text-gray-700 hover:bg-gray-100" title="View">
-                                        <x-filament::icon icon="heroicon-o-eye" class="h-4 w-4" />
-                                    </button>
-                                    <button class="rounded-md bg-white p-2 text-gray-700 hover:bg-gray-100" title="Download">
-                                        <x-filament::icon icon="heroicon-o-arrow-down-tray" class="h-4 w-4" />
-                                    </button>
+                        {{-- SVG Preview with Code-Style Visual Representation --}}
+                        <div class="aspect-square {{ $svg['bg'] }} flex items-center justify-center relative overflow-hidden">
+                            {{-- SVG Code Pattern Background --}}
+                            <div class="absolute inset-0 opacity-10" aria-hidden="true">
+                                <div class="absolute top-2 left-2 right-2 text-[10px] font-mono text-white space-y-1">
+                                    <div>&lt;svg&gt;</div>
+                                    <div class="ml-2">&lt;path d="..."&gt;</div>
+                                    <div class="ml-2">&lt;/path&gt;</div>
+                                    <div>&lt;/svg&gt;</div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
 
-                {{-- Empty State Indicator --}}
-                <div class="mt-6 rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-800">
-                    <x-filament::icon
-                        icon="heroicon-o-document"
-                        class="mx-auto h-12 w-12 text-gray-400"
-                    />
-                    <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">
-                        Placeholder Grid
-                    </h3>
-                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        This is a placeholder view. Actual SVG assets will be displayed here once the Media Engine integration is complete.
-                    </p>
-                </div>
+                            {{-- Main SVG Icon --}}
+                            <x-filament::icon
+                                :icon="$svg['icon']"
+                                class="relative z-10 w-16 h-16 text-white opacity-80 group-hover:scale-110 group-focus-within:scale-110 transition-transform duration-200"
+                                aria-hidden="true"
+                            />
+
+                            {{-- Code Bracket Overlay in Corner --}}
+                            <div class="absolute top-2 right-2 z-20" aria-hidden="true">
+                                <x-filament::icon
+                                    icon="heroicon-o-code-bracket"
+                                    class="w-5 h-5 text-white opacity-40"
+                                />
+                            </div>
+
+                            {{-- Category Badge --}}
+                            <div class="absolute bottom-2 left-2 z-20">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white/90 dark:bg-gray-900/90 text-gray-800 dark:text-gray-200 shadow-sm backdrop-blur-sm">
+                                    {{ $svg['category'] }}
+                                </span>
+                            </div>
+
+                            {{-- Hover Actions Overlay --}}
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 dark:group-hover:bg-black/60 group-focus-within:bg-black/40 dark:group-focus-within:bg-black/60 transition-all duration-200 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 z-30">
+                                <button
+                                    type="button"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                    aria-label="View {{ $svg['name'] }}"
+                                >
+                                    <x-filament::icon
+                                        icon="heroicon-o-eye"
+                                        class="w-4 h-4"
+                                    />
+                                    <span class="hidden sm:inline">View</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-md shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                    aria-label="Download {{ $svg['name'] }}"
+                                >
+                                    <x-filament::icon
+                                        icon="heroicon-o-arrow-down-tray"
+                                        class="w-4 h-4"
+                                    />
+                                    <span class="hidden sm:inline">Download</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {{-- SVG Details --}}
+                        <div class="p-3 space-y-1">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 group-focus-within:text-primary-600 dark:group-focus-within:text-primary-400 transition-colors" title="{{ $svg['name'] }}">
+                                {{ $svg['name'] }}
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <x-filament::icon
+                                    icon="heroicon-o-document-text"
+                                    class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"
+                                    aria-hidden="true"
+                                />
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $svg['size'] }}
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
             </div>
+        </div>
+
+        {{-- Status Footer --}}
+        <div class="text-center py-4">
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+                Showing {{ count($this->getPlaceholderSvgs()) }} placeholder SVG files &bull; Upload and management features coming soon
+            </p>
         </div>
     </div>
 </x-filament-panels::page>
