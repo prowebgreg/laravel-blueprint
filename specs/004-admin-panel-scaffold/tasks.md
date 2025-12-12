@@ -43,7 +43,7 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T011 Configure `->viteTheme()` registration in `app/Providers/Filament/AdminPanelProvider.php` → @laravel-specialist
+- [X] T011 Configure `->viteTheme()` registration in `app/Providers/Filament/AdminPanelProvider.php` → @laravel-specialist
 - [ ] T012 [P] Configure `->colors()` mapping for Filament color slots (primary, danger, gray, warning, success, info) in `app/Providers/Filament/AdminPanelProvider.php` → @laravel-specialist
 - [ ] T013 [P] Configure `->darkMode(true)` and `->sidebarCollapsibleOnDesktop()` in `app/Providers/Filament/AdminPanelProvider.php` → @laravel-specialist
 - [ ] T014 [P] Create placeholder logo Blade view with light/dark variants in `resources/views/filament/logo.blade.php` → @frontend-developer
