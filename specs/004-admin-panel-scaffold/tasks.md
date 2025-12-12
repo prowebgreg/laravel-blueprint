@@ -32,7 +32,7 @@
 - [X] T006 [P] Add shadcn oklch CSS custom properties (dark mode .dark class) in `resources/css/filament/admin/theme.css` → @frontend-developer
 - [X] T007 [P] Configure Tailwind v3 fontFamily extend for Geist in `resources/css/filament/admin/tailwind.config.js` → @frontend-developer
 - [X] T008 [P] Create CSS bridge mapping oklch variables to Filament utility classes in `resources/css/filament/admin/theme.css` → @frontend-developer
-- [ ] T009 Add theme.css to Vite inputs in `vite.config.js` → @frontend-developer
+- [X] T009 Add theme.css to Vite inputs in `vite.config.js` → @frontend-developer
 - [ ] T010 Build frontend assets with `sail npm run build` and verify Geist fonts load correctly → @frontend-developer
 
 ---
