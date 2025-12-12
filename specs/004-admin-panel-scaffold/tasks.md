@@ -137,7 +137,7 @@
 
 - [X] T051 [US4] Implement tabbed form schema with "Page Content" and "SEO Data" tabs in `PageResource.php` → @laravel-specialist
 - [X] T052 [US4] Implement right sidebar Section with Save button, slug field, timestamps, record ID in `PageResource.php` → @laravel-specialist
-- [ ] T053 [US4] Configure header with back link to listing and status selector in PageResource EditPage → @laravel-specialist
+- [X] T053 [US4] Configure header with back link to listing and status selector in PageResource EditPage → @laravel-specialist
 - [ ] T054 [US4] Clone tabbed layout to ServiceResource form schema (identical structure) → @laravel-specialist
 - [ ] T055 [US4] Clone tabbed layout to BlogPostResource form schema (identical structure) → @laravel-specialist
 - [ ] T056 [US4] Verify all three edit pages have identical layout structure (tabs + sidebar) → @laravel-specialist
