@@ -117,7 +117,7 @@
 - [X] T043 [US3] Create BlogPostResource in `app/Filament/Resources/BlogPostResource.php` cloning PageResource table structure exactly → @laravel-specialist
 - [X] T044 [P] [US3] Create BlogPostResource pages in `app/Filament/Resources/BlogPostResource/Pages/` → @laravel-specialist
 - [X] T045 [US3] Create FaqResource in `app/Filament/Resources/FaqResource.php` with table columns (Question, Status, Updated) → @laravel-specialist
-- [ ] T046 [P] [US3] Create FaqResource pages in `app/Filament/Resources/FaqResource/Pages/` → @laravel-specialist
+- [X] T046 [P] [US3] Create FaqResource pages in `app/Filament/Resources/FaqResource/Pages/` → @laravel-specialist
 - [ ] T047 [US3] Create TestimonialResource in `app/Filament/Resources/TestimonialResource.php` with table columns (Name/Author, Status, Updated) → @laravel-specialist
 - [ ] T048 [P] [US3] Create TestimonialResource pages in `app/Filament/Resources/TestimonialResource/Pages/` → @laravel-specialist
 - [ ] T049 [US3] Configure consistent status badge styling (Published=success/green, Draft=gray) across all Resources → @laravel-specialist
