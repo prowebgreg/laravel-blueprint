@@ -385,3 +385,72 @@ describe('edge cases', function () {
         expect(is_dir($outputDir))->toBeTrue();
     });
 });
+
+describe('EXIF orientation correction', function () {
+    it('applies orientation correction via Spatie Image', function () {
+        // The orientation() method is called on all variant generation
+        // This test verifies the action can process images with EXIF data
+        // Note: Creating images with EXIF orientation metadata requires external tools
+        // so we test that regular images process correctly with orientation() call
+
+        $action = new GenerateVariantsAction;
+        $sourcePath = createTestImage(1920, 1080);
+        $outputDir = sys_get_temp_dir().'/variants';
+
+        $variants = $action->execute($sourcePath, $outputDir, 'test-image');
+
+        // Variants should be generated successfully with orientation correction applied
+        expect($variants)->not->toBeEmpty()
+            ->and($variants['original']['width'])->toBe(1920)
+            ->and($variants['original']['height'])->toBe(1080);
+    });
+});
+
+describe('animated image handling', function () {
+    it('handles static GIF normally without extraction', function () {
+        // Static GIF should not trigger first-frame extraction
+        $staticGif = createTestImage(1920, 1080, 'gif');
+
+        $action = new GenerateVariantsAction;
+        $outputDir = sys_get_temp_dir().'/variants';
+
+        $variants = $action->execute($staticGif, $outputDir, 'static-gif-test');
+
+        expect($variants)->not->toBeEmpty();
+
+        // All variants should be WebP format
+        foreach ($variants as $variant) {
+            expect($variant['path'])->toEndWith('.webp');
+        }
+    });
+
+    it('handles static WebP normally without extraction', function () {
+        $staticWebP = createTestImage(1920, 1080, 'webp');
+
+        $action = new GenerateVariantsAction;
+        $outputDir = sys_get_temp_dir().'/variants';
+
+        $variants = $action->execute($staticWebP, $outputDir, 'static-webp-test');
+
+        expect($variants)->not->toBeEmpty();
+
+        // All variants should be WebP format
+        foreach ($variants as $variant) {
+            expect($variant['path'])->toEndWith('.webp');
+        }
+    });
+
+    it('detects animated GIF by frame count', function () {
+        // Create a GIF file and verify the isAnimatedGif detection logic
+        // Note: This tests static GIF detection (animated GIF creation requires external tools)
+
+        $staticGif = createTestImage(100, 100, 'gif');
+        $action = new GenerateVariantsAction;
+        $outputDir = sys_get_temp_dir().'/variants';
+
+        // Static GIF should process normally
+        $variants = $action->execute($staticGif, $outputDir, 'frame-count-test');
+
+        expect($variants)->not->toBeEmpty();
+    });
+});

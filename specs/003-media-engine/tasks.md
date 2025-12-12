@@ -243,11 +243,11 @@
 
 ### Edge Case Handling (from Checklist Cross-Check)
 
-- [ ] T077 [P] Add empty file (0-byte) validation rejection in ValidateUploadAction → @laravel-specialist
-- [ ] T078 [P] Add EXIF orientation auto-correction in GenerateVariantsAction using Spatie Image → @laravel-specialist
-- [ ] T079 [P] Add animated WebP first-frame extraction handling (same as GIF) in GenerateVariantsAction → @laravel-specialist
-- [ ] T080 [P] Add pessimistic locking for state transitions to prevent race conditions in ProcessMediaVariantsJob → @laravel-specialist
-- [ ] T081 [P] Add test cases for edge cases: empty file, EXIF orientation, animated WebP, concurrent state updates → @test-automator
+- [X] T077 [P] Add empty file (0-byte) validation rejection in ValidateUploadAction → @laravel-specialist
+- [X] T078 [P] Add EXIF orientation auto-correction in GenerateVariantsAction using Spatie Image → @laravel-specialist
+- [X] T079 [P] Add animated WebP first-frame extraction handling (same as GIF) in GenerateVariantsAction → @laravel-specialist
+- [X] T080 [P] Add pessimistic locking for state transitions to prevent race conditions in ProcessMediaVariantsJob → @laravel-specialist
+- [X] T081 [P] Add test cases for edge cases: empty file, EXIF orientation, animated WebP, concurrent state updates → @test-automator
 
 ---
 

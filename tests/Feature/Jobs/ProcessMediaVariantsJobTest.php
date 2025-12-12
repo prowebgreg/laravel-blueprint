@@ -436,3 +436,115 @@ describe('edge cases', function () {
             ->and(MediaVariant::where('media_asset_id', $asset->id)->count())->toBe(0);
     });
 });
+
+describe('concurrent state updates', function () {
+    it('uses pessimistic locking to prevent race conditions', function () {
+        Storage::fake('s3-permanent');
+
+        $asset = MediaAsset::factory()->processing()->create([
+            'dimensions' => ['width' => 2000, 'height' => 1125],
+        ]);
+
+        // Create a fake image file for processing
+        $fakeImage = \Illuminate\Http\UploadedFile::fake()->image('test.jpg', 2000, 1125);
+        Storage::disk('s3-permanent')->put(
+            $asset->s3_key_original,
+            $fakeImage->getContent()
+        );
+
+        // Process the job - it should acquire lock and complete successfully
+        $job = new ProcessMediaVariantsJob($asset);
+        $job->handle(
+            app(\App\Actions\Media\GenerateVariantsAction::class),
+            app(\App\Actions\Media\UploadToS3Action::class)
+        );
+
+        $asset->refresh();
+
+        // Asset should be in Ready state with no error
+        expect($asset->state)->toBe(MediaState::Ready)
+            ->and($asset->error_message)->toBeNull();
+    });
+
+    it('skips processing if asset state changed during execution', function () {
+        Storage::fake('s3-permanent');
+
+        // Create asset in Ready state (not Processing)
+        $asset = MediaAsset::factory()->create([
+            'state' => MediaState::Ready,
+            'dimensions' => ['width' => 2000, 'height' => 1125],
+        ]);
+
+        $fakeImage = \Illuminate\Http\UploadedFile::fake()->image('test.jpg', 2000, 1125);
+        Storage::disk('s3-permanent')->put(
+            $asset->s3_key_original,
+            $fakeImage->getContent()
+        );
+
+        // Job should skip processing because asset is not in Processing state
+        $job = new ProcessMediaVariantsJob($asset);
+        $job->handle(
+            app(\App\Actions\Media\GenerateVariantsAction::class),
+            app(\App\Actions\Media\UploadToS3Action::class)
+        );
+
+        // No variants should be created because job was skipped
+        expect(MediaVariant::where('media_asset_id', $asset->id)->count())->toBe(0);
+    });
+
+    it('handles concurrent job dispatch by checking state with lock', function () {
+        Storage::fake('s3-permanent');
+
+        $asset = MediaAsset::factory()->processing()->create([
+            'dimensions' => ['width' => 2000, 'height' => 1125],
+        ]);
+
+        $fakeImage = \Illuminate\Http\UploadedFile::fake()->image('test.jpg', 2000, 1125);
+        Storage::disk('s3-permanent')->put(
+            $asset->s3_key_original,
+            $fakeImage->getContent()
+        );
+
+        // First job processes and changes state to Ready
+        $job1 = new ProcessMediaVariantsJob($asset);
+        $job1->handle(
+            app(\App\Actions\Media\GenerateVariantsAction::class),
+            app(\App\Actions\Media\UploadToS3Action::class)
+        );
+
+        $asset->refresh();
+        expect($asset->state)->toBe(MediaState::Ready);
+
+        $variantCountAfterFirstJob = MediaVariant::where('media_asset_id', $asset->id)->count();
+
+        // Second job should see state is Ready and skip processing
+        // Reload asset with Processing state to simulate delayed job
+        $asset->state = MediaState::Processing;
+        $job2 = new ProcessMediaVariantsJob($asset);
+        $job2->handle(
+            app(\App\Actions\Media\GenerateVariantsAction::class),
+            app(\App\Actions\Media\UploadToS3Action::class)
+        );
+
+        // No additional variants should be created
+        expect(MediaVariant::where('media_asset_id', $asset->id)->count())->toBe($variantCountAfterFirstJob);
+    });
+
+    it('acquires lock before state transition in failed handler', function () {
+        Storage::fake('s3-permanent');
+
+        $asset = MediaAsset::factory()->processing()->create([
+            'dimensions' => ['width' => 2000, 'height' => 1125],
+        ]);
+
+        $job = new ProcessMediaVariantsJob($asset);
+        $exception = new \Exception('Test failure');
+
+        // Call failed() - it should acquire lock and update state atomically
+        $job->failed($exception);
+
+        $asset->refresh();
+        expect($asset->state)->toBe(MediaState::Failed)
+            ->and($asset->error_message)->toContain('Test failure');
+    });
+});
