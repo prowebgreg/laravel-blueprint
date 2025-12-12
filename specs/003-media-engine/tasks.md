@@ -238,8 +238,8 @@
 - [X] T072 Add processing failure logging with asset ID and stack trace → @laravel-specialist
 - [X] T073 [P] Run ./vendor/bin/sail pint to format all new files → @laravel-specialist
 - [X] T074 [P] Run ./vendor/bin/sail artisan test to verify entire test suite passes → @test-automator
-- [ ] T075 Verify Horizon media queue configuration exists → @laravel-specialist
-- [ ] T076 Run quickstart.md validation steps to verify complete implementation → @qa-expert
+- [X] T075 Verify Horizon media queue configuration exists → @laravel-specialist
+- [X] T076 Run quickstart.md validation steps to verify complete implementation → @qa-expert
 
 ### Edge Case Handling (from Checklist Cross-Check)
 
