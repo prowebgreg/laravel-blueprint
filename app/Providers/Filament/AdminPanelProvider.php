@@ -9,6 +9,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -44,6 +45,28 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->brandLogo(fn () => view('filament.logo'))
             ->viteTheme('resources/css/filament/admin/theme.css')
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Public Pages')
+                    ->icon('heroicon-o-document-text')
+                    ->collapsible(true),
+                NavigationGroup::make()
+                    ->label('Content Resources')
+                    ->icon('heroicon-o-rectangle-stack')
+                    ->collapsible(true),
+                NavigationGroup::make()
+                    ->label('Media Library')
+                    ->icon('heroicon-o-photo')
+                    ->collapsible(true),
+                NavigationGroup::make()
+                    ->label('SEO')
+                    ->icon('heroicon-o-globe-alt')
+                    ->collapsible(true),
+                NavigationGroup::make()
+                    ->label('Settings')
+                    ->icon('heroicon-o-cog-6-tooth')
+                    ->collapsible(true),
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
