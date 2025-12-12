@@ -25,7 +25,7 @@
 **Purpose**: Create Filament theme foundation with Geist fonts and shadcn-style colors
 
 - [X] T001 Generate Filament theme files via `sail artisan make:filament-theme admin` in `resources/css/filament/admin/` → @laravel-specialist
-- [ ] T002 Copy Geist font files from `resources/fonts/admin/` to `public/fonts/admin/` directory (all weights 100-900 + variable fonts) → @devops-engineer
+- [X] T002 Copy Geist font files from `resources/fonts/admin/` to `public/fonts/admin/` directory (all weights 100-900 + variable fonts) → @devops-engineer
 - [ ] T003 [P] Create @font-face declarations for Geist Sans (weights 100-900 + variable) in `resources/css/filament/admin/theme.css` → @frontend-developer
 - [ ] T004 [P] Create @font-face declarations for Geist Mono (weights 100-900 + variable) in `resources/css/filament/admin/theme.css` → @frontend-developer
 - [ ] T005 [P] Add shadcn oklch CSS custom properties (light mode) in `resources/css/filament/admin/theme.css` → @frontend-developer
