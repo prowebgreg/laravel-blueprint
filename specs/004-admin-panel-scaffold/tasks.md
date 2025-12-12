@@ -116,7 +116,7 @@
 - [X] T042 [P] [US3] Create ServiceResource pages in `app/Filament/Resources/ServiceResource/Pages/` → @laravel-specialist
 - [X] T043 [US3] Create BlogPostResource in `app/Filament/Resources/BlogPostResource.php` cloning PageResource table structure exactly → @laravel-specialist
 - [X] T044 [P] [US3] Create BlogPostResource pages in `app/Filament/Resources/BlogPostResource/Pages/` → @laravel-specialist
-- [ ] T045 [US3] Create FaqResource in `app/Filament/Resources/FaqResource.php` with table columns (Question, Status, Updated) → @laravel-specialist
+- [X] T045 [US3] Create FaqResource in `app/Filament/Resources/FaqResource.php` with table columns (Question, Status, Updated) → @laravel-specialist
 - [ ] T046 [P] [US3] Create FaqResource pages in `app/Filament/Resources/FaqResource/Pages/` → @laravel-specialist
 - [ ] T047 [US3] Create TestimonialResource in `app/Filament/Resources/TestimonialResource.php` with table columns (Name/Author, Status, Updated) → @laravel-specialist
 - [ ] T048 [P] [US3] Create TestimonialResource pages in `app/Filament/Resources/TestimonialResource/Pages/` → @laravel-specialist
