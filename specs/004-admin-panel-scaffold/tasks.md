@@ -155,7 +155,7 @@
 ### Implementation for User Story 5
 
 - [X] T057 [US5] Configure modal create action with basic fields (Question, Answer, Status) in FaqResource → @laravel-specialist
-- [ ] T058 [US5] Implement simplified single-section edit form in FaqResource (no tabs, no sidebar) → @laravel-specialist
+- [X] T058 [US5] Implement simplified single-section edit form in FaqResource (no tabs, no sidebar) → @laravel-specialist
 - [ ] T059 [US5] Configure modal create action with basic fields (Author Name, Content, Status) in TestimonialResource → @laravel-specialist
 - [ ] T060 [US5] Implement simplified single-section edit form in TestimonialResource (matching FaqResource structure) → @laravel-specialist
 - [ ] T061 [US5] Verify modal → edit redirect workflow for both Resources → @laravel-specialist

@@ -29,21 +29,25 @@ class FaqResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('question')
-                    ->label('Question')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Section::make('FAQ Details')
+                    ->schema([
+                        Forms\Components\TextInput::make('question')
+                            ->label('Question')
+                            ->required()
+                            ->maxLength(255),
 
-                Forms\Components\Textarea::make('answer')
-                    ->label('Answer')
-                    ->required()
-                    ->rows(4),
+                        Forms\Components\Textarea::make('answer')
+                            ->label('Answer')
+                            ->required()
+                            ->rows(6),
 
-                Forms\Components\Select::make('status')
-                    ->label('Status')
-                    ->options(ContentStatus::class)
-                    ->default(ContentStatus::Draft)
-                    ->required(),
+                        Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options(ContentStatus::class)
+                            ->default(ContentStatus::Draft)
+                            ->required(),
+                    ])
+                    ->columnSpanFull(),
             ]);
     }
 
