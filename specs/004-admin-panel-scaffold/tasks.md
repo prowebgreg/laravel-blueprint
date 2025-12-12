@@ -112,7 +112,7 @@
 
 - [X] T039 [US3] Create PageResource in `app/Filament/Resources/PageResource.php` with table columns (Title, Slug, Status, Updated) → @laravel-specialist
 - [X] T040 [P] [US3] Create PageResource pages (ListPages, CreatePage, EditPage) in `app/Filament/Resources/PageResource/Pages/` → @laravel-specialist
-- [ ] T041 [US3] Create ServiceResource in `app/Filament/Resources/ServiceResource.php` cloning PageResource table structure exactly → @laravel-specialist
+- [X] T041 [US3] Create ServiceResource in `app/Filament/Resources/ServiceResource.php` cloning PageResource table structure exactly → @laravel-specialist
 - [ ] T042 [P] [US3] Create ServiceResource pages in `app/Filament/Resources/ServiceResource/Pages/` → @laravel-specialist
 - [ ] T043 [US3] Create BlogPostResource in `app/Filament/Resources/BlogPostResource.php` cloning PageResource table structure exactly → @laravel-specialist
 - [ ] T044 [P] [US3] Create BlogPostResource pages in `app/Filament/Resources/BlogPostResource/Pages/` → @laravel-specialist
