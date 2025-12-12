@@ -158,7 +158,7 @@
 - [X] T058 [US5] Implement simplified single-section edit form in FaqResource (no tabs, no sidebar) → @laravel-specialist
 - [X] T059 [US5] Configure modal create action with basic fields (Author Name, Content, Status) in TestimonialResource → @laravel-specialist
 - [X] T060 [US5] Implement simplified single-section edit form in TestimonialResource (matching FaqResource structure) → @laravel-specialist
-- [ ] T061 [US5] Verify modal → edit redirect workflow for both Resources → @laravel-specialist
+- [X] T061 [US5] Verify modal → edit redirect workflow for both Resources → @laravel-specialist
 
 **Checkpoint**: User Story 5 complete - Simple content uses modal create + simplified edit
 
