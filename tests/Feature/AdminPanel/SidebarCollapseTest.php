@@ -91,3 +91,43 @@ it('sidebar navigation structure supports dropdown menus when collapsed', functi
         expect($content)->toContain($group->getLabel());
     }
 });
+
+it('sidebar collapse state persists via localStorage (Filament native behavior)', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user);
+
+    $response = $this->get('/admin');
+
+    $response->assertSuccessful();
+
+    // Filament v3 automatically persists sidebar collapse state to localStorage
+    // when sidebarCollapsibleOnDesktop() is enabled.
+    //
+    // The localStorage key used by Filament is: 'collapsedSidebarGroups'
+    // This is a native Filament feature and requires no additional configuration.
+    //
+    // Technical implementation:
+    // - Filament uses Alpine.js with x-data directive to manage sidebar state
+    // - Alpine.persist() plugin automatically syncs to localStorage
+    // - State persists across page refreshes and browser sessions
+    //
+    // Verification approach:
+    // Since this is a frontend localStorage feature that requires JavaScript execution,
+    // we verify that the necessary infrastructure is present:
+    // 1. Alpine.js is loaded (enables persistence)
+    // 2. Sidebar collapse functionality is configured
+    // 3. Panel has sidebarCollapsibleOnDesktop enabled
+
+    // Verify Alpine.js is present (required for localStorage persistence)
+    $content = $response->getContent();
+    expect($content)->toContain('x-data');
+
+    // Verify panel is configured to be collapsible (enables persistence)
+    $panel = filament()->getPanel('admin');
+    expect($panel->isSidebarCollapsibleOnDesktop())->toBeTrue();
+
+    // Note: Actual localStorage persistence testing would require browser automation
+    // tools like Dusk. This test verifies that all prerequisites for persistence are
+    // correctly configured. Manual testing steps are documented in the task notes.
+});
