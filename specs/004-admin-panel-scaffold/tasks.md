@@ -209,7 +209,7 @@
 
 ### Implementation for User Story 8
 
-- [ ] T073 [US8] Implement Identity section (Logo, Site Name, Tagline) in WebsiteDetailsPage → @laravel-specialist
+- [X] T073 [US8] Implement Identity section (Logo, Site Name, Tagline) in WebsiteDetailsPage → @laravel-specialist
 - [ ] T074 [US8] Implement Contact section (Phone, Email, Address) in WebsiteDetailsPage → @laravel-specialist
 - [ ] T075 [US8] Implement Social Links section in WebsiteDetailsPage → @laravel-specialist
 - [ ] T076 [US8] Implement Scripts tab (Head, Body, Footer scripts) in ScriptsIntegrationsPage → @laravel-specialist
