@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Filament\Enums\ThemeMode;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -242,4 +243,22 @@ it('has sidebar ring colors defined', function () {
     // Dark mode
     expect($themeCss)
         ->toContain('--sidebar-ring: oklch(0.7200 0 0);');
+});
+
+it('has dark mode enabled in admin panel configuration for theme persistence', function () {
+    // Get the admin panel instance
+    $panel = filament()->getPanel('admin');
+
+    // Verify dark mode is enabled (allows toggle and localStorage persistence)
+    expect($panel->hasDarkMode())->toBeTrue();
+});
+
+it('uses system theme as default when dark mode is enabled', function () {
+    // Get the admin panel instance
+    $panel = filament()->getPanel('admin');
+
+    // Verify system theme mode is set (ThemeMode::System)
+    // This ensures localStorage can properly store user preference overrides
+    // When user toggles theme, Filament stores preference in localStorage
+    expect($panel->getDefaultThemeMode())->toBe(ThemeMode::System);
 });
