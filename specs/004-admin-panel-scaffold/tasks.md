@@ -192,7 +192,7 @@
 ### Implementation for User Story 7
 
 - [X] T068 [US7] Implement Generate Sitemap button with status indicator in SitemapPage → @laravel-specialist
-- [ ] T069 [US7] Create RedirectResource in `app/Filament/Resources/RedirectResource.php` with table columns (Source URL, Target URL, Type, Status) → @laravel-specialist
+- [X] T069 [US7] Create RedirectResource in `app/Filament/Resources/RedirectResource.php` with table columns (Source URL, Target URL, Type, Status) → @laravel-specialist
 - [ ] T070 [P] [US7] Create RedirectResource pages (ListRedirects, CreateRedirect, EditRedirect) in `app/Filament/Resources/RedirectResource/Pages/` → @laravel-specialist
 - [ ] T071 [US7] Implement sectioned form fields for global structured data (Organization, Website, Breadcrumbs) in StructuredDataPage → @laravel-specialist
 - [ ] T072 [US7] Implement configuration area for 404 handling (Custom 404 page, Logging options) in NotFoundPagesPage → @laravel-specialist
