@@ -195,7 +195,7 @@
 - [X] T069 [US7] Create RedirectResource in `app/Filament/Resources/RedirectResource.php` with table columns (Source URL, Target URL, Type, Status) → @laravel-specialist
 - [X] T070 [P] [US7] Create RedirectResource pages (ListRedirects, CreateRedirect, EditRedirect) in `app/Filament/Resources/RedirectResource/Pages/` → @laravel-specialist
 - [X] T071 [US7] Implement sectioned form fields for global structured data (Organization, Website, Breadcrumbs) in StructuredDataPage → @laravel-specialist
-- [ ] T072 [US7] Implement configuration area for 404 handling (Custom 404 page, Logging options) in NotFoundPagesPage → @laravel-specialist
+- [X] T072 [US7] Implement configuration area for 404 handling (Custom 404 page, Logging options) in NotFoundPagesPage → @laravel-specialist
 
 **Checkpoint**: User Story 7 complete - SEO pages display placeholder controls
 
