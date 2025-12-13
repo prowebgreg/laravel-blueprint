@@ -657,3 +657,50 @@
 .fi-dropdown-panel[data-placement^="left"] {
   margin-right: 0.5rem;
 }
+
+/* ================================================
+   Responsive Behavior - Mobile/Tablet (768px and below)
+   ================================================ */
+
+@media (max-width: 768px) {
+  /* Ensure tables scroll horizontally on small screens */
+  .fi-ta-table-wrapper,
+  .fi-ta-content {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent tables from breaking layout */
+  .fi-ta-table {
+    min-width: 600px; /* Ensure table has minimum width to trigger scroll */
+  }
+
+  /* Ensure sidebar behaves properly at mobile widths */
+  .fi-sidebar {
+    /* Filament handles sidebar responsive behavior via JS */
+    /* This ensures smooth transitions */
+    transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+
+  /* Ensure form sections stack properly on mobile */
+  .fi-fo-field-wrp {
+    flex-direction: column;
+  }
+
+  /* Adjust padding for mobile viewports */
+  .fi-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Ensure modal dialogs are properly sized on mobile */
+  .fi-modal-window {
+    max-width: calc(100vw - 2rem);
+    margin: 1rem;
+  }
+
+  /* Stats cards should stack on mobile */
+  .fi-wi-stats-overview {
+    grid-template-columns: 1fr;
+  }
+}
