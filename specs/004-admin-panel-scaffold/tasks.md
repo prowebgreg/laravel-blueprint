@@ -215,7 +215,7 @@
 - [X] T076 [US8] Implement Scripts tab (Head, Body, Footer scripts) in ScriptsIntegrationsPage → @laravel-specialist
 - [X] T077 [US8] Implement APIs tab (placeholder API key fields) in ScriptsIntegrationsPage → @laravel-specialist
 - [X] T078 [US8] Implement Webhooks tab (placeholder webhook URL fields) in ScriptsIntegrationsPage → @laravel-specialist
-- [ ] T079 [US8] Create UserResource in `app/Filament/Resources/UserResource.php` with table columns (Name, Email, Created) and full CRUD → @laravel-specialist
+- [X] T079 [US8] Create UserResource in `app/Filament/Resources/UserResource.php` with table columns (Name, Email, Created) and full CRUD → @laravel-specialist
 - [ ] T080 [P] [US8] Create UserResource pages (ListUsers, CreateUser, EditUser) in `app/Filament/Resources/UserResource/Pages/` → @laravel-specialist
 - [ ] T081 [US8] Verify Settings pages display correct form structures and tabs work correctly → @laravel-specialist
 
