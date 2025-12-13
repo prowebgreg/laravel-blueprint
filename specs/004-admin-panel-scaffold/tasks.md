@@ -266,7 +266,7 @@
 - [X] T092 Run PHPStan Level 6 analysis via `./vendor/bin/phpstan analyse` and fix any issues → @laravel-specialist
 - [X] T093 Run quickstart.md validation steps (theme, navigation, resources, responsiveness) → @laravel-specialist
 - [X] T094 Verify 768px responsive behavior (sidebar auto-collapse, horizontal table scroll) → @frontend-developer, @laravel-specialist
-- [ ] T095 Final verification: all 23 navigation items accessible with correct layouts and breadcrumbs → @laravel-specialist
+- [X] T095 Final verification: all 23 navigation items accessible with correct layouts and breadcrumbs → @laravel-specialist
 
 ---
 

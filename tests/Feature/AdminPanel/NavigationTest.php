@@ -313,3 +313,134 @@ it('verifies authenticated users can access dashboard with navigation', function
     expect($content)->toContain('SEO');
     expect($content)->toContain('Settings');
 });
+
+it('displays breadcrumbs on resource listing pages', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    // Test Static Pages resource breadcrumb
+    $response = $this->get('/admin/pages');
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Static Pages');
+
+    // Test Services resource breadcrumb
+    $response = $this->get('/admin/services');
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Services');
+
+    // Test FAQs resource breadcrumb
+    $response = $this->get('/admin/faqs');
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('FAQs');
+});
+
+it('displays breadcrumbs on custom pages', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    // Test Media Library pages
+    $response = $this->get('/admin/images-page');
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Images');
+
+    // Test SEO pages
+    $response = $this->get('/admin/sitemap-page');
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Sitemap');
+
+    // Test Settings pages
+    $response = $this->get('/admin/website-details-page');
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Website Details');
+});
+
+it('displays breadcrumbs on resource edit pages', function () {
+    $user = User::factory()->create();
+    $page = \App\Models\Page::factory()->create();
+    $service = \App\Models\Service::factory()->create();
+    $faq = \App\Models\Faq::factory()->create();
+
+    $this->actingAs($user);
+
+    // Test Page edit breadcrumb shows resource name
+    $response = $this->get("/admin/pages/{$page->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Static Pages');
+    expect($content)->toContain('Edit');
+
+    // Test Service edit breadcrumb
+    $response = $this->get("/admin/services/{$service->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Services');
+    expect($content)->toContain('Edit');
+
+    // Test FAQ edit breadcrumb
+    $response = $this->get("/admin/faqs/{$faq->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('FAQs');
+    expect($content)->toContain('Edit');
+});
+
+it('complex resources display tabbed layout with sidebar on edit pages', function () {
+    $user = User::factory()->create();
+    $page = \App\Models\Page::factory()->create();
+    $service = \App\Models\Service::factory()->create();
+    $blogPost = \App\Models\BlogPost::factory()->create();
+
+    $this->actingAs($user);
+
+    // Test PageResource edit has tabs
+    $response = $this->get("/admin/pages/{$page->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Page Content');
+    expect($content)->toContain('SEO Data');
+    expect($content)->toContain('URL Slug');
+
+    // Test ServiceResource edit has tabs
+    $response = $this->get("/admin/services/{$service->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Page Content');
+    expect($content)->toContain('SEO Data');
+    expect($content)->toContain('URL Slug');
+
+    // Test BlogPostResource edit has tabs
+    $response = $this->get("/admin/blog-posts/{$blogPost->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Page Content');
+    expect($content)->toContain('SEO Data');
+    expect($content)->toContain('URL Slug');
+});
+
+it('simple resources display single-section layout without tabs on edit pages', function () {
+    $user = User::factory()->create();
+    $faq = \App\Models\Faq::factory()->create();
+    $testimonial = \App\Models\Testimonial::factory()->create();
+
+    $this->actingAs($user);
+
+    // Test FaqResource edit has single section (no tabs)
+    $response = $this->get("/admin/faqs/{$faq->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('FAQ Details');
+    expect($content)->not->toContain('SEO Data');
+
+    // Test TestimonialResource edit has single section (no tabs)
+    $response = $this->get("/admin/testimonials/{$testimonial->id}/edit");
+    $response->assertSuccessful();
+    $content = $response->getContent();
+    expect($content)->toContain('Testimonial Details');
+    expect($content)->not->toContain('SEO Data');
+});
