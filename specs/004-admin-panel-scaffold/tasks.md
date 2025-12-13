@@ -231,7 +231,7 @@
 
 ### Implementation for User Story 9
 
-- [ ] T082 [US9] Verify dark mode toggle appears in user menu (top-right) → @laravel-specialist
+- [X] T082 [US9] Verify dark mode toggle appears in user menu (top-right) → @laravel-specialist
 - [ ] T083 [US9] Test light → dark → light transitions with correct oklch color palette → @laravel-specialist, @frontend-developer
 - [ ] T084 [US9] Verify theme preference persists via localStorage across sessions → @laravel-specialist
 
