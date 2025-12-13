@@ -112,4 +112,16 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default Admin Password (Development Only)
+    |--------------------------------------------------------------------------
+    |
+    | This password is used by AdminUserSeeder in non-production environments.
+    | NEVER use this in production. Only for local/development/testing.
+    |
+    */
+
+    'default_admin_password' => env('DEFAULT_ADMIN_PASSWORD'),
+
 ];

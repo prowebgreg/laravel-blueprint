@@ -154,7 +154,7 @@ class GenerateVariantsAction
             return $sourcePath;
         }
 
-        $mimeType = $imageInfo['mime'] ?? '';
+        $mimeType = $imageInfo['mime'];
 
         // Check if it's a GIF or WebP
         $isGif = $mimeType === 'image/gif';

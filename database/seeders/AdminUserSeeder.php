@@ -24,10 +24,10 @@ class AdminUserSeeder extends Seeder
             return;
         }
 
-        $password = env('DEFAULT_ADMIN_PASSWORD');
+        $password = config('auth.default_admin_password');
 
         if (empty($password)) {
-            $this->command->error('DEFAULT_ADMIN_PASSWORD environment variable is not set.');
+            $this->command->error('DEFAULT_ADMIN_PASSWORD environment variable is not set in auth config.');
 
             return;
         }

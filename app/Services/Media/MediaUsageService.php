@@ -129,6 +129,11 @@ class MediaUsageService
         $usagesByType = $publicUsages->groupBy('model_type');
 
         foreach ($usagesByType as $modelClass => $typeUsages) {
+            // Ensure model class is a string (class name)
+            if (! is_string($modelClass) || ! class_exists($modelClass)) {
+                continue;
+            }
+
             // Batch load all models of this type
             $ids = $typeUsages->pluck('model_id');
             $models = $modelClass::whereIn('id', $ids)->get()->keyBy('id');

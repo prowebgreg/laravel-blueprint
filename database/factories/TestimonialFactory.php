@@ -16,7 +16,7 @@ class TestimonialFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      *
-     * @var class-string<\Illuminate\Database\Eloquent\Model>
+     * @var class-string<\App\Models\Testimonial>
      */
     protected $model = Testimonial::class;
 
@@ -32,7 +32,7 @@ class TestimonialFactory extends Factory
             'status' => ContentStatus::Draft,
             'author_name' => fake()->name(),
             'author_title' => fake()->jobTitle(),
-            'location' => fake()->city().', '.fake()->stateAbbr(),
+            'location' => fake()->city().', '.fake()->randomElement(['CA', 'NY', 'TX', 'FL', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI']),
             'quote' => fake()->paragraph(3),
             'rating' => null,
             'avatar' => null,
@@ -87,7 +87,7 @@ class TestimonialFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'author_name' => fake()->name(),
             'author_title' => fake()->jobTitle(),
-            'location' => fake()->city().', '.fake()->stateAbbr(),
+            'location' => fake()->city().', '.fake()->randomElement(['CA', 'NY', 'TX', 'FL', 'IL', 'PA', 'OH', 'GA', 'NC', 'MI']),
             'rating' => fake()->numberBetween(4, 5),
             'avatar' => fake()->imageUrl(400, 400, 'people', true),
             'quote' => fake()->randomElement([

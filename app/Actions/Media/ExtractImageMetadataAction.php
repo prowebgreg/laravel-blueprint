@@ -39,8 +39,8 @@ class ExtractImageMetadataAction
 
             [$width, $height] = $imageInfo;
 
-            // Validate dimensions are positive integers
-            if (! is_int($width) || ! is_int($height) || $width <= 0 || $height <= 0) {
+            // Validate dimensions are positive
+            if ($width <= 0 || $height <= 0) {
                 return null;
             }
 

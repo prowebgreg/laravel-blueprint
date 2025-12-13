@@ -17,7 +17,7 @@ class ServiceFactory extends Factory
     /**
      * The name of the factory's corresponding model.
      *
-     * @var class-string<\Illuminate\Database\Eloquent\Model>
+     * @var class-string<\App\Models\Service>
      */
     protected $model = Service::class;
 

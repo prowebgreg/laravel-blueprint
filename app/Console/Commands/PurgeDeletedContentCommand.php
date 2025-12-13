@@ -10,6 +10,7 @@ use App\Models\Page;
 use App\Models\Service;
 use App\Models\Testimonial;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -103,7 +104,7 @@ class PurgeDeletedContentCommand extends Command
      * Collect all soft-deleted content older than cutoff date.
      *
      * @param  \Illuminate\Support\Carbon  $cutoffDate
-     * @return \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, Model>>
+     * @return \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Model>>
      */
     protected function collectContentToPurge($cutoffDate): \Illuminate\Support\Collection
     {
@@ -125,7 +126,7 @@ class PurgeDeletedContentCommand extends Command
     /**
      * Display summary of content to be purged.
      *
-     * @param  \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, Model>>  $toPurge
+     * @param  \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Model>>  $toPurge
      */
     protected function displaySummary(\Illuminate\Support\Collection $toPurge): void
     {
@@ -156,7 +157,7 @@ class PurgeDeletedContentCommand extends Command
     /**
      * Execute the purge operation.
      *
-     * @param  \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, Model>>  $toPurge
+     * @param  \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \Illuminate\Database\Eloquent\Model>>  $toPurge
      * @return array{total: int, relationships: int}
      */
     protected function executePurge(\Illuminate\Support\Collection $toPurge): array
@@ -199,7 +200,7 @@ class PurgeDeletedContentCommand extends Command
     /**
      * Purge relationships for a specific model instance.
      *
-     * @param  class-string<Model>  $modelClass
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
      */
     protected function purgeRelationships(string $modelClass, int $modelId): int
     {

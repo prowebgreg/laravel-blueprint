@@ -89,6 +89,11 @@ class MediaUploadService
         $mediaType = $validationResult->mediaType;
         $dimensions = $validationResult->dimensions;
 
+        // Assert mediaType is not null (validation ensures this)
+        if ($mediaType === null) {
+            throw new \RuntimeException('Media type should not be null after successful validation');
+        }
+
         // Step 2: Sanitize the filename
         $sanitizedFilename = $this->sanitizeFilenameAction->execute(
             $file->getClientOriginalName()
@@ -96,6 +101,7 @@ class MediaUploadService
 
         // Step 3: Sanitize SVG content if needed
         $fileToUpload = $file;
+        $tempPath = null;
         if ($mediaType === MediaType::Svg) {
             try {
                 Log::info('Sanitizing SVG content', [
@@ -131,7 +137,7 @@ class MediaUploadService
                 ]);
             } catch (\Exception $e) {
                 // Clean up temp file if it was created
-                if (isset($tempPath) && file_exists($tempPath)) {
+                if ($tempPath !== null && file_exists($tempPath)) {
                     @unlink($tempPath);
                 }
 
@@ -160,12 +166,12 @@ class MediaUploadService
             );
 
             // Clean up temporary SVG file if it was created
-            if ($mediaType === MediaType::Svg && isset($tempPath) && file_exists($tempPath)) {
+            if ($tempPath !== null && file_exists($tempPath)) {
                 @unlink($tempPath);
             }
         } catch (\Exception $e) {
             // Clean up temporary SVG file if it was created
-            if ($mediaType === MediaType::Svg && isset($tempPath) && file_exists($tempPath)) {
+            if ($tempPath !== null && file_exists($tempPath)) {
                 @unlink($tempPath);
             }
 

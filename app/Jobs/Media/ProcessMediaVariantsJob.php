@@ -193,7 +193,8 @@ class ProcessMediaVariantsJob implements ShouldQueue
 
             throw $e;
         } finally {
-            // Clean up temp directory
+            // Clean up temp directory if it was created
+            // @phpstan-ignore-next-line (tempDir can be null if exception thrown before initialization)
             if ($tempDir !== null && is_dir($tempDir)) {
                 $this->cleanupTempDirectory($tempDir);
             }

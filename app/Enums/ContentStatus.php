@@ -12,7 +12,7 @@ enum ContentStatus: string implements HasColor, HasLabel
     case Draft = 'draft';
     case Published = 'published';
 
-    public function getColor(): string|array|null
+    public function getColor(): string
     {
         return match ($this) {
             self::Published => 'success',
@@ -20,7 +20,7 @@ enum ContentStatus: string implements HasColor, HasLabel
         };
     }
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::Published => 'Published',

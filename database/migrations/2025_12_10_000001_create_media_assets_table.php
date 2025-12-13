@@ -19,25 +19,25 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             // File identification
-            $table->string('filename', 255)->notNull();
-            $table->string('original_name', 255)->notNull();
+            $table->string('filename', 255);
+            $table->string('original_name', 255);
 
             // Type and storage
-            $table->string('media_type', 50)->notNull();
-            $table->string('folder', 50)->notNull();
+            $table->string('media_type', 50);
+            $table->string('folder', 50);
 
             // File properties
-            $table->bigInteger('file_size')->notNull();
+            $table->bigInteger('file_size');
             $table->jsonb('dimensions')->nullable();
-            $table->string('mime_type', 127)->notNull();
+            $table->string('mime_type', 127);
 
             // Processing state
-            $table->string('state', 50)->notNull()->default('uploading');
+            $table->string('state', 50)->default('uploading');
             $table->text('error_message')->nullable();
 
             // S3 and CloudFront URLs
-            $table->string('s3_key_original', 512)->notNull();
-            $table->string('cloudfront_url_original', 512)->notNull();
+            $table->string('s3_key_original', 512);
+            $table->string('cloudfront_url_original', 512);
 
             // Metadata
             $table->string('alt_text', 255)->nullable();
