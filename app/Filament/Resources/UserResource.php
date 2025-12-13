@@ -63,7 +63,7 @@ class UserResource extends Resource
                             ->same('password')
                             ->required(fn (string $operation): bool => $operation === 'create')
                             ->maxLength(255)
-                            ->visible(fn (?User $record): bool => $record === null || filled(request()->input('data.password'))),
+                            ->visible(fn (string $operation): bool => $operation === 'create'),
                     ])
                     ->columns(2),
             ]);
