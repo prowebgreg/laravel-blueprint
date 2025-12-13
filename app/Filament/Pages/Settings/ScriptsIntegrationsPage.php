@@ -44,8 +44,14 @@ class ScriptsIntegrationsPage extends Page implements HasForms
             'google_maps_key' => 'AIzaSy...',
             'recaptcha_site_key' => '6Le...',
             'recaptcha_secret_key' => '6Le...',
-            'webhook_url' => 'https://example.com/webhook',
-            'webhook_secret' => 'whsec_...',
+            'form_submission_webhook_url' => 'https://api.example.com/webhooks/form-submissions',
+            'form_submission_webhook_secret' => 'whsec_form_abc123...',
+            'content_update_webhook_url' => 'https://api.example.com/webhooks/content-updates',
+            'content_update_webhook_secret' => 'whsec_content_xyz789...',
+            'media_upload_webhook_url' => 'https://api.example.com/webhooks/media-uploads',
+            'media_upload_webhook_secret' => 'whsec_media_def456...',
+            'custom_webhook_url' => 'https://example.com/webhook',
+            'custom_webhook_secret' => 'whsec_custom_ghi012...',
         ]);
     }
 
@@ -129,25 +135,81 @@ class ScriptsIntegrationsPage extends Page implements HasForms
                         Tabs\Tab::make('Webhooks')
                             ->icon('heroicon-o-globe-alt')
                             ->schema([
-                                Section::make('Webhook Configuration')
-                                    ->description('Configure webhook endpoints for external integrations.')
+                                Section::make('Form Submission Webhooks')
+                                    ->description('Receive notifications when forms are submitted on your website.')
                                     ->schema([
-                                        TextInput::make('webhook_url')
+                                        TextInput::make('form_submission_webhook_url')
+                                            ->label('Webhook URL')
+                                            ->url()
+                                            ->placeholder('https://api.example.com/webhooks/form-submissions')
+                                            ->helperText('URL to receive form submission notifications.')
+                                            ->maxLength(255),
+                                        TextInput::make('form_submission_webhook_secret')
+                                            ->label('Webhook Secret')
+                                            ->placeholder('whsec_form_...')
+                                            ->password()
+                                            ->revealable()
+                                            ->helperText('Secret key for verifying form submission webhooks.')
+                                            ->maxLength(255),
+                                    ])
+                                    ->columns(2),
+
+                                Section::make('Content Update Webhooks')
+                                    ->description('Receive notifications when content (pages, posts, services) is created, updated, or deleted.')
+                                    ->schema([
+                                        TextInput::make('content_update_webhook_url')
+                                            ->label('Webhook URL')
+                                            ->url()
+                                            ->placeholder('https://api.example.com/webhooks/content-updates')
+                                            ->helperText('URL to receive content change notifications.')
+                                            ->maxLength(255),
+                                        TextInput::make('content_update_webhook_secret')
+                                            ->label('Webhook Secret')
+                                            ->placeholder('whsec_content_...')
+                                            ->password()
+                                            ->revealable()
+                                            ->helperText('Secret key for verifying content update webhooks.')
+                                            ->maxLength(255),
+                                    ])
+                                    ->columns(2),
+
+                                Section::make('Media Upload Webhooks')
+                                    ->description('Receive notifications when media files are uploaded or processed.')
+                                    ->schema([
+                                        TextInput::make('media_upload_webhook_url')
+                                            ->label('Webhook URL')
+                                            ->url()
+                                            ->placeholder('https://api.example.com/webhooks/media-uploads')
+                                            ->helperText('URL to receive media upload notifications.')
+                                            ->maxLength(255),
+                                        TextInput::make('media_upload_webhook_secret')
+                                            ->label('Webhook Secret')
+                                            ->placeholder('whsec_media_...')
+                                            ->password()
+                                            ->revealable()
+                                            ->helperText('Secret key for verifying media upload webhooks.')
+                                            ->maxLength(255),
+                                    ])
+                                    ->columns(2),
+
+                                Section::make('Custom Webhooks')
+                                    ->description('General-purpose webhook endpoint for custom integrations.')
+                                    ->schema([
+                                        TextInput::make('custom_webhook_url')
                                             ->label('Webhook URL')
                                             ->url()
                                             ->placeholder('https://example.com/webhook')
-                                            ->helperText('The URL where webhook events will be sent.')
-                                            ->maxLength(255)
-                                            ->columnSpanFull(),
-                                        TextInput::make('webhook_secret')
+                                            ->helperText('URL for general webhook events.')
+                                            ->maxLength(255),
+                                        TextInput::make('custom_webhook_secret')
                                             ->label('Webhook Secret')
-                                            ->placeholder('whsec_...')
+                                            ->placeholder('whsec_custom_...')
                                             ->password()
                                             ->revealable()
-                                            ->helperText('Secret key used to verify webhook signatures.')
-                                            ->maxLength(255)
-                                            ->columnSpanFull(),
-                                    ]),
+                                            ->helperText('Secret key for verifying custom webhooks.')
+                                            ->maxLength(255),
+                                    ])
+                                    ->columns(2),
                             ]),
                     ])
                     ->columnSpanFull(),
