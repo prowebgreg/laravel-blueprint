@@ -585,3 +585,75 @@
 .fi-breadcrumbs a:hover {
   color: var(--foreground);
 }
+
+/* ================================================
+   Sidebar Navigation - Collapsed State & Tooltips
+   ================================================ */
+
+/* Navigation group icons - Enhanced hover states */
+.fi-sidebar-group-button {
+  transition: background-color 0.2s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.fi-sidebar-group-button:hover {
+  background-color: var(--sidebar-accent);
+  transform: scale(1.05);
+}
+
+/* Dropdown menu for collapsed sidebar navigation */
+.fi-sidebar-group-dropdown-list,
+.fi-dropdown-panel {
+  background-color: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xl);
+  z-index: 50;
+}
+
+/* Dropdown items */
+.fi-sidebar-group-dropdown-list-item,
+.fi-dropdown-list-item {
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.fi-sidebar-group-dropdown-list-item:hover,
+.fi-dropdown-list-item:hover {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+/* Active state for dropdown items */
+.fi-sidebar-group-dropdown-list-item.fi-active,
+.fi-dropdown-list-item.fi-active {
+  background-color: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
+  font-weight: 600;
+}
+
+/* Icon visibility in collapsed sidebar */
+.fi-sidebar-collapsed .fi-sidebar-item-icon,
+.fi-sidebar-collapsed .fi-sidebar-group-icon {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Ensure proper contrast for navigation icons */
+.fi-sidebar-item-icon,
+.fi-sidebar-group-icon {
+  color: var(--sidebar-foreground);
+}
+
+.fi-sidebar-item-icon:hover,
+.fi-sidebar-group-icon:hover {
+  color: var(--sidebar-primary);
+}
+
+/* Tooltip-like appearance for dropdown positioning */
+.fi-dropdown-panel[data-placement^="right"] {
+  margin-left: 0.5rem;
+}
+
+.fi-dropdown-panel[data-placement^="left"] {
+  margin-right: 0.5rem;
+}

@@ -248,7 +248,7 @@
 ### Implementation for User Story 10
 
 - [X] T085 [US10] Verify sidebar collapse toggle appears and functions correctly → @laravel-specialist
-- [ ] T086 [US10] Verify tooltips appear on hover for collapsed navigation items → @laravel-specialist, @frontend-developer
+- [X] T086 [US10] Verify tooltips appear on hover for collapsed navigation items → @laravel-specialist, @frontend-developer
 - [ ] T087 [US10] Verify collapse preference persists via localStorage → @laravel-specialist
 
 **Checkpoint**: User Story 10 complete - Sidebar collapses with tooltips
